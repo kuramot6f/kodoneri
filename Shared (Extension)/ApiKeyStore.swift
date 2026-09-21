@@ -8,7 +8,7 @@
 import Foundation
 import Security
 
-enum ApiKeyStore {
+nonisolated enum ApiKeyStore {
 
     static let providers = ["openai", "anthropic", "deepseek"]
 
