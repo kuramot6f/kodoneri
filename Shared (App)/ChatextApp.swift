@@ -20,7 +20,7 @@ struct ChatextApp: App {
         Window("chatext", id: "main") {
             ContentView()
         }
-        .windowResizability(.contentSize)
+        .defaultSize(width: 440, height: 540)
 #else
         WindowGroup {
             ContentView()
