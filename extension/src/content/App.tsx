@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent, MouseEvent } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ChatView } from "./ChatView";
 import { isTouchDevice, PHONE_QUERY, useMediaQuery } from "./device";
 import { HistoryView } from "./HistoryView";
@@ -26,12 +27,8 @@ type HistoryTab = "chat" | "memory";
 /** floating/sidebar on desktop and iPad; phones keep the floating look at a fixed size, or enlarge it. */
 type Layout = "floating" | "sidebar" | "phone" | "phone-expanded";
 
-const HISTORY_TABS = [
-  { value: "chat", label: "チャット", title: "保存した会話の一覧" },
-  { value: "memory", label: "メモリ", title: "AIが覚えている内容の一覧" }
-] as const;
-
 export function App() {
+  const { t } = useLingui();
   const [view, setView] = useState<View>("chat");
   const [historyTab, setHistoryTab] = useState<HistoryTab>("chat");
   const [question, setQuestion] = useState("");
@@ -140,10 +137,14 @@ export function App() {
     await memories.close();
   };
 
+  const historyTabs = [
+    { value: "chat", label: t`Chats`, title: t`Saved conversations` },
+    { value: "memory", label: t`Memory`, title: t`What the AI remembers` }
+  ] as const;
   const expandLabel = phone
-    ? (expanded ? "元の大きさに戻す" : "大きく表示")
-    : (expanded ? "フローティングに戻す" : "サイドバーに表示");
-  const historyLabel = phone ? "メニュー(チャット履歴・メモリ)" : "チャット履歴";
+    ? (expanded ? t`Restore size` : t`Enlarge`)
+    : (expanded ? t`Switch to floating panel` : t`Show in sidebar`);
+  const historyLabel = phone ? t`Menu (chat history and memory)` : t`Chat history`;
 
   if (!state || !open) return null;
 
@@ -154,16 +155,16 @@ export function App() {
         <header {...panelFrame.handlersFor(null)}>
           {view === "memory" ? (
             <>
-              <button className="round" type="button" aria-label="一覧に戻る" title="一覧に戻る" onClick={() => void closeMemory()}>
+              <button className="round" type="button" aria-label={t`Back to list`} title={t`Back to list`} onClick={() => void closeMemory()}>
                 <Icon name="back" />
               </button>
-              <h1 className="header-title">{memories.editing?.title.trim() || "メモリ"}を編集</h1>
-              <button className="pill" type="button" title="編集を終えて一覧に戻る" onClick={() => void closeMemory()}>完了</button>
+              <h1 className="header-title"><Trans>Edit {memories.editing?.title.trim() || t`memory`}</Trans></h1>
+              <button className="pill" type="button" title={t`Finish editing and return to the list`} onClick={() => void closeMemory()}><Trans>Done</Trans></button>
             </>
           ) : (
             <>
               <div className="header-actions">
-                <button className="round" type="button" aria-label="パネルを閉じる" title="パネルを閉じる" onClick={() => panel.setPanel({ open: false })}>
+                <button className="round" type="button" aria-label={t`Close panel`} title={t`Close panel`} onClick={() => panel.setPanel({ open: false })}>
                   <Icon name="close" />
                 </button>
                 <button
@@ -190,7 +191,7 @@ export function App() {
                   </button>
                 )}
                 {(!phone || view === "history") && (
-                  <button className={view === "history" ? "round accent-action" : "round"} type="button" aria-label="新規チャット" title="新規チャット" onClick={startNewChat} disabled={busy}>
+                  <button className={view === "history" ? "round accent-action" : "round"} type="button" aria-label={t`New chat`} title={t`New chat`} onClick={startNewChat} disabled={busy}>
                     <Icon name="edit" tone={view === "history" ? "inverse" : "default"} />
                   </button>
                 )}
@@ -202,7 +203,7 @@ export function App() {
           <MemoryEditor memory={memories.editing} onChange={memories.update} />
         ) : view === "history" ? (
           <>
-            <SegmentedTabs tabs={HISTORY_TABS} value={historyTab} onChange={setHistoryTab} />
+            <SegmentedTabs tabs={historyTabs} value={historyTab} onChange={setHistoryTab} />
             {historyTab === "memory" ? (
               <MemoryListView
                 memories={memories.memories}

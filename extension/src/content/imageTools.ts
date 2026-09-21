@@ -1,5 +1,6 @@
 import type { ImageToolOutput, ToolOutput, ToolSuccessOutput } from "../shared/protocol";
 import { loadResource, resolveResourceUrl } from "../shared/resourceLoader";
+import { i18n } from "../shared/i18n.ts";
 import type { PageResourceEntry } from "./pageSnapshot";
 
 const MAX_IMAGE_BYTES = 32 * 1024 * 1024;
@@ -28,7 +29,7 @@ export function createImageReader(
       const output = await outputPromise;
       const contentLength = getToolContentLength(output);
       if (returnedContentLength + contentLength > MAX_TOTAL_TOOL_CONTENT_LENGTH) {
-        throw new Error("この質問で送信できる画像・SVGの合計サイズを超えました。");
+        throw new Error(i18n._({ id: "errors.totalImageSize", message: "The total image and SVG size allowed for this question has been exceeded." }));
       }
       returnedContentLength += contentLength;
       return output;
@@ -40,11 +41,11 @@ export function createImageReader(
 
 function parseReadImageArgs(argumentsJson: string): string {
   const value: unknown = JSON.parse(argumentsJson);
-  if (!value || typeof value !== "object") throw new Error("引数が不正です。");
+  if (!value || typeof value !== "object") throw new Error(i18n._({ id: "errors.invalidArguments", message: "Invalid arguments." }));
 
   const { ref } = value as Record<string, unknown>;
   if (typeof ref !== "string" || !ref.trim()) {
-    throw new Error("refは空でない文字列で指定してください。");
+    throw new Error(i18n._({ id: "errors.refRequired", message: "ref must be a non-empty string." }));
   }
   return ref;
 }
@@ -69,7 +70,7 @@ function resolveReadTarget(
 
 function targetFromEntry(ref: string, entry: PageResourceEntry): ReadTarget {
   if (entry.type === "inline-text") {
-    throw new Error("このrefはscriptまたはstyleです。readかgrepを使用してください。");
+    throw new Error(i18n._({ id: "errors.textRefAsImage", message: "This ref identifies a script or style. Use read or grep." }));
   }
   if (entry.type === "source") {
     return { cacheKey: `source:${entry.source}`, load: () => loadSource(entry.source) };
@@ -87,12 +88,12 @@ function targetFromEntry(ref: string, entry: PageResourceEntry): ReadTarget {
 }
 
 function resolveImageSource(ref: string, baseUrl: string): string {
-  return resolveResourceUrl(ref, baseUrl, IMAGE_RESOURCE_SCHEMES, "画像");
+  return resolveResourceUrl(ref, baseUrl, IMAGE_RESOURCE_SCHEMES, i18n._({ id: "resources.image", message: "image" }));
 }
 
 async function loadSource(source: string): Promise<ToolSuccessOutput> {
   const { buffer } = await loadResource(source, {
-    label: "画像またはSVG",
+    label: i18n._({ id: "resources.imageOrSvg", message: "image or SVG" }),
     maxBytes: MAX_IMAGE_BYTES
   });
 
@@ -102,26 +103,26 @@ async function loadSource(source: string): Promise<ToolSuccessOutput> {
 
   const svg = parseSvgText(buffer);
   if (svg !== null) return { type: "text", content: svg };
-  throw new Error("JPEG、PNG、GIF、WebP、SVG以外の形式には対応していません。");
+  throw new Error(i18n._({ id: "errors.unsupportedImageFormat", message: "Only JPEG, PNG, GIF, WebP, and SVG formats are supported." }));
 }
 
 async function captureCanvas(canvas: HTMLCanvasElement): Promise<ImageToolOutput> {
-  if (!canvas.width || !canvas.height) throw new Error("canvasのサイズが0です。");
+  if (!canvas.width || !canvas.height) throw new Error(i18n._({ id: "errors.emptyCanvas", message: "The canvas has zero size." }));
   const blob = await canvasToBlob(canvas);
   return imageOutputFromBuffer(await blob.arrayBuffer(), "image/png");
 }
 
 async function captureVideoFrame(video: HTMLVideoElement): Promise<ImageToolOutput> {
   if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
-    throw new Error("videoの現在フレームをまだ読み取れません。");
+    throw new Error(i18n._({ id: "errors.videoFrameUnavailable", message: "The current video frame is not available yet." }));
   }
-  if (!video.videoWidth || !video.videoHeight) throw new Error("videoのサイズが0です。");
+  if (!video.videoWidth || !video.videoHeight) throw new Error(i18n._({ id: "errors.emptyVideo", message: "The video has zero size." }));
 
   const canvas = document.createElement("canvas");
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
   const context = canvas.getContext("2d");
-  if (!context) throw new Error("videoフレームの描画先を作成できませんでした。");
+  if (!context) throw new Error(i18n._({ id: "errors.videoCanvasContext", message: "Could not create a drawing context for the video frame." }));
 
   context.drawImage(video, 0, 0);
   const blob = await canvasToBlob(canvas);
@@ -133,7 +134,7 @@ function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
     try {
       canvas.toBlob((blob) => {
         if (blob) resolve(blob);
-        else reject(new Error("canvasをPNGへ変換できませんでした。"));
+        else reject(new Error(i18n._({ id: "errors.canvasToPng", message: "Could not convert the canvas to PNG." })));
       }, "image/png");
     } catch (error) {
       reject(error);
@@ -142,7 +143,7 @@ function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
 }
 
 async function imageOutputFromBuffer(buffer: ArrayBuffer, mimeType: string): Promise<ImageToolOutput> {
-  if (buffer.byteLength > MAX_IMAGE_BYTES) throw new Error("画像サイズが32 MiBを超えています。");
+  if (buffer.byteLength > MAX_IMAGE_BYTES) throw new Error(i18n._({ id: "errors.imageTooLarge", message: "The image exceeds 32 MiB." }));
   return {
     type: "image",
     dataUrl: await toDataUrl(buffer, mimeType),
@@ -181,15 +182,17 @@ function toDataUrl(buffer: ArrayBuffer, mimeType: string): Promise<string> {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       if (typeof reader.result === "string") resolve(reader.result);
-      else reject(new Error("画像をdata URLへ変換できませんでした。"));
+      else reject(new Error(i18n._({ id: "errors.imageToDataUrl", message: "Could not convert the image to a data URL." })));
     }, { once: true });
     reader.addEventListener("error", () => {
-      reject(reader.error ?? new Error("画像をdata URLへ変換できませんでした。"));
+      reject(reader.error ?? new Error(i18n._({ id: "errors.imageToDataUrl", message: "Could not convert the image to a data URL." })));
     }, { once: true });
     reader.readAsDataURL(new Blob([buffer], { type: mimeType }));
   });
 }
 
 function getErrorMessage(error: unknown): string {
-  return error instanceof Error && error.message ? error.message : "画像ツールの実行に失敗しました。";
+  return error instanceof Error && error.message
+    ? error.message
+    : i18n._({ id: "errors.imageToolFailed", message: "Image tool execution failed." });
 }

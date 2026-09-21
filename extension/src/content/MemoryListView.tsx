@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Icon } from "./Icon";
 import { findSnippet, Highlight, normalizeQuery, SearchBar } from "./search";
 import { MEMORY_MAX_COUNT } from "../shared/memory";
@@ -18,6 +19,7 @@ interface MemoryEntry {
 }
 
 export function MemoryListView({ memories, onCreate, onSelect, onToggleFavorite, onDelete }: MemoryListViewProps) {
+  const { t } = useLingui();
   const [query, setQuery] = useState("");
   const normalizedQuery = normalizeQuery(query);
   const entries = normalizedQuery
@@ -31,45 +33,45 @@ export function MemoryListView({ memories, onCreate, onSelect, onToggleFavorite,
           <button
             className="pill add-memory"
             type="button"
-            aria-label="新規メモリ"
-            title={memories.length >= MEMORY_MAX_COUNT ? `メモリは${MEMORY_MAX_COUNT}件まで` : "新規メモリ"}
+            aria-label={t`New memory`}
+            title={memories.length >= MEMORY_MAX_COUNT ? t`You can save up to ${MEMORY_MAX_COUNT} memories` : t`New memory`}
             onClick={onCreate}
             disabled={memories.length >= MEMORY_MAX_COUNT}
           >
             <Icon name="add" />
-            <span>新規メモリ</span>
+            <span><Trans>New memory</Trans></span>
           </button>
         </div>
         {memories.length === 0 ? (
-          <p className="history-empty">保存されたメモリはありません。</p>
+          <p className="history-empty"><Trans>No saved memories.</Trans></p>
         ) : entries.length === 0 ? (
-          <p className="history-empty">一致するメモリはありません。</p>
+          <p className="history-empty"><Trans>No matching memories.</Trans></p>
         ) : entries.map(({ memory, preview }) => {
-          const title = memory.title.trim() || "無題";
+          const title = memory.title.trim() || t`Untitled`;
           return (
             <div className="history-row" key={memory.id}>
-              <button className="history-item" type="button" title="このメモリを編集" onClick={() => onSelect(memory)}>
+              <button className="history-item" type="button" title={t`Edit this memory`} onClick={() => onSelect(memory)}>
                 <span className="history-title"><Highlight text={title} query={normalizedQuery} /></span>
                 {preview.trim() && <span className="history-preview"><Highlight text={preview} query={normalizedQuery} /></span>}
               </button>
               <button
                 className={memory.favorite ? "icon-button favorite" : "icon-button"}
                 type="button"
-                aria-label={memory.favorite ? "お気に入りを解除" : "お気に入りに追加"}
-                title={memory.favorite ? "お気に入りを解除" : "お気に入りに追加(AIは編集できなくなる)"}
+                aria-label={memory.favorite ? t`Remove from favorites` : t`Add to favorites`}
+                title={memory.favorite ? t`Remove from favorites` : t`Add to favorites (the AI will no longer be able to edit it)`}
                 aria-pressed={memory.favorite}
                 onClick={() => onToggleFavorite(memory)}
               >
                 <Icon name={memory.favorite ? "star" : "starBorder"} tone={memory.favorite ? "default" : "secondary"} />
               </button>
-              <button className="icon-button" type="button" aria-label="このメモリを削除" title="このメモリを削除" onClick={() => onDelete(memory)}>
+              <button className="icon-button" type="button" aria-label={t`Delete this memory`} title={t`Delete this memory`} onClick={() => onDelete(memory)}>
                 <Icon name="delete" tone="secondary" />
               </button>
             </div>
           );
         })}
       </div>
-      {memories.length > 0 && <SearchBar value={query} placeholder="メモリを検索" onChange={setQuery} />}
+      {memories.length > 0 && <SearchBar value={query} placeholder={t`Search memories`} onChange={setQuery} />}
     </>
   );
 }

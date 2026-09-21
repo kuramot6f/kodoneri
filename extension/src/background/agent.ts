@@ -1,6 +1,7 @@
 import { generateText, isLoopFinished, streamText } from "ai";
 import type { LanguageModelUsage, ModelMessage, ToolSet } from "ai";
 import type { CacheUsage } from "../shared/conversation";
+import { i18n } from "../shared/i18n.ts";
 import { taggedMessage } from "../shared/conversation.ts";
 import { MEMORY_CONTENT_MAX_LENGTH, MEMORY_MAX_COUNT } from "../shared/memory.ts";
 import type { ToolDetail, ToolOutput } from "../shared/protocol";
@@ -81,17 +82,17 @@ export async function streamAnswer(
       } else if (part.type === "error") {
         throw part.error;
       } else if (part.type === "abort") {
-        throw new DOMException("回答の生成を中止しました。", "AbortError");
+        throw new DOMException(i18n._({ id: "errors.responseCancelled", message: "Response generation was cancelled." }), "AbortError");
       }
     }
 
     const steps = await result.steps;
-    if (!steps.at(-1)?.text) throw new Error("回答を取得できませんでした。");
+    if (!steps.at(-1)?.text) throw new Error(i18n._({ id: "errors.noResponse", message: "No response was received." }));
     return { partial: { text: "", reasoning: "" }, cacheUsage, contextTokens };
   } catch (error) {
     const cancelled = isAbortError(error);
     return {
-      error: cancelled ? "回答の生成を中止しました。" : getErrorMessage(error),
+      error: cancelled ? i18n._({ id: "errors.responseCancelled", message: "Response generation was cancelled." }) : getErrorMessage(error),
       cancelled,
       partial: { text, reasoning },
       cacheUsage,
@@ -108,7 +109,7 @@ export async function generateTitle(runtime: ModelRuntime, question: string, ans
     providerOptions: runtime.providerOptions
   });
   const title = text.replace(/[\r\n]+/g, " ").trim().replace(/^[「『"']+|[」』"']+$/g, "").trim();
-  if (!title) throw new Error("タイトルを取得できませんでした。");
+  if (!title) throw new Error(i18n._({ id: "errors.noTitle", message: "No title was received." }));
   return title.slice(0, TITLE_MAX_LENGTH);
 }
 
@@ -122,7 +123,7 @@ export async function compact(runtime: ModelRuntime, prefix: ModelMessage[], sig
     providerOptions: runtime.providerOptions
   });
   const content = text.trim();
-  if (!content) throw new Error("会話の圧縮結果を取得できませんでした。");
+  if (!content) throw new Error(i18n._({ id: "errors.noCompaction", message: "No conversation compaction result was received." }));
   return `これは以前の会話を継続するための作業チェックポイントです。\n\n${content}`;
 }
 
@@ -166,5 +167,7 @@ function isAbortError(error: unknown): boolean {
 }
 
 function getErrorMessage(error: unknown): string {
-  return error instanceof Error && error.message ? error.message : "不明なエラーが発生しました。";
+  return error instanceof Error && error.message
+    ? error.message
+    : i18n._({ id: "errors.unknown", message: "An unknown error occurred." });
 }

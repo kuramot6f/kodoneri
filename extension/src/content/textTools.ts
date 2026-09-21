@@ -6,6 +6,7 @@ import {
 } from "../shared/textResource";
 import type { TextResourceOutput, ToolOutput } from "../shared/protocol";
 import { aggregateGrep } from "../shared/aggregateGrep";
+import { i18n } from "../shared/i18n.ts";
 import {
   parseTextToolCall,
   runTextTool,
@@ -44,11 +45,11 @@ export function createTextToolRunner(
         const call = parseTextToolCall(name, argumentsJson);
         if (call.name === "grep" && call.args.resourceType) {
           if (call.args.resourceType === "session" || call.args.resourceType === "tab") {
-            throw new Error(`${call.args.resourceType}の一括検索はBackgroundで実行されます。`);
+            throw new Error(i18n._({ id: "errors.backgroundSearch", message: "Bulk {resourceType} searches run in the background.", values: { resourceType: call.args.resourceType } }));
           }
           // Background strips a tab or iframe ref before delivery, so a remaining ref names a resource instead.
           if (call.args.ref !== undefined) {
-            throw new Error("resource_typeと併用するrefはタブかiframeの参照を指定してください。");
+            throw new Error(i18n._({ id: "errors.resourceTypeRef", message: "When used with resource_type, ref must identify a tab or iframe." }));
           }
           const resourceType = call.args.resourceType;
           return runAggregateGrep(
@@ -95,7 +96,7 @@ async function runAggregateGrep(
     resources: refs.map((ref) => ({ ref })),
     args,
     run: ({ ref }, offset) => run(ref, offset),
-    nonTextError: "テキストツールが画像を返しました。"
+    nonTextError: i18n._({ id: "errors.textToolReturnedImage", message: "The text tool returned an image." })
   });
   return {
     type: "text",
@@ -140,7 +141,7 @@ async function runSingleTextTool(
     const entry = resources.get(ref);
     if (entry) {
       if (entry.type !== "inline-text" && entry.type !== "svg") {
-        throw new Error("このrefは画像資源です。read_imageを使用してください。");
+        throw new Error(i18n._({ id: "errors.imageRefAsText", message: "This ref identifies an image resource. Use read_image." }));
       }
       const content = entry.content;
       const metadata: TextToolMetadata = { ref };
@@ -155,7 +156,7 @@ async function runSingleTextTool(
         : loadRemote(url);
       resourcePromise = load.then((resource) => {
         if (budget.loadedBytes + resource.byteLength > MAX_TOTAL_TEXT_RESOURCE_BYTES) {
-          throw new Error("この質問で取得できるテキスト資源の合計サイズが20 MiBを超えました。");
+          throw new Error(i18n._({ id: "errors.totalTextSize", message: "The text resources fetched for this question exceed 20 MiB in total." }));
         }
         budget.loadedBytes += resource.byteLength;
         return resource;
@@ -171,7 +172,9 @@ async function runSingleTextTool(
 }
 
 function getErrorMessage(error: unknown): string {
-  return error instanceof Error && error.message ? error.message : "テキストツールの実行に失敗しました。";
+  return error instanceof Error && error.message
+    ? error.message
+    : i18n._({ id: "errors.textToolFailed", message: "Text tool execution failed." });
 }
 
 function decodeHtmlAttribute(value: string): string {

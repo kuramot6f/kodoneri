@@ -5,6 +5,7 @@ import type {
   ToolOutput,
   WhoAmI
 } from "../shared/protocol";
+import { i18n } from "../shared/i18n.ts";
 import { createImageReader } from "./imageTools";
 import { interactWithPage } from "./interactionTools";
 import { createPageSnapshotState, preparePageSnapshot } from "./pageSnapshot";
@@ -26,7 +27,7 @@ const sessions = new Map<string, PageTools>();
 export const whoami: Promise<WhoAmI> = browser.runtime.sendMessage({ type: "whoami" } satisfies RuntimeMessage)
   .then((response: unknown) => {
     const me = response as Partial<WhoAmI> | undefined;
-    if (typeof me?.tabId !== "number" || typeof me.frameId !== "number") throw new Error("タブを特定できませんでした。");
+    if (typeof me?.tabId !== "number" || typeof me.frameId !== "number") throw new Error(i18n._({ id: "errors.identifyTab", message: "Could not identify the tab." }));
     return me as WhoAmI;
   });
 
@@ -75,7 +76,7 @@ function createPageTools(refPrefix: string, selection: PageSelection | null): Pa
 async function loadRemoteTextResource(url: string): Promise<TextResourceOutput> {
   const output = await browser.runtime.sendMessage({ type: "fetch", url } satisfies RuntimeMessage) as
     TextResourceOutput | { type: "error"; error: string } | undefined;
-  if (!output) throw new Error("テキスト資源を取得できませんでした。");
+  if (!output) throw new Error(i18n._({ id: "errors.fetchTextResource", message: "Could not fetch the text resource." }));
   if (output.type === "error") throw new Error(output.error);
   return output;
 }

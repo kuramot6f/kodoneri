@@ -1,10 +1,14 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { I18nProvider } from "@lingui/react";
 import type { RuntimeMessage, TabMessage, ToolOutput } from "../shared/protocol";
+import { activateBrowserLocale, i18n } from "../shared/i18n.ts";
 import { App } from "./App";
 import { CHAT_HOST_ID } from "./pageSelection";
 import { disposePageTools, getPageTools } from "./pageTools";
 import "./styles.css";
+
+activateBrowserLocale();
 
 browser.runtime.onMessage.addListener((message: TabMessage) => {
   if (message.type === "ping") return Promise.resolve(true);
@@ -17,7 +21,9 @@ browser.runtime.onMessage.addListener((message: TabMessage) => {
     return getPageTools(message.requestId, message.refPrefix).run(message.name, message.args)
       .catch((error: unknown): ToolOutput => ({
         type: "error",
-        error: error instanceof Error && error.message ? error.message : "ツールの実行に失敗しました。"
+        error: error instanceof Error && error.message
+          ? error.message
+          : i18n._({ id: "errors.toolExecutionFailed", message: "Tool execution failed." })
       }));
   }
 });
@@ -61,7 +67,9 @@ if (window === window.top && !document.getElementById(CHAT_HOST_ID)) {
 
   createRoot(root).render(
     <StrictMode>
-      <App />
+      <I18nProvider i18n={i18n}>
+        <App />
+      </I18nProvider>
     </StrictMode>
   );
 

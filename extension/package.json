@@ -5,9 +5,11 @@
   "type": "module",
   "packageManager": "pnpm@12.5.1",
   "scripts": {
-    "build": "corepack pnpm typecheck && corepack pnpm build:content && corepack pnpm build:background",
+    "build": "corepack pnpm i18n:compile && corepack pnpm typecheck && corepack pnpm build:content && corepack pnpm build:background",
     "build:content": "vite build --mode content",
     "build:background": "vite build --mode background",
+    "i18n:extract": "lingui extract --clean",
+    "i18n:compile": "lingui compile --typescript",
     "test": "node --experimental-strip-types --test test/*.test.ts",
     "typecheck": "tsc --noEmit"
   },
@@ -15,6 +17,8 @@
     "@ai-sdk/anthropic": "4.0.58",
     "@ai-sdk/deepseek": "^3.0.49",
     "@ai-sdk/openai": "4.0.71",
+    "@lingui/core": "6.7.0",
+    "@lingui/react": "6.7.0",
     "ai": "^7.0.107",
     "highlight.js": "^11.12.0",
     "marked": "^18.0.13",
@@ -23,6 +27,9 @@
     "react-dom": "^19.3.0"
   },
   "devDependencies": {
+    "@lingui/cli": "6.7.0",
+    "@lingui/vite-plugin": "6.7.0",
+    "@rolldown/plugin-babel": "^0.2.4",
     "@types/firefox-webext-browser": "^143.0.0",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
