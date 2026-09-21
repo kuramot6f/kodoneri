@@ -1,15 +1,15 @@
-import addIcon from "../../../design/plus.svg?url";
-import closeIcon from "../../../design/xmark.svg?url";
-import deleteIcon from "../../../design/trash.svg?url";
-import editIcon from "../../../design/square.and.pencil.svg?url";
-import historyIcon from "../../../design/clock.arrow.trianglehead.counterclockwise.rotate.90.svg?url";
-import menuIcon from "../../../design/line.3.horizontal.svg?url";
-import searchIcon from "../../../design/magnifyingglass.svg?url";
-import sendIcon from "../../../design/arrow.up.svg?url";
-import sidebarIcon from "../../../design/sidebar.left.svg?url";
-import starBorderIcon from "../../../design/star.svg?url";
-import stopIcon from "../../../design/stop.fill.svg?url";
-import tuneIcon from "../../../design/slider.horizontal.3.svg?url";
+import addIcon from "../../../design/plus.svg?raw";
+import closeIcon from "../../../design/xmark.svg?raw";
+import deleteIcon from "../../../design/trash.svg?raw";
+import editIcon from "../../../design/square.and.pencil.svg?raw";
+import historyIcon from "../../../design/clock.arrow.trianglehead.counterclockwise.rotate.90.svg?raw";
+import menuIcon from "../../../design/line.3.horizontal.svg?raw";
+import searchIcon from "../../../design/magnifyingglass.svg?raw";
+import sendIcon from "../../../design/arrow.up.svg?raw";
+import sidebarIcon from "../../../design/sidebar.left.svg?raw";
+import starBorderIcon from "../../../design/star.svg?raw";
+import stopIcon from "../../../design/stop.fill.svg?raw";
+import tuneIcon from "../../../design/slider.horizontal.3.svg?raw";
 
 // design/ に対応するものがない補助アイコンだけ Material Icons のパスを使う。
 const PATHS = {
@@ -21,7 +21,7 @@ const PATHS = {
   star: "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z",
 } as const;
 
-const MASKS = {
+const INLINE_SVGS = {
   add: addIcon,
   close: closeIcon,
   delete: deleteIcon,
@@ -36,16 +36,16 @@ const MASKS = {
   tune: tuneIcon
 } as const;
 
-type IconName = keyof typeof PATHS | keyof typeof MASKS;
+type IconName = keyof typeof PATHS | keyof typeof INLINE_SVGS;
 
 export function Icon({ name }: { name: IconName }) {
-  if (name in MASKS) {
-    const source = MASKS[name as keyof typeof MASKS];
+  if (name in INLINE_SVGS) {
+    const source = INLINE_SVGS[name as keyof typeof INLINE_SVGS];
     return (
       <span
         className="icon"
-        style={{ maskImage: `url(${source})`, WebkitMaskImage: `url(${source})` }}
         aria-hidden="true"
+        dangerouslySetInnerHTML={{ __html: source }}
       />
     );
   }
