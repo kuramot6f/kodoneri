@@ -53,7 +53,7 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
     void browser.runtime.sendMessage({ type: "settings", settings } satisfies RuntimeMessage);
   };
 
-  const model = view?.settings && view.models.find(({ id }) => id === view.settings!.model);
+  const model = view?.settings && view.models.find(({ key }) => key === view.settings!.model);
   const providers = Object.keys(PROVIDERS) as (keyof typeof PROVIDERS)[];
 
   return (
@@ -65,17 +65,17 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
           <label className="model-menu-row">
             <span><Trans>Model</Trans></span>
             <select
-              value={model.id}
+              value={model.key}
               onChange={(event) => {
-                const next = view.models.find(({ id }) => id === event.target.value)!;
-                save({ model: next.id, effort: clampEffort(next, view.settings!.effort) });
+                const next = view.models.find(({ key }) => key === event.target.value)!;
+                save({ model: next.key, effort: clampEffort(next, view.settings!.effort) });
               }}
             >
               {providers.map((provider) => {
                 const models = view.models.filter((candidate) => candidate.provider === provider);
                 return models.length === 0 ? null : (
                   <optgroup label={PROVIDERS[provider]} key={provider}>
-                    {models.map(({ id, label }) => <option value={id} key={id}>{label}</option>)}
+                    {models.map(({ key, label }) => <option value={key} key={key}>{label}</option>)}
                   </optgroup>
                 );
               })}
@@ -90,7 +90,7 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
                 max={model.efforts.length - 1}
                 step={1}
                 value={model.efforts.indexOf(view.settings.effort)}
-                onChange={(event) => save({ model: model.id, effort: model.efforts[Number(event.target.value)]! })}
+                onChange={(event) => save({ model: model.key, effort: model.efforts[Number(event.target.value)]! })}
               />
               <output>{EFFORT_LABELS[view.settings.effort]}</output>
             </label>
