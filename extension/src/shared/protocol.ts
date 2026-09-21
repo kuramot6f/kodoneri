@@ -98,7 +98,9 @@ export type PanelMessage =
     }
   | { type: "cancel" }
   | { type: "open"; conversationId: string | null }
-  | { type: "panel"; panel: Partial<PanelState> };
+  | { type: "panel"; panel: Partial<PanelState> }
+  /** Answered with the current state at once, so the panel can tell a live port from a dead one. */
+  | { type: "ping" };
 
 /** Background → Content over the "panel" port. */
 export type PanelEvent =

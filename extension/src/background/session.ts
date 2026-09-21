@@ -60,12 +60,20 @@ export function getSession(tabId: number): Promise<Session> {
 
 async function restoreSession(tabId: number): Promise<Session> {
   const key = `tab:${tabId}`;
-  const stored = (await browser.storage.session.get(key))[key] as StoredTabState | undefined;
+  let stored: StoredTabState | undefined;
+  let conversation: Conversation | null = null;
+  try {
+    stored = (await browser.storage.session.get(key))[key] as StoredTabState | undefined;
+    if (stored?.conversationId) conversation = await loadConversation(stored.conversationId);
+  } catch {
+    // Stored tab state that cannot be read would otherwise keep this tab without a panel for good.
+    stored = undefined;
+  }
   const session: Session = {
     tabId,
     port: null,
     panel: { ...DEFAULT_PANEL, ...stored?.panel },
-    conversation: stored?.conversationId ? await loadConversation(stored.conversationId) : null,
+    conversation,
     run: null,
     step: null,
     compacting: false,
@@ -130,6 +138,8 @@ export async function moveSession(session: Session, targetTabId: number): Promis
 }
 
 async function handle(session: Session, message: PanelMessage): Promise<void> {
+  // Replied before any await so a slow ask or open never looks like a dead port.
+  if (message.type === "ping") return pushState(session);
   if (message.type === "ask") return ask(session, message);
   if (message.type === "cancel") return session.run?.controller.abort();
   if (message.type === "open") {
