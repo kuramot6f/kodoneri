@@ -1,0 +1,485 @@
+/* ホスト要素にはページ側の通常ルール(`* { font-family }` 等)が :host より優先される。
+   !important 同士なら Shadow 内が勝つので、継承の起点になる宣言は全部 !important で固定する */
+:host {
+  all: initial !important;
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 2147483647 !important;
+  font: 14px -apple-system, system-ui, sans-serif !important;
+  color: var(--text) !important;
+  --text: #000;
+  --text-secondary: #3c3c4399;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+button, textarea, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: default; opacity: .4; }
+
+/* 背後のパネルだけ強いすりガラス。中の部品はその上に乗るのでほぼ素通しでよい。
+   #panel 自体に backdrop-filter を置くと、Safari は子孫(header/.bottom-bar の縁ぼかし)の
+   backdrop-filter を白く誤描画するので、兄弟層になる ::before に持たせる */
+#panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+}
+
+/* ピル型のガラス部品: 上端の白い光、下端の暗いリム、細いリング、薄い落ち影を1つのbox-shadowにまとめる */
+.composer-row textarea, .search-input, .round, .pill, .selection-option, .segmented {
+  border: 0;
+  border-radius: 1000px;
+  background: linear-gradient(#fff2, #fff0 58%, #00000009), #f2f2f28d;
+  box-shadow:
+    0 0 0 .5px #e8e8e8, 0 8px 15px #00000005,
+    inset 0 1px 0 #fff5, inset 0 -1px 0 #0000000f,
+    inset 0 40px 30px -40px #0000001a;
+  backdrop-filter: blur(4px) saturate(.84);
+  -webkit-backdrop-filter: blur(4px) saturate(.84);
+}
+
+/* ホストは画面全体を覆う透明な層で、パネル自身がレイアウトごとに位置を決める */
+#panel {
+  position: fixed;
+  z-index: 0;
+  display: flex;
+  pointer-events: auto;
+  border: 1px solid #fff9;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.43);
+  box-shadow: 0 8px 32px #0003;
+}
+/* フローティング: 右下に浮かぶ。ドラッグ後はインラインstyleのleft/topが優先される */
+#panel[data-layout="floating"] {
+  right: 16px;
+  bottom: 16px;
+  width: min(380px, calc(100vw - 24px));
+  height: min(600px, calc(100vh - 24px));
+}
+#panel[data-layout="floating"] header { cursor: grab; }
+/* サイドバー: 右端に全高で固定。幅はApp側でページのmargin-rightにも使う */
+#panel[data-layout="sidebar"] {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 380px;
+  border-width: 0 0 0 1px;
+  border-radius: 0;
+}
+/* スマホ: フローティングと同じ見た目のまま大きさを固定し、拡大時は画面中央に大きく表示する */
+#panel[data-layout="phone"] {
+  right: 12px;
+  bottom: 12px;
+  width: calc(100vw - 24px);
+  height: 50vh;
+}
+#panel[data-layout="phone-expanded"] { inset: 7.5vh 12px; }
+.panel-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: inherit;
+  overflow-y: auto;
+}
+
+/* リサイズ用の透明な縁。辺は8px幅、隅は14px四方でパネルの外側へ4pxはみ出す */
+.edge { position: absolute; z-index: 2; touch-action: none; }
+.edge[data-edge="n"], .edge[data-edge="s"] { left: 8px; right: 8px; height: 8px; cursor: ns-resize; }
+.edge[data-edge="e"], .edge[data-edge="w"] { top: 8px; bottom: 8px; width: 8px; cursor: ew-resize; }
+.edge[data-edge*="n"] { top: -4px; }
+.edge[data-edge*="s"] { bottom: -4px; }
+.edge[data-edge*="e"] { right: -4px; }
+.edge[data-edge*="w"] { left: -4px; }
+.edge[data-edge="nw"], .edge[data-edge="se"] { width: 14px; height: 14px; cursor: nwse-resize; }
+.edge[data-edge="ne"], .edge[data-edge="sw"] { width: 14px; height: 14px; cursor: nesw-resize; }
+
+.round {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+}
+.icon {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  background: currentColor;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+}
+svg.icon { background: none; }
+
+/* fill + shadow → #08F の plus-darker レイヤー → glass effect → 白いアイコン */
+.accent-action {
+  position: relative;
+  isolation: isolate;
+  background: #f2f2f28d;
+  color: #fff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.accent-action::before, .accent-action::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.accent-action::before {
+  z-index: 0;
+  background: #08f;
+  mix-blend-mode: plus-darker;
+}
+.accent-action::after {
+  z-index: 1;
+  background: linear-gradient(#fff3, #fff0 58%, #0001);
+  box-shadow: inset 0 1px 0 #fff7, inset 0 -1px 0 #0002;
+  backdrop-filter: blur(4px) saturate(.84);
+  -webkit-backdrop-filter: blur(4px) saturate(.84);
+}
+.round:not(:disabled):hover { filter: brightness(1.08); }
+.pill { height: 40px; padding: 0 16px; font-weight: 600; }
+.pill:not(:disabled):hover { filter: brightness(1.08); }
+.header-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ヘッダーとボトムバーはコンテンツの上に浮かせ、blur量の違う2層を並べた段階ぼかしで縁を馴染ませる
+   (mask-image によるフェードは Safari で白く誤描画されるため使わない) */
+header, .bottom-bar { display: flex; gap: 8px; padding: 12px; position: sticky; z-index: 1; }
+header { top: 0; align-items: center; justify-content: space-between; touch-action: none; user-select: none; }
+.bottom-bar { bottom: 0; flex-direction: column; }
+
+header::before, header::after, .bottom-bar::before, .bottom-bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+/* コンテンツ側の層: 弱くぼかす */
+header::before { bottom: 0; height: 50%; }
+.bottom-bar::before { top: 0; height: 40%; }
+header::before, .bottom-bar::before {
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+}
+/* パネルの縁側の層: 強くぼかす */
+header::after { top: 0; height: 50%; }
+.bottom-bar::after { bottom: 0; height: 60%; }
+header::after, .bottom-bar::after {
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+/* スマホではぼかし帯をバーの縁側だけに寄せて短くする(幅の判定は device.ts の PHONE_QUERY と同じ) */
+@media (max-width: 599px) {
+  header::after, .bottom-bar::after { height: 30%; }
+  header::before { top: 30%; bottom: auto; height: 15%; }
+  .bottom-bar::before { top: auto; bottom: 30%; height: 15%; }
+}
+.header-actions { display: flex; gap: 8px; }
+
+/* チャット/メモリ切替のセグメント。選択中の白いピルが --tab-index に合わせて滑る */
+.segmented {
+  position: relative;
+  display: flex;
+  margin: 0 12px 8px;
+  padding: 3px;
+}
+.segmented button {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  padding: 7px;
+  border: 0;
+  border-radius: 1000px;
+  background: none;
+  color: var(--text-secondary);
+  font-weight: 600;
+  transition: color .2s;
+}
+.segmented button[aria-selected="true"] { color: var(--text); }
+.segmented-thumb {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / var(--tab-count));
+  border-radius: 1000px;
+  background: linear-gradient(#fff9, #fff5), #fffc;
+  box-shadow: 0 1px 3px #0000001f, inset 0 1px 0 #fff;
+  transform: translateX(calc(100% * var(--tab-index)));
+  transition: transform .25s cubic-bezier(.3, 1.2, .4, 1);
+}
+
+#history-view { flex: 1; padding: 0 8px 12px; }
+
+.history-group h2 {
+  margin: 8px 12px 4px;
+  color: var(--text-secondary);
+  font-size: 18px;
+  font-weight: 600;
+}
+.history-group + .history-group { margin-top: 8px; }
+
+.history-row { display: flex; align-items: center; gap: 2px; }
+.history-item {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 14px;
+  background: none;
+  text-align: left;
+}
+.history-item:hover { background: #0000000d; }
+/* メモリ一覧の先頭に右寄せで置く新規作成ボタン。リストと一緒にスクロールする */
+.add-row { display: flex; justify-content: flex-end; padding: 0 4px 8px; }
+.add-memory { display: inline-flex; align-items: center; gap: 6px; }
+
+/* エントリ右端のゴミ箱。クリックで確認なしに削除する */
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 1000px;
+  background: none;
+  color: var(--text-secondary);
+}
+.icon-button:hover { background: #0000000d; color: var(--text); }
+.icon-button.favorite { color: #f5a623; }
+.history-title { display: block; font-weight: 600; overflow-wrap: anywhere; }
+.history-preview {
+  display: -webkit-box;
+  margin-top: 2px;
+  overflow: hidden;
+  color: var(--text-secondary);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.history-empty { margin: 12px; color: var(--text-secondary); }
+.history-item mark { background: #ffd60a80; color: inherit; }
+
+.search-row { display: flex; gap: 8px; }
+.search-input {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  padding: 10px 16px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.search-input::placeholder { color: var(--text-secondary); }
+
+#messages { flex: 1; padding: 0 16px; }
+
+.message {
+  margin-bottom: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.user {
+  width: fit-content;
+  max-width: 80%;
+  margin-left: auto;
+  padding: 8px 14px;
+  border-radius: 18px;
+  background: #ccc;
+}
+.selection {
+  margin-bottom: 6px;
+  max-height: 160px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  background: none;
+  color: var(--text-secondary);
+}
+.selection-media { margin-top: 4px; font-size: 12px; }
+.error { color: #c0392b; }
+
+.markdown { white-space: normal; }
+.markdown > :first-child { margin-top: 0; }
+.markdown > :last-child { margin-bottom: 0; }
+.markdown p, .markdown ul, .markdown ol, .markdown pre { margin: .5em 0; }
+.markdown ul, .markdown ol { padding-left: 1.5em; }
+.markdown pre {
+  overflow-x: auto;
+  border: 1px solid #00000012;
+  border-radius: 10px;
+  background: #f6f6f7;
+  white-space: pre;
+}
+.markdown :is(h1, h2, h3, h4, h5, h6) { margin: 1em 0 .5em; font-size: 1.1em; }
+.markdown a { color: #007aff; }
+.markdown code { font-family: ui-monospace, monospace; }
+.markdown pre code { display: block; padding: 10px 12px; }
+.markdown .hljs-comment, .markdown .hljs-quote { color: #6e7781; font-style: italic; }
+.markdown .hljs-keyword, .markdown .hljs-selector-tag, .markdown .hljs-literal, .markdown .hljs-type { color: #cf222e; }
+.markdown .hljs-string, .markdown .hljs-regexp, .markdown .hljs-addition { color: #0a7a35; }
+.markdown .hljs-number, .markdown .hljs-symbol, .markdown .hljs-bullet { color: #0550ae; }
+.markdown .hljs-title, .markdown .hljs-section, .markdown .hljs-built_in, .markdown .hljs-name { color: #8250df; }
+.markdown .hljs-attr, .markdown .hljs-attribute, .markdown .hljs-variable, .markdown .hljs-template-variable, .markdown .hljs-property { color: #953800; }
+.markdown .hljs-meta, .markdown .hljs-selector-id, .markdown .hljs-selector-class { color: #116329; }
+.markdown .hljs-deletion { color: #82071e; background: #ffebe9; }
+.markdown .hljs-addition { background: #dafbe1; }
+.markdown .hljs-emphasis { font-style: italic; }
+.markdown .hljs-strong { font-weight: 600; }
+
+/* 思考・ツール呼び出しの折りたたみ */
+details {
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+summary {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+summary::-webkit-details-marker { display: none; }
+summary svg { flex: none; width: 16px; height: 16px; transition: transform .2s; }
+details[open] summary svg { transform: rotate(180deg); }
+details pre {
+  max-height: 240px;
+  margin: 6px 0 0 18px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+}
+
+.composer-row { display: flex; align-items: flex-end; gap: 8px; }
+.composer-row textarea {
+  flex: 1;
+  min-height: 40px;
+  max-height: 160px;
+  border-radius: 20px; /* 1行時(40px)はピル型、伸びても角は20px固定 */
+  field-sizing: content;
+  padding: 10px 16px;
+  resize: none;
+  outline: none;
+}
+textarea::placeholder { color: var(--text-secondary); }
+
+/* iOS Safari は 16px 未満の入力欄にフォーカスするとページを自動ズームする */
+@media (pointer: coarse) {
+  .composer-row textarea, .search-input { font-size: 16px; }
+}
+
+.selection-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 10px 18px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+}
+.selection-option input { margin: 0; accent-color: #007aff; }
+
+.cache-rate {
+  color: var(--text-secondary);
+  font-size: 11px;
+  text-align: right;
+}
+
+/* モデルと思考量。入力欄左のボタンの真上に開く小さなガラス板 */
+.model-menu-anchor { position: relative; flex: none; }
+.model-menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 260px;
+  padding: 12px 14px;
+  border: 1px solid #fff9;
+  border-radius: 16px;
+  background: #f2f2f2f2;
+  box-shadow: 0 8px 32px #0003, 0 0 0 .5px #e8e8e8;
+}
+.model-menu-row { display: flex; align-items: center; gap: 10px; }
+.model-menu-row > span { flex: none; width: 44px; color: var(--text-secondary); font-size: 12px; }
+.model-menu-row select { flex: 1; min-width: 0; height: 28px; border: 0; border-radius: 8px; background: #0000000d; padding: 0 8px; }
+.model-menu-row input[type="range"] { flex: 1; min-width: 0; margin: 0; accent-color: #007aff; }
+.model-menu-row output { flex: none; width: 48px; text-align: right; font-size: 12px; font-variant-numeric: tabular-nums; }
+.model-menu-empty { margin: 0; color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
+
+/* メモリ編集。自動保存なので枠なしのタイトルと本文だけを置く */
+#memory-editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px 20px;
+}
+.memory-title, .memory-content {
+  border: 0;
+  padding: 0;
+  background: none;
+  outline: none;
+  overflow-wrap: anywhere;
+}
+.memory-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #0000001f;
+}
+.memory-title-label { flex: none; color: var(--text-secondary); }
+.memory-title { flex: 1; min-width: 0; font-weight: 600; }
+.memory-content {
+  flex: 1;
+  margin-top: 12px;
+  resize: none;
+  line-height: 1.5;
+}
+.memory-title::placeholder { color: var(--text-secondary); }
+.memory-count { color: var(--text-secondary); font-size: 11px; text-align: right; }
+
+/* 回答後に走るメモリ保守。思考・tool_callは通常と同じ部品で、見出しと結びの一文だけ控えめにする */
+.memory-update { margin-top: 4px; }
+.memory-update-label { margin-bottom: 6px; color: var(--text-secondary); font-size: 12px; font-weight: 600; }
+.memory-update-note { color: var(--text-secondary); }
