@@ -5,6 +5,7 @@
 //  Created by Daichi on 9/19/26.
 //
 
+import AuthenticationServices
 import SwiftUI
 
 /// A grouped form, so the window reads like Settings on both platforms.
@@ -18,6 +19,7 @@ struct ContentView: View {
                 AppHeader()
             }
 
+            GatewaySection()
             ApiKeysSection()
         }
         .formStyle(.grouped)
@@ -90,6 +92,69 @@ private struct ApiKeysSection: View {
                 ApiKeyStore.write(provider, value)
             }
         )
+    }
+
+}
+
+/// Sign in with Apple is traded for a gateway token, which is kept in the Keychain like an API key.
+private struct GatewaySection: View {
+
+    @State private var isSignedIn = false
+    @State private var error: String?
+
+    var body: some View {
+        Section {
+            if isSignedIn {
+                LabeledContent("Apple ID") {
+                    Button("Sign Out") {
+                        ApiKeyStore.delete("chatext")
+                        isSignedIn = false
+                    }
+                }
+            } else {
+                SignInWithAppleButton(.signIn) { request in
+                    request.requestedScopes = []
+                } onCompletion: { result in
+                    Task { await signIn(result) }
+                }
+                .frame(height: 36)
+            }
+            if let error {
+                Text(error)
+                    .font(.footnote)
+                    .foregroundStyle(.red)
+            }
+        } header: {
+            Text("chatext")
+        } footer: {
+            Text("Signing in adds a model that needs no API key.")
+        }
+        .task {
+            isSignedIn = await Task.detached { ApiKeyStore.read("chatext") != nil }.value
+        }
+    }
+
+    private func signIn(_ result: Result<ASAuthorization, Error>) async {
+        do {
+            guard let credential = try result.get().credential as? ASAuthorizationAppleIDCredential,
+                  let identityToken = credential.identityToken.flatMap({ String(data: $0, encoding: .utf8) }) else { return }
+            var request = URLRequest(url: gatewayURL.appending(path: "auth/apple"))
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = try JSONEncoder().encode(["identityToken": identityToken])
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard (response as? HTTPURLResponse)?.statusCode == 200,
+                  let token = try JSONDecoder().decode([String: String].self, from: data)["token"] else {
+                throw URLError(.badServerResponse)
+            }
+            ApiKeyStore.write("chatext", token)
+            isSignedIn = true
+            error = nil
+        } catch ASAuthorizationError.canceled {
+            // The user dismissed the sheet; nothing to report.
+        } catch {
+            self.error = error.localizedDescription
+        }
     }
 
 }

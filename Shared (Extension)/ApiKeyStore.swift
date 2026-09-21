@@ -3,6 +3,7 @@
 //  Shared (Extension)
 //
 //  API keys shared by the app and the extension through the iCloud-synchronized Keychain.
+//  The chatext gateway token lives here too, under the "chatext" provider.
 //
 
 import Foundation
@@ -10,7 +11,7 @@ import Security
 
 nonisolated enum ApiKeyStore {
 
-    static let providers = ["openai", "anthropic", "deepseek"]
+    static let providers = ["openai", "anthropic", "deepseek", "chatext"]
 
     private static let service = "kuramot6f.chatext.apiKeys"
 
