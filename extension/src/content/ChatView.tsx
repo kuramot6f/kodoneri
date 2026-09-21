@@ -137,7 +137,7 @@ export function ChatView({
             disabled={!busy && !question.trim()}
             onClick={showStop ? onStop : undefined}
           >
-            <Icon name={showStop ? "stop" : "send"} />
+            <Icon name={showStop ? "stop" : "send"} tone="inverse" />
           </button>
         </div>
         {cacheUsage && <CacheRate usage={cacheUsage} />}

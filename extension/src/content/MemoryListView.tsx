@@ -60,10 +60,10 @@ export function MemoryListView({ memories, onCreate, onSelect, onToggleFavorite,
                 aria-pressed={memory.favorite}
                 onClick={() => onToggleFavorite(memory)}
               >
-                <Icon name={memory.favorite ? "star" : "starBorder"} />
+                <Icon name={memory.favorite ? "star" : "starBorder"} tone={memory.favorite ? "default" : "secondary"} />
               </button>
               <button className="icon-button" type="button" aria-label="このメモリを削除" title="このメモリを削除" onClick={() => onDelete(memory)}>
-                <Icon name="delete" />
+                <Icon name="delete" tone="secondary" />
               </button>
             </div>
           );
