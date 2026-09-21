@@ -1,0 +1,73 @@
+diff --git a/dist/index.js b/dist/index.js
+index d27abff4302c3b084651d99f4ab6f2057aae1797..042f02734a159a5bb61e188a24bb6cf4fb4776b6 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -2983,6 +2983,19 @@ async function convertToAnthropicPrompt({
+                             });
+                             return void 0;
+                           }
++                          if (contentPart.data.type === "reference") {
++                            betas.add("files-api-2025-04-14");
++                            return {
++                              type: topLevel === "image" ? "image" : "document",
++                              source: {
++                                type: "file",
++                                file_id: resolveProviderReference({
++                                  reference: contentPart.data.reference,
++                                  provider: "anthropic"
++                                })
++                              }
++                            };
++                          }
+                           warnings.push({
+                             type: "other",
+                             message: `unsupported tool content part type: ${contentPart.type} with data type: ${contentPart.data.type}`
+diff --git a/dist/internal/index.js b/dist/internal/index.js
+index b6794ec87ececd072f2d268a53fa051f6d468957..c4ffe33221f3c37c3fef481b580155048da6d764 100644
+--- a/dist/internal/index.js
++++ b/dist/internal/index.js
+@@ -2968,6 +2968,19 @@ async function convertToAnthropicPrompt({
+                             });
+                             return void 0;
+                           }
++                          if (contentPart.data.type === "reference") {
++                            betas.add("files-api-2025-04-14");
++                            return {
++                              type: topLevel === "image" ? "image" : "document",
++                              source: {
++                                type: "file",
++                                file_id: resolveProviderReference({
++                                  reference: contentPart.data.reference,
++                                  provider: "anthropic"
++                                })
++                              }
++                            };
++                          }
+                           warnings.push({
+                             type: "other",
+                             message: `unsupported tool content part type: ${contentPart.type} with data type: ${contentPart.data.type}`
+diff --git a/src/convert-to-anthropic-prompt.ts b/src/convert-to-anthropic-prompt.ts
+index a6e7622d02229d38cc04f4088c007fd208f1a71b..49abad33df1688835e457521924456fc2314344b 100644
+--- a/src/convert-to-anthropic-prompt.ts
++++ b/src/convert-to-anthropic-prompt.ts
+@@ -585,6 +585,20 @@ export async function convertToAnthropicPrompt({
+                               return undefined;
+                             }
+ 
++                            if (contentPart.data.type === 'reference') {
++                              betas.add('files-api-2025-04-14');
++                              return {
++                                type: topLevel === 'image' ? 'image' : 'document',
++                                source: {
++                                  type: 'file',
++                                  file_id: resolveProviderReference({
++                                    reference: contentPart.data.reference,
++                                    provider: 'anthropic',
++                                  }),
++                                },
++                              };
++                            }
++
+                             warnings.push({
+                               type: 'other',
+                               message: `unsupported tool content part type: ${contentPart.type} with data type: ${contentPart.data.type}`,

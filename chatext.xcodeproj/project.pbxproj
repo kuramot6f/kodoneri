@@ -1,0 +1,948 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 110;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		422D2BF6305E3AA1007990AD /* chatext Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 422D2BF5305E3AA1007990AD /* chatext Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		422D2C00305E3AA1007990AD /* chatext Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 422D2BFF305E3AA1007990AD /* chatext Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		422D2BF7305E3AA1007990AD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 422D2BBC305E3AA0007990AD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 422D2BF4305E3AA1007990AD;
+			remoteInfo = "chatext Extension (iOS)";
+		};
+		422D2C01305E3AA1007990AD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 422D2BBC305E3AA0007990AD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 422D2BFE305E3AA1007990AD;
+			remoteInfo = "chatext Extension (macOS)";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		422D2C28305E3AA1007990AD /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolder = PlugIns;
+			files = (
+				422D2BF6305E3AA1007990AD /* chatext Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+		};
+		422D2C32305E3AA1007990AD /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolder = PlugIns;
+			files = (
+				422D2C00305E3AA1007990AD /* chatext Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		422D2BD8305E3AA1007990AD /* chatext.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chatext.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		422D2BEA305E3AA1007990AD /* chatext.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chatext.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		422D2BF5305E3AA1007990AD /* chatext Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "chatext Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		422D2BFF305E3AA1007990AD /* chatext Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "chatext Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		422D2D14305E3AA1007990AD /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
+		422D2D15305E3AA1007990AD /* tsconfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tsconfig.json; sourceTree = "<group>"; };
+		422D2D16305E3AA1007990AD /* vite.config.ts */ = {isa = PBXFileReference; lastKnownFileType = text; path = vite.config.ts; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		422D2C23305E3AA1007990AD /* Exceptions for "Shared (App)" folder in "chatext (iOS)" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				ChatextApp.swift,
+				ContentView.swift,
+			);
+			target = 422D2BD7305E3AA1007990AD /* chatext (iOS) */;
+		};
+		422D2C27305E3AA1007990AD /* Exceptions for "iOS (Extension)" folder in "chatext Extension (iOS)" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 422D2BF4305E3AA1007990AD /* chatext Extension (iOS) */;
+		};
+		422D2C2D305E3AA1007990AD /* Exceptions for "Shared (App)" folder in "chatext (macOS)" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				ChatextApp.swift,
+				ContentView.swift,
+			);
+			target = 422D2BE9305E3AA1007990AD /* chatext (macOS) */;
+		};
+		422D2C31305E3AA1007990AD /* Exceptions for "macOS (Extension)" folder in "chatext Extension (macOS)" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 422D2BFE305E3AA1007990AD /* chatext Extension (macOS) */;
+		};
+		422D2C36305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext Extension (iOS)" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ApiKeyStore.swift,
+				SafariWebExtensionHandler.swift,
+			);
+			target = 422D2BF4305E3AA1007990AD /* chatext Extension (iOS) */;
+		};
+		422D2C37305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext Extension (macOS)" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ApiKeyStore.swift,
+				SafariWebExtensionHandler.swift,
+			);
+			target = 422D2BFE305E3AA1007990AD /* chatext Extension (macOS) */;
+		};
+		422D2E01305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext (iOS)" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ApiKeyStore.swift,
+			);
+			target = 422D2BD7305E3AA1007990AD /* chatext (iOS) */;
+		};
+		422D2E02305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext (macOS)" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ApiKeyStore.swift,
+			);
+			target = 422D2BE9305E3AA1007990AD /* chatext (macOS) */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		422D2BC0305E3AA0007990AD /* Shared (App) */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				422D2C23305E3AA1007990AD /* Exceptions for "Shared (App)" folder in "chatext (iOS)" target */,
+				422D2C2D305E3AA1007990AD /* Exceptions for "Shared (App)" folder in "chatext (macOS)" target */,
+			);
+			path = "Shared (App)";
+			sourceTree = "<group>";
+		};
+		422D2BC9305E3AA1007990AD /* Shared (Extension) */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				422D2C36305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext Extension (iOS)" target */,
+				422D2C37305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext Extension (macOS)" target */,
+				422D2E01305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext (iOS)" target */,
+				422D2E02305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext (macOS)" target */,
+			);
+			path = "Shared (Extension)";
+			sourceTree = "<group>";
+		};
+		422D2BF9305E3AA1007990AD /* iOS (Extension) */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				422D2C27305E3AA1007990AD /* Exceptions for "iOS (Extension)" folder in "chatext Extension (iOS)" target */,
+			);
+			path = "iOS (Extension)";
+			sourceTree = "<group>";
+		};
+		422D2C03305E3AA1007990AD /* macOS (Extension) */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				422D2C31305E3AA1007990AD /* Exceptions for "macOS (Extension)" folder in "chatext Extension (macOS)" target */,
+			);
+			path = "macOS (Extension)";
+			sourceTree = "<group>";
+		};
+		422D2D10305E3AA1007990AD /* src */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = src;
+			sourceTree = "<group>";
+		};
+		422D2D11305E3AA1007990AD /* test */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = test;
+			sourceTree = "<group>";
+		};
+		422D2D12305E3AA1007990AD /* public */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = public;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		422D2BD5305E3AA1007990AD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		422D2BE7305E3AA1007990AD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		422D2BF2305E3AA1007990AD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		422D2BFC305E3AA1007990AD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		422D2BBB305E3AA0007990AD = {
+			isa = PBXGroup;
+			children = (
+				422D2BC0305E3AA0007990AD /* Shared (App) */,
+				422D2BC9305E3AA1007990AD /* Shared (Extension) */,
+				422D2BF9305E3AA1007990AD /* iOS (Extension) */,
+				422D2C03305E3AA1007990AD /* macOS (Extension) */,
+				422D2D13305E3AA1007990AD /* extension */,
+				422D2BD9305E3AA1007990AD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		422D2BD9305E3AA1007990AD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				422D2BD8305E3AA1007990AD /* chatext.app */,
+				422D2BEA305E3AA1007990AD /* chatext.app */,
+				422D2BF5305E3AA1007990AD /* chatext Extension.appex */,
+				422D2BFF305E3AA1007990AD /* chatext Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		422D2D13305E3AA1007990AD /* extension */ = {
+			isa = PBXGroup;
+			children = (
+				422D2D10305E3AA1007990AD /* src */,
+				422D2D11305E3AA1007990AD /* test */,
+				422D2D12305E3AA1007990AD /* public */,
+				422D2D14305E3AA1007990AD /* package.json */,
+				422D2D15305E3AA1007990AD /* tsconfig.json */,
+				422D2D16305E3AA1007990AD /* vite.config.ts */,
+			);
+			path = extension;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		422D2BD7305E3AA1007990AD /* chatext (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 422D2C29305E3AA1007990AD /* Build configuration list for PBXNativeTarget "chatext (iOS)" */;
+			buildPhases = (
+				422D2BD4305E3AA1007990AD /* Sources */,
+				422D2BD5305E3AA1007990AD /* Frameworks */,
+				422D2BD6305E3AA1007990AD /* Resources */,
+				422D2C28305E3AA1007990AD /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				422D2BF8305E3AA1007990AD /* PBXTargetDependency */,
+			);
+			name = "chatext (iOS)";
+			productName = "chatext (iOS)";
+			productReference = 422D2BD8305E3AA1007990AD /* chatext.app */;
+			productType = "com.apple.product-type.application";
+		};
+		422D2BE9305E3AA1007990AD /* chatext (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 422D2C33305E3AA1007990AD /* Build configuration list for PBXNativeTarget "chatext (macOS)" */;
+			buildPhases = (
+				422D2BE6305E3AA1007990AD /* Sources */,
+				422D2BE7305E3AA1007990AD /* Frameworks */,
+				422D2BE8305E3AA1007990AD /* Resources */,
+				422D2C32305E3AA1007990AD /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				422D2C02305E3AA1007990AD /* PBXTargetDependency */,
+			);
+			name = "chatext (macOS)";
+			productName = "chatext (macOS)";
+			productReference = 422D2BEA305E3AA1007990AD /* chatext.app */;
+			productType = "com.apple.product-type.application";
+		};
+		422D2BF4305E3AA1007990AD /* chatext Extension (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 422D2C24305E3AA1007990AD /* Build configuration list for PBXNativeTarget "chatext Extension (iOS)" */;
+			buildPhases = (
+				422D2BF1305E3AA1007990AD /* Sources */,
+				422D2BF2305E3AA1007990AD /* Frameworks */,
+				422D2BF3305E3AA1007990AD /* Resources */,
+				422D2D01305E3AA1007990AD /* Build Web Extension */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				422D2BF9305E3AA1007990AD /* iOS (Extension) */,
+			);
+			name = "chatext Extension (iOS)";
+			productName = "chatext Extension (iOS)";
+			productReference = 422D2BF5305E3AA1007990AD /* chatext Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		422D2BFE305E3AA1007990AD /* chatext Extension (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 422D2C2E305E3AA1007990AD /* Build configuration list for PBXNativeTarget "chatext Extension (macOS)" */;
+			buildPhases = (
+				422D2BFB305E3AA1007990AD /* Sources */,
+				422D2BFC305E3AA1007990AD /* Frameworks */,
+				422D2BFD305E3AA1007990AD /* Resources */,
+				422D2D02305E3AA1007990AD /* Build Web Extension */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				422D2C03305E3AA1007990AD /* macOS (Extension) */,
+			);
+			name = "chatext Extension (macOS)";
+			productName = "chatext Extension (macOS)";
+			productReference = 422D2BFF305E3AA1007990AD /* chatext Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		422D2BBC305E3AA0007990AD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					422D2BD7305E3AA1007990AD = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					422D2BE9305E3AA1007990AD = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					422D2BF4305E3AA1007990AD = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					422D2BFE305E3AA1007990AD = {
+						CreatedOnToolsVersion = 27.0;
+					};
+				};
+			};
+			buildConfigurationList = 422D2BBF305E3AA0007990AD /* Build configuration list for PBXProject "chatext" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 422D2BBB305E3AA0007990AD;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 422D2BD9305E3AA1007990AD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				422D2BD7305E3AA1007990AD /* chatext (iOS) */,
+				422D2BE9305E3AA1007990AD /* chatext (macOS) */,
+				422D2BF4305E3AA1007990AD /* chatext Extension (iOS) */,
+				422D2BFE305E3AA1007990AD /* chatext Extension (macOS) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		422D2BD6305E3AA1007990AD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		422D2BE8305E3AA1007990AD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		422D2BF3305E3AA1007990AD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		422D2BFD305E3AA1007990AD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		422D2D01305E3AA1007990AD /* Build Web Extension */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "Build Web Extension";
+			shellPath = /bin/sh;
+			shellScript = (
+				"if [ \"$ACTION\" = indexbuild ]; then exit 0; fi",
+				"export PATH=\"/opt/homebrew/bin:/usr/local/bin:$HOME/.local/share/mise/shims:$PATH\"",
+				"cd \"$SRCROOT/extension\" || exit 1",
+				"if ! command -v npm > /dev/null; then",
+				"  echo \"error: npm not found. Run 'mise install' (see README).\"",
+				"  exit 1",
+				"fi",
+				"[ -d node_modules ] || npm ci",
+				"npm run build || exit 1",
+				"# 生成物はソースツリーに置かず、ビルド済み appex へ直接入れる",
+				"DEST=\"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"",
+				"mkdir -p \"$DEST\"",
+				"rsync -a dist/ \"$DEST/\"",
+				"",
+			);
+		};
+		422D2D02305E3AA1007990AD /* Build Web Extension */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "Build Web Extension";
+			shellPath = /bin/sh;
+			shellScript = (
+				"if [ \"$ACTION\" = indexbuild ]; then exit 0; fi",
+				"export PATH=\"/opt/homebrew/bin:/usr/local/bin:$HOME/.local/share/mise/shims:$PATH\"",
+				"cd \"$SRCROOT/extension\" || exit 1",
+				"if ! command -v npm > /dev/null; then",
+				"  echo \"error: npm not found. Run 'mise install' (see README).\"",
+				"  exit 1",
+				"fi",
+				"[ -d node_modules ] || npm ci",
+				"npm run build || exit 1",
+				"# 生成物はソースツリーに置かず、ビルド済み appex へ直接入れる",
+				"DEST=\"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"",
+				"mkdir -p \"$DEST\"",
+				"rsync -a dist/ \"$DEST/\"",
+				"",
+			);
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		422D2BD4305E3AA1007990AD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		422D2BE6305E3AA1007990AD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		422D2BF1305E3AA1007990AD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		422D2BFB305E3AA1007990AD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		422D2BF8305E3AA1007990AD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 422D2BF4305E3AA1007990AD /* chatext Extension (iOS) */;
+			targetProxy = 422D2BF7305E3AA1007990AD /* PBXContainerItemProxy */;
+		};
+		422D2C02305E3AA1007990AD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 422D2BFE305E3AA1007990AD /* chatext Extension (macOS) */;
+			targetProxy = 422D2C01305E3AA1007990AD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		422D2C25305E3AA1007990AD /* Debug configuration for PBXNativeTarget "chatext Extension (iOS)" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = chatext.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V9WGCH53JN;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "chatext Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kuramot6f.chatext.Extension;
+				PRODUCT_NAME = "chatext Extension";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		422D2C26305E3AA1007990AD /* Release configuration for PBXNativeTarget "chatext Extension (iOS)" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = chatext.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V9WGCH53JN;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "chatext Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kuramot6f.chatext.Extension;
+				PRODUCT_NAME = "chatext Extension";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		422D2C2A305E3AA1007990AD /* Debug configuration for PBXNativeTarget "chatext (iOS)" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = chatext.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V9WGCH53JN;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = chatext;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kuramot6f.chatext;
+				PRODUCT_NAME = chatext;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		422D2C2B305E3AA1007990AD /* Release configuration for PBXNativeTarget "chatext (iOS)" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = chatext.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V9WGCH53JN;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = chatext;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kuramot6f.chatext;
+				PRODUCT_NAME = chatext;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		422D2C2F305E3AA1007990AD /* Debug configuration for PBXNativeTarget "chatext Extension (macOS)" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = chatext.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V9WGCH53JN;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "chatext Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kuramot6f.chatext.Extension;
+				PRODUCT_NAME = "chatext Extension";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		422D2C30305E3AA1007990AD /* Release configuration for PBXNativeTarget "chatext Extension (macOS)" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = chatext.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V9WGCH53JN;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "chatext Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kuramot6f.chatext.Extension;
+				PRODUCT_NAME = "chatext Extension";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		422D2C34305E3AA1007990AD /* Debug configuration for PBXNativeTarget "chatext (macOS)" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = chatext.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V9WGCH53JN;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = chatext;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kuramot6f.chatext;
+				PRODUCT_NAME = chatext;
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		422D2C35305E3AA1007990AD /* Release configuration for PBXNativeTarget "chatext (macOS)" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = chatext.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V9WGCH53JN;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = chatext;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kuramot6f.chatext;
+				PRODUCT_NAME = chatext;
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		422D2C38305E3AA1007990AD /* Debug configuration for PBXProject "chatext" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		422D2C39305E3AA1007990AD /* Release configuration for PBXProject "chatext" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		422D2BBF305E3AA0007990AD /* Build configuration list for PBXProject "chatext" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				422D2C38305E3AA1007990AD /* Debug configuration for PBXProject "chatext" */,
+				422D2C39305E3AA1007990AD /* Release configuration for PBXProject "chatext" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		422D2C24305E3AA1007990AD /* Build configuration list for PBXNativeTarget "chatext Extension (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				422D2C25305E3AA1007990AD /* Debug configuration for PBXNativeTarget "chatext Extension (iOS)" */,
+				422D2C26305E3AA1007990AD /* Release configuration for PBXNativeTarget "chatext Extension (iOS)" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		422D2C29305E3AA1007990AD /* Build configuration list for PBXNativeTarget "chatext (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				422D2C2A305E3AA1007990AD /* Debug configuration for PBXNativeTarget "chatext (iOS)" */,
+				422D2C2B305E3AA1007990AD /* Release configuration for PBXNativeTarget "chatext (iOS)" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		422D2C2E305E3AA1007990AD /* Build configuration list for PBXNativeTarget "chatext Extension (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				422D2C2F305E3AA1007990AD /* Debug configuration for PBXNativeTarget "chatext Extension (macOS)" */,
+				422D2C30305E3AA1007990AD /* Release configuration for PBXNativeTarget "chatext Extension (macOS)" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		422D2C33305E3AA1007990AD /* Build configuration list for PBXNativeTarget "chatext (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				422D2C34305E3AA1007990AD /* Debug configuration for PBXNativeTarget "chatext (macOS)" */,
+				422D2C35305E3AA1007990AD /* Release configuration for PBXNativeTarget "chatext (macOS)" */,
+			);
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 422D2BBC305E3AA0007990AD /* Project object */;
+	validationLevel = 1;
+}

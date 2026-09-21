@@ -1,0 +1,107 @@
+diff --git a/dist/index.js b/dist/index.js
+index ea140ec2633f3cfe1f4f9a78467b3b2ef7e9f506..439d4f5ace130c0ef94fed178adf0fc4a5067da7 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -389,6 +389,7 @@ async function convertToDeepSeekChatMessages({
+             feature: "message name on tool messages"
+           });
+         }
++        const referencedFiles = [];
+         for (const toolResponse of content) {
+           if (toolResponse.type === "tool-approval-response") {
+             continue;
+@@ -403,7 +404,30 @@ async function convertToDeepSeekChatMessages({
+             case "execution-denied":
+               contentValue = (_a = output.reason) != null ? _a : "Tool call execution denied.";
+               break;
+-            case "content":
++            case "content": {
++              let text = "";
++              const files = [];
++              for (const part of output.value) {
++                if (part.type === "text") {
++                  text += part.text;
++                } else if (part.data.type === "reference" && getTopLevelMediaType(part.mediaType) === "image") {
++                  files.push({
++                    type: "file",
++                    file_id: resolveProviderReference({
++                      reference: part.data.reference,
++                      provider: "deepseek"
++                    })
++                  });
++                }
++              }
++              if (files.length === 0) {
++                contentValue = JSON.stringify(output.value);
++              } else {
++                contentValue = text;
++                referencedFiles.push(...files);
++              }
++              break;
++            }
+             case "json":
+             case "error-json":
+               contentValue = JSON.stringify(output.value);
+@@ -415,6 +439,9 @@ async function convertToDeepSeekChatMessages({
+             content: contentValue
+           });
+         }
++        if (referencedFiles.length > 0) {
++          messages.push({ role: "user", content: referencedFiles });
++        }
+         break;
+       }
+       default: {
+diff --git a/src/chat/convert-to-deepseek-chat-messages.ts b/src/chat/convert-to-deepseek-chat-messages.ts
+index 3773339a0c5a0c5a7efa9a2054152e571256d33b..597b87f592fda3ea8b6578fa90a7e7c5b68029f3 100644
+--- a/src/chat/convert-to-deepseek-chat-messages.ts
++++ b/src/chat/convert-to-deepseek-chat-messages.ts
+@@ -354,1 +354,3 @@ export async function convertToDeepSeekChatMessages({
++        const referencedFiles: Array<DeepSeekContentPart> = [];
++
+         for (const toolResponse of content) {
+@@ -366,7 +368,33 @@ export async function convertToDeepSeekChatMessages({
+             case 'execution-denied':
+               contentValue = output.reason ?? 'Tool call execution denied.';
+               break;
+-            case 'content':
++            case 'content': {
++              let text = '';
++              const files: Array<DeepSeekContentPart> = [];
++              for (const part of output.value) {
++                if (part.type === 'text') {
++                  text += part.text;
++                } else if (
++                  part.data.type === 'reference' &&
++                  getTopLevelMediaType(part.mediaType) === 'image'
++                ) {
++                  files.push({
++                    type: 'file',
++                    file_id: resolveProviderReference({
++                      reference: part.data.reference,
++                      provider: 'deepseek',
++                    }),
++                  });
++                }
++              }
++              if (files.length === 0) {
++                contentValue = JSON.stringify(output.value);
++              } else {
++                contentValue = text;
++                referencedFiles.push(...files);
++              }
++              break;
++            }
+             case 'json':
+             case 'error-json':
+               contentValue = JSON.stringify(output.value);
+@@ -379,5 +407,9 @@ export async function convertToDeepSeekChatMessages({
+             content: contentValue,
+           });
+         }
++
++        if (referencedFiles.length > 0) {
++          messages.push({ role: 'user', content: referencedFiles });
++        }
+         break;
+       }
