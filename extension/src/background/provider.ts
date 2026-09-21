@@ -10,6 +10,9 @@ import { clampEffort, findModel, lowestEffort, MODELS } from "../shared/models";
 import type { Effort, ModelInfo, ModelSettings, Provider } from "../shared/models";
 import { TOOL_HISTORY_TTL_MS } from "../shared/conversation";
 
+/** The chatext gateway speaks DeepSeek's API and pins the model itself; the key is the gateway token. */
+const GATEWAY_URL = "https://chatext-gateway.TODO.workers.dev";
+
 type ProviderOptions = NonNullable<Parameters<typeof streamText>[0]["providerOptions"]>;
 type FilesApi = Parameters<typeof uploadFile>[0]["api"];
 
@@ -40,7 +43,7 @@ export function availableModels(): ModelInfo[] {
 export function resolveSettings(settings: ModelSettings): ModelSettings | null {
   const model = findModel(settings.model);
   const info = model && apiKeys[model.provider] ? model : availableModels()[0];
-  return info ? { model: info.id, effort: clampEffort(info, settings.effort) } : null;
+  return info ? { model: info.key, effort: clampEffort(info, settings.effort) } : null;
 }
 
 export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"): ModelRuntime {
@@ -78,8 +81,9 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
         fileOptions: {}
       };
     }
-    case "deepseek": {
-      const deepSeek = createDeepSeek({ apiKey });
+    case "deepseek":
+    case "chatext": {
+      const deepSeek = createDeepSeek({ apiKey, ...(info.provider === "chatext" ? { baseURL: GATEWAY_URL } : {}) });
       const options: DeepSeekLanguageModelOptions = level === "none"
         ? { thinking: { type: "disabled" } }
         : { thinking: { type: "enabled" }, reasoningEffort: level as "low" | "high" | "max" };
