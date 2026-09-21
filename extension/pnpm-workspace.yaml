@@ -1,0 +1,3 @@
+patchedDependencies:
+  '@ai-sdk/anthropic@4.0.58': patches/@ai-sdk__anthropic@4.0.58.patch
+  '@ai-sdk/deepseek@3.0.49': patches/@ai-sdk__deepseek@3.0.49.patch

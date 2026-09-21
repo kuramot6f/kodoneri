@@ -1,0 +1,17 @@
+{
+  "providers": {
+    "openai": "OpenAI",
+    "anthropic": "Anthropic",
+    "deepseek": "DeepSeek"
+  },
+  "models": [
+    { "id": "gpt-6-astra", "provider": "openai", "label": "Astra", "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 400000 },
+    { "id": "gpt-5.6-sol", "provider": "openai", "label": "Sol", "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 400000 },
+    { "id": "gpt-5.6-terra", "provider": "openai", "label": "Terra", "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 400000 },
+    { "id": "gpt-5.6-luna", "provider": "openai", "label": "Luna", "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 400000 },
+    { "id": "claude-opus-5", "provider": "anthropic", "label": "Opus", "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000 },
+    { "id": "claude-sonnet-5", "provider": "anthropic", "label": "Sonnet", "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000 },
+    { "id": "claude-haiku-4-5", "provider": "anthropic", "label": "Haiku", "efforts": [], "contextWindow": 200000 },
+    { "id": "deepseek-flash", "provider": "deepseek", "label": "Flash", "efforts": ["none", "low", "high", "max"], "contextWindow": 1000000 }
+  ]
+}

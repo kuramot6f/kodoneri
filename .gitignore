@@ -1,0 +1,11 @@
+.DS_Store
+node_modules/
+
+# Vite の生成物。npm run build / Xcode ビルドで再生成される。
+extension/dist/
+extension/.env.local
+
+# Xcode
+xcuserdata/
+build/
+DerivedData/
