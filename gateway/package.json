@@ -1,0 +1,21 @@
+{
+  "name": "chatext-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.5.1",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "wrangler types && tsc --noEmit",
+    "db:init": "wrangler d1 execute chatext-gateway --remote --file schema.sql",
+    "db:init:local": "wrangler d1 execute chatext-gateway --local --file schema.sql"
+  },
+  "dependencies": {
+    "jose": "^6.2.12"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "wrangler": "^4.135.0"
+  }
+}
