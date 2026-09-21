@@ -191,7 +191,7 @@ export function App() {
                 )}
                 {(!phone || view === "history") && (
                   <button className={view === "history" ? "round accent-action" : "round"} type="button" aria-label="新規チャット" title="新規チャット" onClick={startNewChat} disabled={busy}>
-                    <Icon name="edit" />
+                    <Icon name="edit" tone={view === "history" ? "inverse" : "default"} />
                   </button>
                 )}
               </div>

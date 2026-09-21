@@ -1,15 +1,4 @@
-import addIcon from "../../../design/plus.svg?raw";
-import closeIcon from "../../../design/xmark.svg?raw";
-import deleteIcon from "../../../design/trash.svg?raw";
-import editIcon from "../../../design/square.and.pencil.svg?raw";
-import historyIcon from "../../../design/clock.arrow.trianglehead.counterclockwise.rotate.90.svg?raw";
-import menuIcon from "../../../design/line.3.horizontal.svg?raw";
-import searchIcon from "../../../design/magnifyingglass.svg?raw";
-import sendIcon from "../../../design/arrow.up.svg?raw";
-import sidebarIcon from "../../../design/sidebar.left.svg?raw";
-import starBorderIcon from "../../../design/star.svg?raw";
-import stopIcon from "../../../design/stop.fill.svg?raw";
-import tuneIcon from "../../../design/slider.horizontal.3.svg?raw";
+import type { CSSProperties } from "react";
 
 // design/ に対応するものがない補助アイコンだけ Material Icons のパスを使う。
 const PATHS = {
@@ -21,37 +10,57 @@ const PATHS = {
   star: "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z",
 } as const;
 
-const INLINE_SVGS = {
-  add: addIcon,
-  close: closeIcon,
-  delete: deleteIcon,
-  edit: editIcon,
-  history: historyIcon,
-  menu: menuIcon,
-  search: searchIcon,
-  send: sendIcon,
-  sidebar: sidebarIcon,
-  starBorder: starBorderIcon,
-  stop: stopIcon,
-  tune: tuneIcon
+const PNGS = {
+  add: "plus.png",
+  close: "xmark.png",
+  delete: "trash.png",
+  edit: "square.and.pencil.png",
+  history: "clock.arrow.trianglehead.counterclockwise.rotate.90.png",
+  menu: "line.3.horizontal.png",
+  search: "magnifyingglass.png",
+  send: "arrow.up.png",
+  sidebar: "sidebar.left.png",
+  starBorder: "star.png",
+  stop: "stop.fill.png",
+  tune: "slider.horizontal.3.png"
 } as const;
 
-type IconName = keyof typeof PATHS | keyof typeof INLINE_SVGS;
+type IconName = keyof typeof PATHS | keyof typeof PNGS;
+type IconTone = "default" | "inverse" | "secondary";
 
-export function Icon({ name }: { name: IconName }) {
-  if (name in INLINE_SVGS) {
-    const source = INLINE_SVGS[name as keyof typeof INLINE_SVGS];
+const baseStyle = {
+  position: "relative",
+  zIndex: 2,
+  display: "inline-block",
+  flex: "none",
+  width: 20,
+  height: 20,
+  background: "transparent"
+} satisfies CSSProperties;
+
+export function Icon({ name, tone = "default" }: { name: IconName; tone?: IconTone }) {
+  const style = {
+    ...baseStyle,
+    filter: tone === "inverse" ? "brightness(0) invert(1)" : undefined,
+    opacity: tone === "secondary" ? .6 : undefined
+  } satisfies CSSProperties;
+
+  if (name in PNGS) {
+    const file = PNGS[name as keyof typeof PNGS];
     return (
-      <span
-        className="icon"
+      <img
+        className="ui-icon"
+        src={browser.runtime.getURL(`images/ui-icons/${file}`)}
+        alt=""
         aria-hidden="true"
-        dangerouslySetInnerHTML={{ __html: source }}
+        draggable={false}
+        style={{ ...style, objectFit: "contain" }}
       />
     );
   }
 
   return (
-    <svg className="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <svg className="ui-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={style}>
       <path d={PATHS[name as keyof typeof PATHS]} />
     </svg>
   );

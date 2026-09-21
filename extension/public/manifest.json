@@ -44,7 +44,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "styles.css"
+        "styles.css",
+        "images/ui-icons/*.png"
       ],
       "matches": [
         "<all_urls>"
