@@ -1,10 +1,12 @@
 import type { ModelsView, RuntimeMessage, WhoAmI } from "../shared/protocol";
+import { activateBrowserLocale, i18n } from "../shared/i18n.ts";
 import { loadSettings, saveSettings } from "../shared/store";
 import { loadTextResource } from "../shared/textResource";
 import { clearFrames, registerFrame } from "./frames";
 import { availableModels, refreshApiKeys, resolveSettings } from "./provider";
 import { attachPort, removeSession, togglePanel } from "./session";
 
+activateBrowserLocale();
 void refreshApiKeys().catch(() => undefined);
 
 browser.action.onClicked.addListener((tab) => {
@@ -40,7 +42,9 @@ browser.runtime.onMessage.addListener((message: RuntimeMessage, sender) => {
   if (message.type === "fetch") {
     return loadTextResource(message.url).catch((error: unknown) => ({
       type: "error",
-      error: error instanceof Error && error.message ? error.message : "テキスト資源を取得できませんでした。"
+      error: error instanceof Error && error.message
+        ? error.message
+        : i18n._({ id: "errors.fetchTextResource", message: "Could not fetch the text resource." })
     }));
   }
 });

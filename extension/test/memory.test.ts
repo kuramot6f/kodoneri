@@ -18,12 +18,12 @@ test("patch edits apply in order and an empty replacement removes a statement", 
 });
 
 test("patch rejects stale, ambiguous, empty, and oversized results", () => {
-  assert.throws(() => applyMemoryEdits("- a", [{ old: "b", new: "c" }]), /一致しません/);
-  assert.throws(() => applyMemoryEdits("- a\n- a", [{ old: "a", new: "c" }]), /複数回/);
-  assert.throws(() => applyMemoryEdits("- a", [{ old: "- a", new: " " }]), /空/);
+  assert.throws(() => applyMemoryEdits("- a", [{ old: "b", new: "c" }]), /does not match/);
+  assert.throws(() => applyMemoryEdits("- a\n- a", [{ old: "a", new: "c" }]), /more than once/);
+  assert.throws(() => applyMemoryEdits("- a", [{ old: "- a", new: " " }]), /become empty/);
   assert.throws(
     () => applyMemoryEdits("- a", [{ old: "a", new: "b".repeat(MEMORY_CONTENT_MAX_LENGTH) }]),
-    /1000文字以内/
+    /no more than 1000 characters/
   );
 });
 
@@ -39,7 +39,7 @@ test("write calls validate refs, titles, and content", () => {
   assert.deepEqual(parseMemoryWriteCall("delete", '{"ref":"memory_1"}'), { name: "delete", ref: "memory_1" });
   assert.throws(() => parseMemoryWriteCall("rename", '{"ref":"session_1","title":"t"}'), /memory_/);
   assert.throws(() => parseMemoryWriteCall("rename", '{"ref":"memory_1","title":""}'), /title/);
-  assert.throws(() => parseMemoryWriteCall("patch", '{"ref":"memory_1","edits":[]}'), /edits/);
+  assert.throws(() => parseMemoryWriteCall("patch", '{"ref":"memory_1","edits":[]}'), /edit/);
   assert.throws(() => parseMemoryWriteCall("patch", '{"ref":"memory_1","edits":[{"old":"","new":"x"}]}'), /old/);
   assert.throws(() => parseMemoryWriteCall("new", `{"title":"t","content":"${"x".repeat(1001)}"}`), /1000/);
 });

@@ -1,4 +1,5 @@
 import type { SelectionContext, SelectionMediaContext } from "../shared/protocol";
+import { plural, t } from "@lingui/core/macro";
 import type { PageSnapshot } from "./pageSnapshot";
 
 export const CHAT_HOST_ID = "web-page-chat-host";
@@ -26,13 +27,14 @@ export function summarizePageSelection(selection: PageSelection | null): string 
   if (!selection) return null;
 
   const characters = Array.from(selection.text);
+  const preview = `${characters.slice(0, 10).join("")}${characters.length > 10 ? "…" : ""}`;
   const textPreview = characters.length > 0
-    ? `「${characters.slice(0, 10).join("")}${characters.length > 10 ? "…" : ""}」`
+    ? t`“${preview}”`
     : "";
   const mediaSummary = selection.media.length > 0
-    ? `メディア${selection.media.length}件`
+    ? plural(selection.media.length, { one: "# media item", other: "# media items" })
     : "";
-  return [textPreview, mediaSummary].filter(Boolean).join("＋");
+  return [textPreview, mediaSummary].filter(Boolean).join(" + ");
 }
 
 export function createSelectionContext(

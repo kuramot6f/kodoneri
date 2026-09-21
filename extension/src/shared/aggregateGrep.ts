@@ -1,4 +1,5 @@
 import type { ToolOutput } from "./protocol";
+import { i18n } from "./i18n.ts";
 
 const MAX_MATCHES = 20;
 
@@ -46,7 +47,7 @@ export async function aggregateGrep<T extends { ref: string }>({
 
     const result = parseGrepResult(output.content);
     if (!result) {
-      errors.push({ ref: resource.ref, error: "grep結果を解析できませんでした。" });
+      errors.push({ ref: resource.ref, error: i18n._({ id: "errors.parseGrepResult", message: "Could not parse the grep result." }) });
       continue;
     }
 

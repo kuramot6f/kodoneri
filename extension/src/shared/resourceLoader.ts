@@ -1,3 +1,5 @@
+import { i18n } from "./i18n.ts";
+
 export interface LoadedResource {
   buffer: ArrayBuffer;
   byteLength: number;
@@ -21,10 +23,10 @@ export function resolveResourceUrl(
   try {
     url = new URL(ref, baseUrl);
   } catch {
-    throw new Error(`refを${label}URLとして解決できませんでした。`);
+    throw new Error(i18n._({ id: "errors.resolveResourceUrl", message: "Could not resolve ref as a {label} URL.", values: { label } }));
   }
   if (!schemes.has(url.protocol)) {
-    throw new Error(`未対応のURL schemeです: ${url.protocol}`);
+    throw new Error(i18n._({ id: "errors.unsupportedUrlScheme", message: "Unsupported URL scheme: {scheme}", values: { scheme: url.protocol } }));
   }
   url.hash = "";
   return url.href;
@@ -42,15 +44,15 @@ export async function loadResource(
   try {
     response = await fetch(source, { signal });
   } catch (error) {
-    throw new Error(`${label}を取得できませんでした。${formatCause(error)}`);
+    throw new Error(i18n._({ id: "errors.fetchResource", message: "Could not fetch {label}.{cause}", values: { label, cause: formatCause(error) } }));
   }
-  if (!response.ok) throw new Error(`${label}の取得に失敗しました（HTTP ${response.status}）。`);
+  if (!response.ok) throw new Error(i18n._({ id: "errors.fetchResourceHttp", message: "Failed to fetch {label} (HTTP {status}).", values: { label, status: response.status } }));
 
   const contentLengthHeader = response.headers.get("Content-Length");
   if (contentLengthHeader !== null) {
     const contentLength = Number(contentLengthHeader);
     if (Number.isFinite(contentLength) && contentLength > maxBytes) {
-      throw new Error(`${label}のサイズが${formatMiB(maxBytes)} MiBを超えています。`);
+      throw resourceTooLarge(label, maxBytes);
     }
   }
 
@@ -72,7 +74,7 @@ async function readResponseBuffer(
   if (!response.body) {
     const buffer = await response.arrayBuffer();
     if (buffer.byteLength > maxBytes) {
-      throw new Error(`${label}のサイズが${formatMiB(maxBytes)} MiBを超えています。`);
+      throw resourceTooLarge(label, maxBytes);
     }
     return buffer;
   }
@@ -86,7 +88,7 @@ async function readResponseBuffer(
     byteLength += value.byteLength;
     if (byteLength > maxBytes) {
       await reader.cancel().catch(() => undefined);
-      throw new Error(`${label}のサイズが${formatMiB(maxBytes)} MiBを超えています。`);
+      throw resourceTooLarge(label, maxBytes);
     }
     chunks.push(value);
   }
@@ -102,6 +104,14 @@ async function readResponseBuffer(
 
 function formatMiB(bytes: number): string {
   return String(bytes / (1024 * 1024));
+}
+
+function resourceTooLarge(label: string, maxBytes: number): Error {
+  return new Error(i18n._({
+    id: "errors.resourceTooLarge",
+    message: "{label} exceeds {size} MiB.",
+    values: { label, size: formatMiB(maxBytes) }
+  }));
 }
 
 function formatCause(error: unknown): string {

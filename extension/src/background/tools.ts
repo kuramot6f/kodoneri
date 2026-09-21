@@ -3,6 +3,7 @@ import type { ToolResultPart, ToolSet } from "ai";
 import { aggregateGrep } from "../shared/aggregateGrep";
 import { parseTextToolCall, type GrepArgs } from "../shared/htmlTools";
 import { isMemoryWriteTool } from "../shared/memory";
+import { i18n } from "../shared/i18n.ts";
 import type { ImageToolOutput, TabMessage, ToolSuccessOutput } from "../shared/protocol";
 import { isToolOutput } from "../shared/toolOutput";
 import { isClickInteraction, keepNewTabsInBackground } from "./backgroundTabPolicy";
@@ -73,7 +74,7 @@ async function executeTool(runtime: ToolRuntime, name: string, args: string, sig
     case "interact":
       return pageTool(runtime, name, args, (JSON.parse(args) as { ref?: unknown }).ref);
     default:
-      throw new Error(`未対応のツールです: ${name}`);
+      throw new Error(i18n._({ id: "errors.unsupportedTool", message: "Unsupported tool: {name}", values: { name } }));
   }
 }
 
@@ -85,12 +86,12 @@ async function textTool(runtime: ToolRuntime, name: "grep" | "read", args: strin
   if (resourceType === "tab") return grepTabs(runtime, call.args as GrepArgs);
 
   const ref = call.args.ref;
-  if (!ref) throw new Error("refを指定してください。現在のページはbrowser_contextのrefを使います。");
+  if (!ref) throw new Error(i18n._({ id: "errors.refRequiredCurrentPage", message: "ref is required. Use the browser_context ref for the current page." }));
   if (/^(?:session|memory)_\d+$/.test(ref)) {
     const texts = ref.startsWith("session") ? await sessionTexts() : await memoryTexts();
     const text = texts.find((candidate) => candidate.ref === ref);
     if (!text) {
-      throw new Error(`参照が無効です: ${ref}。会話はgrep(resource_type=session)、メモリはlist(type=memory)で参照を再取得してください。`);
+      throw new Error(i18n._({ id: "errors.invalidStoredRef", message: "Invalid ref: {ref}. Use grep(resource_type=session) to refresh conversation refs or list(type=memory) to refresh memory refs.", values: { ref } }));
     }
     return runStoredTextTool(text, call);
   }
@@ -115,7 +116,7 @@ async function grepTabs(runtime: ToolRuntime, args: GrepArgs): Promise<ToolSucce
       }
     },
     metadata: ({ ref, title, url }) => ({ ref, title, url }),
-    nonTextError: "grepが画像結果を返しました。"
+    nonTextError: i18n._({ id: "errors.grepReturnedImage", message: "grep returned an image result." })
   });
   return { type: "text", content: JSON.stringify(result) };
 }
@@ -125,12 +126,12 @@ async function grepTabs(runtime: ToolRuntime, args: GrepArgs): Promise<ToolSucce
  * tab_12_style_3, or tab_12_iframe_1_img_2; anything else (a URL) targets the current tab.
  */
 async function pageTool(runtime: ToolRuntime, name: string, args: string, ref: unknown): Promise<ToolSuccessOutput> {
-  if (typeof ref !== "string" || !ref) throw new Error("refを指定してください。現在のページはbrowser_contextのrefを使います。");
+  if (typeof ref !== "string" || !ref) throw new Error(i18n._({ id: "errors.refRequiredCurrentPage", message: "ref is required. Use the browser_context ref for the current page." }));
   const match = /^(tab_(\d+))((?:_iframe_\d+)*)(?:_(.+))?$/.exec(ref);
   const tabId = match ? await resolveTab(match[1]!) : runtime.session.tabId;
   const framePath = match?.[3]?.slice(1) ?? "";
   const frameId = framePath ? await resolveFrame(tabId, framePath) : 0;
-  if (frameId === null) throw new Error(`iframeに接続できませんでした: ${ref}`);
+  if (frameId === null) throw new Error(i18n._({ id: "errors.connectIframe", message: "Could not connect to iframe: {ref}", values: { ref } }));
   const refPrefix = match ? `${match[1]}${match[3]}_` : `tab_${tabId}_`;
   const localArgs = { ...JSON.parse(args) as Record<string, unknown> };
   if (match && match[4] === undefined) delete localArgs.ref;
@@ -140,7 +141,7 @@ async function pageTool(runtime: ToolRuntime, name: string, args: string, ref: u
   runtime.session.touched.add(`${tabId}:${frameId}`);
   const send = async () => {
     const output: unknown = await browser.tabs.sendMessage(tabId, message, { frameId });
-    if (!isToolOutput(output)) throw new Error("ツール結果を取得できませんでした。");
+    if (!isToolOutput(output)) throw new Error(i18n._({ id: "errors.noToolResult", message: "Could not retrieve the tool result." }));
     if (output.type === "error") throw new Error(output.error);
     return output;
   };
@@ -165,7 +166,7 @@ async function listTabs(currentTabId: number): Promise<ToolSuccessOutput> {
 async function captureViewport(tabId: number): Promise<ToolSuccessOutput> {
   const tab = await browser.tabs.get(tabId);
   if (!tab.active || tab.windowId === undefined) {
-    throw new Error("対象タブが表示中ではありません。タブを表示してから再試行してください。");
+    throw new Error(i18n._({ id: "errors.tabNotVisible", message: "The target tab is not visible. Show the tab and try again." }));
   }
   const dataUrl = await browser.tabs.captureVisibleTab(tab.windowId, { format: "png" });
   const base64 = dataUrl.slice(dataUrl.indexOf(",") + 1);
@@ -205,7 +206,7 @@ async function uploadToolImage(runtime: ToolRuntime, output: ImageToolOutput): P
 function dataUrlToBytes(dataUrl: string): Uint8Array {
   const separator = dataUrl.indexOf(",");
   const metadata = separator < 0 ? "" : dataUrl.slice(0, separator);
-  if (!metadata.startsWith("data:") || !metadata.endsWith(";base64")) throw new Error("画像データの形式が不正です。");
+  if (!metadata.startsWith("data:") || !metadata.endsWith(";base64")) throw new Error(i18n._({ id: "errors.invalidImageData", message: "Invalid image data format." }));
   const binary = atob(dataUrl.slice(separator + 1));
   return Uint8Array.from(binary, (character) => character.charCodeAt(0));
 }
@@ -220,5 +221,7 @@ function extensionFor(mimeType: string): string {
 }
 
 function getErrorMessage(error: unknown): string {
-  return error instanceof Error && error.message ? error.message : "不明なエラーが発生しました。";
+  return error instanceof Error && error.message
+    ? error.message
+    : i18n._({ id: "errors.unknown", message: "An unknown error occurred." });
 }

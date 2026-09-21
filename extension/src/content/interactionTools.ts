@@ -1,4 +1,5 @@
 import type { ToolOutput } from "../shared/protocol";
+import { i18n } from "../shared/i18n.ts";
 
 type InteractionAction = "click" | "type" | "press" | "select" | "check";
 
@@ -12,7 +13,7 @@ export function interactWithPage(argumentsJson: string): ToolOutput {
   try {
     const args = parseInteractionArgs(JSON.parse(argumentsJson));
     const element = document.querySelector(args.query);
-    if (!element) throw new Error(`queryに一致する要素がありません: ${args.query}`);
+    if (!element) throw new Error(i18n._({ id: "errors.elementNotFound", message: "No element matches query: {query}", values: { query: args.query } }));
 
     runInteraction(element, args);
     return {
@@ -29,24 +30,24 @@ export function interactWithPage(argumentsJson: string): ToolOutput {
       type: "error",
       error: error instanceof Error && error.message
         ? error.message
-        : "ページを操作できませんでした。"
+        : i18n._({ id: "errors.interactionFailed", message: "Could not interact with the page." })
     };
   }
 }
 
 function parseInteractionArgs(value: unknown): InteractionArgs {
-  if (!value || typeof value !== "object") throw new Error("引数が不正です。");
+  if (!value || typeof value !== "object") throw new Error(i18n._({ id: "errors.invalidArguments", message: "Invalid arguments." }));
   const { action, query, value: input, ref } = value as Record<string, unknown>;
-  if (!isInteractionAction(action)) throw new Error("actionが不正です。");
+  if (!isInteractionAction(action)) throw new Error(i18n._({ id: "errors.invalidAction", message: "Invalid action." }));
   if (typeof query !== "string" || !query.trim() || query.length > 10000) {
-    throw new Error("queryは1〜10000文字のCSSセレクタで指定してください。");
+    throw new Error(i18n._({ id: "errors.invalidQuery", message: "query must be a CSS selector between 1 and 10000 characters." }));
   }
   // Background strips a tab or iframe ref before delivery, so a remaining ref names a resource instead.
-  if (ref !== undefined) throw new Error("interactのrefはタブかiframeの参照を指定してください。");
+  if (ref !== undefined) throw new Error(i18n._({ id: "errors.invalidInteractionRef", message: "interact ref must identify a tab or iframe." }));
   if (action === "type" || action === "press" || action === "select") {
-    if (typeof input !== "string") throw new Error(`${action}にはvalueが必要です。`);
+    if (typeof input !== "string") throw new Error(i18n._({ id: "errors.actionValueRequired", message: "{action} requires value.", values: { action } }));
   } else if (input !== undefined) {
-    throw new Error(`${action}ではvalueを指定できません。`);
+    throw new Error(i18n._({ id: "errors.actionValueForbidden", message: "value cannot be specified for {action}.", values: { action } }));
   }
   return { action, query, value: input as string | undefined };
 }
@@ -58,7 +59,7 @@ function isInteractionAction(value: unknown): value is InteractionAction {
 
 function runInteraction(element: Element, args: InteractionArgs): void {
   if (args.action === "click") {
-    if (!(element instanceof HTMLElement)) throw new Error("clickできない要素です。");
+    if (!(element instanceof HTMLElement)) throw new Error(i18n._({ id: "errors.notClickable", message: "This element cannot be clicked." }));
     element.click();
     return;
   }
@@ -86,7 +87,7 @@ function setTextValue(element: Element, value: string): void {
     setContentEditableValue(element, value);
     return;
   }
-  throw new Error("typeはinput、textarea、contenteditableにのみ使用できます。");
+  throw new Error(i18n._({ id: "errors.notTypeable", message: "type can only be used with input, textarea, or contenteditable elements." }));
 }
 
 function setFormControlValue(
@@ -99,7 +100,7 @@ function setFormControlValue(
     ? HTMLInputElement.prototype
     : HTMLTextAreaElement.prototype;
   const setter = Object.getOwnPropertyDescriptor(prototype, "value")?.set;
-  if (!setter) throw new Error("入力値を設定できませんでした。");
+  if (!setter) throw new Error(i18n._({ id: "errors.setInputValue", message: "Could not set the input value." }));
   setter.call(element, value);
   element.dispatchEvent(new InputEvent("input", {
     bubbles: true,
@@ -131,7 +132,7 @@ function dispatchBeforeInput(element: HTMLElement, value: string): void {
     data: value,
     inputType: "insertReplacementText"
   }));
-  if (!accepted) throw new Error("typeがbeforeinputイベントでキャンセルされました。");
+  if (!accepted) throw new Error(i18n._({ id: "errors.beforeInputCancelled", message: "type was cancelled by a beforeinput event." }));
 }
 
 function moveCaretToEnd(element: HTMLElement): void {
@@ -145,7 +146,7 @@ function moveCaretToEnd(element: HTMLElement): void {
 }
 
 function pressKey(element: Element, key: string): void {
-  if (!(element instanceof HTMLElement)) throw new Error("キー入力できない要素です。");
+  if (!(element instanceof HTMLElement)) throw new Error(i18n._({ id: "errors.notKeyable", message: "Keyboard input cannot be sent to this element." }));
   element.focus();
   for (const type of ["keydown", "keyup"] as const) {
     element.dispatchEvent(new KeyboardEvent(type, {
@@ -160,10 +161,10 @@ function pressKey(element: Element, key: string): void {
 
 function selectValue(element: Element, value: string): void {
   if (!(element instanceof HTMLSelectElement)) {
-    throw new Error("selectはselect要素にのみ使用できます。");
+    throw new Error(i18n._({ id: "errors.notSelectable", message: "select can only be used with select elements." }));
   }
   if (![...element.options].some((option) => option.value === value)) {
-    throw new Error(`valueに一致するoptionがありません: ${value}`);
+    throw new Error(i18n._({ id: "errors.optionNotFound", message: "No option matches value: {value}", values: { value } }));
   }
   element.focus();
   element.value = value;
@@ -174,7 +175,7 @@ function selectValue(element: Element, value: string): void {
 function checkElement(element: Element): void {
   if (!(element instanceof HTMLInputElement)
     || (element.type !== "checkbox" && element.type !== "radio")) {
-    throw new Error("checkはcheckboxまたはradioにのみ使用できます。");
+    throw new Error(i18n._({ id: "errors.notCheckable", message: "check can only be used with checkbox or radio elements." }));
   }
   if (!element.checked) element.click();
 }

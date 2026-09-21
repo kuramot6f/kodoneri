@@ -2,6 +2,7 @@ import { aggregateGrep } from "../shared/aggregateGrep";
 import { getMessageText, getMeta, type Conversation } from "../shared/conversation";
 import { runTextTool, type GrepArgs, type ParsedTextToolCall } from "../shared/htmlTools";
 import { formatMemoryList, loadMemories, memoryRef } from "../shared/memory";
+import { i18n } from "../shared/i18n.ts";
 import type { ToolSuccessOutput } from "../shared/protocol";
 import { loadConversations } from "../shared/store";
 
@@ -41,7 +42,7 @@ export async function grepStored(texts: StoredText[], args: GrepArgs): Promise<T
       args: { ...args, offset, ref: undefined, resourceType: undefined }
     })),
     metadata: ({ ref, title }) => ({ ref, title }),
-    nonTextError: "grepが画像結果を返しました。"
+    nonTextError: i18n._({ id: "errors.grepReturnedImage", message: "grep returned an image result." })
   });
   return { type: "text", content: JSON.stringify(result) };
 }
@@ -50,7 +51,9 @@ export function runStoredTextTool(text: StoredText, call: ParsedTextToolCall): T
   const output = runTextTool(text.content, call.name === "grep"
     ? { name: "grep", args: { ...call.args, ref: undefined, resourceType: undefined } }
     : { name: "read", args: { ...call.args, ref: undefined } });
-  if (output.type !== "text") throw new Error(output.type === "error" ? output.error : "画像結果は返せません。");
+  if (output.type !== "text") throw new Error(output.type === "error"
+    ? output.error
+    : i18n._({ id: "errors.cannotReturnImage", message: "An image result cannot be returned here." }));
   return {
     type: "text",
     content: JSON.stringify({ ref: text.ref, title: text.title, ...JSON.parse(output.content) as object })

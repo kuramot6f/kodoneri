@@ -36,5 +36,5 @@ test("rejects invalid navigate arguments", () => {
   assert.throws(() => parseNavigateArgs('{"action":"open_tab","url":"https://example.com","ref":"tab_2"}'), /ref/);
   assert.throws(() => parseNavigateArgs('{"action":"switch_tab","ref":"iframe_1"}'), /ref/);
   assert.throws(() => parseNavigateArgs('{"action":"reload","ref":"tab_2","url":"https://example.com"}'), /url/);
-  assert.throws(() => parseNavigateArgs('{"action":"back","ref":"tab_2","extra":true}'), /未対応/);
+  assert.throws(() => parseNavigateArgs('{"action":"back","ref":"tab_2","extra":true}'), /unsupported/);
 });

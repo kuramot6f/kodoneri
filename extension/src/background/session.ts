@@ -1,4 +1,5 @@
 import type { CacheUsage, Conversation, ModelMessage } from "../shared/conversation";
+import { i18n } from "../shared/i18n.ts";
 import {
   createConversation,
   expireToolHistory,
@@ -103,11 +104,11 @@ export async function attachPort(port: browser.runtime.Port): Promise<void> {
 
 /** switch_tab carries the conversation to the tab the user now sees; the old tab is left empty. */
 export async function moveSession(session: Session, targetTabId: number): Promise<void> {
-  if (sessions.get(targetTabId)?.run) throw new Error("移動先のタブでは別の回答を処理中のため、会話を移動できません。");
+  if (sessions.get(targetTabId)?.run) throw new Error(i18n._({ id: "errors.targetTabBusy", message: "The conversation cannot be moved because the target tab is processing another response." }));
   try {
     await browser.tabs.sendMessage(targetTabId, { type: "ping" } satisfies TabMessage, { frameId: 0 });
   } catch {
-    throw new Error("タブは切り替えましたが、このタブでは会話を表示できないため、会話は元のタブに残っています。");
+    throw new Error(i18n._({ id: "errors.targetTabUnavailable", message: "The tab was switched, but the conversation remains in the original tab because it cannot be displayed here." }));
   }
 
   const sourceTabId = session.tabId;
@@ -207,7 +208,7 @@ interface Models {
 
 async function resolveModels(): Promise<Models> {
   const settings = resolveSettings(await loadSettings());
-  if (!settings) throw new Error("APIキーが設定されていません。chatextアプリでAPIキーを設定してください。");
+  if (!settings) throw new Error(i18n._({ id: "errors.apiKeyMissing", message: "No API key is configured. Configure one in the chatext app." }));
   return { main: createRuntime(settings, settings.effort), low: createRuntime(settings, "lowest") };
 }
 
@@ -276,7 +277,7 @@ async function answer(
       const content = await compact(models.low, plan.prefix, signal);
       conversation.messages = applyCompaction(conversation.messages, { prefixMessageCount: plan.prefixMessageCount, content });
     } catch (error) {
-      append(conversation, [taggedMessage("runtime_error", `会話の圧縮に失敗しました。${getErrorMessage(error)}`)]);
+      append(conversation, [taggedMessage("runtime_error", i18n._({ id: "errors.compactionFailed", message: "Conversation compaction failed. {error}", values: { error: getErrorMessage(error) } }))]);
     }
     session.compacting = false;
   }
@@ -306,7 +307,7 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
     signal: new AbortController().signal,
     model,
     scope: "memory" as const,
-    moveSession: () => Promise.reject(new Error("メモリ更新中はタブを切り替えられません。"))
+    moveSession: () => Promise.reject(new Error(i18n._({ id: "errors.switchDuringMemoryUpdate", message: "Tabs cannot be switched while memory is being updated." })))
   };
   const result = await streamAnswer(
     model,
@@ -376,5 +377,7 @@ function post(session: Session, event: PanelEvent): void {
 }
 
 function getErrorMessage(error: unknown): string {
-  return error instanceof Error && error.message ? error.message : "不明なエラーが発生しました。";
+  return error instanceof Error && error.message
+    ? error.message
+    : i18n._({ id: "errors.unknown", message: "An unknown error occurred." });
 }

@@ -1,4 +1,5 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { lexer } from "marked";
 import type { Token } from "marked";
 import { Icon } from "./Icon";
@@ -13,13 +14,14 @@ interface HistoryViewProps {
 }
 
 export function HistoryView({ conversations, onSelect, onDelete }: HistoryViewProps) {
+  const { i18n, t } = useLingui();
   const [query, setQuery] = useState("");
   const viewRef = useRef<HTMLDivElement>(null);
   const normalizedQuery = normalizeQuery(query);
   const entries = useMemo(() => normalizedQuery
     ? searchConversations(conversations.map(indexConversation), normalizedQuery)
     : conversations.map(toDefaultEntry), [conversations, normalizedQuery]);
-  const groups = groupEntriesByDate(entries);
+  const groups = groupEntriesByDate(entries, i18n.locale, t`Today`, t`Yesterday`);
 
   useLayoutEffect(() => {
     const panel = viewRef.current?.parentElement;
@@ -30,19 +32,19 @@ export function HistoryView({ conversations, onSelect, onDelete }: HistoryViewPr
     <>
       <div id="history-view" ref={viewRef}>
         {conversations.length === 0 ? (
-          <p className="history-empty">保存された会話はありません。</p>
+          <p className="history-empty"><Trans>No saved conversations.</Trans></p>
         ) : entries.length === 0 ? (
-          <p className="history-empty">一致する会話はありません。</p>
+          <p className="history-empty"><Trans>No matching conversations.</Trans></p>
         ) : groups.map((group) => (
           <section className="history-group" key={group.dateKey}>
             <h2>{group.label}</h2>
             {group.entries.map(({ conversation, preview }) => (
               <div className="history-row" key={conversation.id}>
-                <button className="history-item" type="button" title="この会話を開く" onClick={() => onSelect(conversation)}>
+                <button className="history-item" type="button" title={t`Open this conversation`} onClick={() => onSelect(conversation)}>
                   <span className="history-title"><Highlight text={conversation.title} query={normalizedQuery} /></span>
                   {preview && <span className="history-preview"><Highlight text={preview} query={normalizedQuery} /></span>}
                 </button>
-                <button className="icon-button" type="button" aria-label="この会話を削除" title="この会話を削除" onClick={() => onDelete(conversation)}>
+                <button className="icon-button" type="button" aria-label={t`Delete this conversation`} title={t`Delete this conversation`} onClick={() => onDelete(conversation)}>
                   <Icon name="delete" />
                 </button>
               </div>
@@ -50,7 +52,7 @@ export function HistoryView({ conversations, onSelect, onDelete }: HistoryViewPr
           </section>
         ))}
       </div>
-      {conversations.length > 0 && <SearchBar value={query} placeholder="履歴を検索" onChange={setQuery} />}
+      {conversations.length > 0 && <SearchBar value={query} placeholder={t`Search history`} onChange={setQuery} />}
     </>
   );
 }
@@ -111,7 +113,7 @@ interface HistoryGroup {
   entries: HistoryEntry[];
 }
 
-function groupEntriesByDate(entries: HistoryEntry[]): HistoryGroup[] {
+function groupEntriesByDate(entries: HistoryEntry[], locale: string, todayLabel: string, yesterdayLabel: string): HistoryGroup[] {
   const today = startOfDay(new Date());
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
@@ -130,10 +132,10 @@ function groupEntriesByDate(entries: HistoryEntry[]): HistoryGroup[] {
     groups.set(dateKey, {
       dateKey,
       label: dateKey === toDateKey(today)
-        ? "Today"
+        ? todayLabel
         : dateKey === toDateKey(yesterday)
-          ? "Yesterday"
-          : date.toLocaleDateString("ja-JP", {
+          ? yesterdayLabel
+          : date.toLocaleDateString(locale, {
               year: "numeric",
               month: "long",
               day: "numeric"

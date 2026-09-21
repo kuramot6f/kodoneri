@@ -1,5 +1,6 @@
 import type { TextResourceOutput } from "./protocol";
 import { loadResource, resolveResourceUrl } from "./resourceLoader";
+import { i18n } from "./i18n.ts";
 
 export const MAX_TEXT_RESOURCE_BYTES = 5 * 1024 * 1024;
 export const MAX_TOTAL_TEXT_RESOURCE_BYTES = 20 * 1024 * 1024;
@@ -21,7 +22,7 @@ const TEXT_MIME_TYPES = new Set([
 ]);
 
 export function resolveTextResourceUrl(ref: string, baseUrl: string): string {
-  return resolveResourceUrl(ref, baseUrl, TEXT_RESOURCE_SCHEMES, "テキスト資源");
+  return resolveResourceUrl(ref, baseUrl, TEXT_RESOURCE_SCHEMES, i18n._({ id: "resources.text", message: "text resource" }));
 }
 
 export async function loadTextResource(
@@ -29,13 +30,13 @@ export async function loadTextResource(
   signal?: AbortSignal
 ): Promise<TextResourceOutput> {
   const resource = await loadResource(url, {
-    label: "テキスト資源",
+    label: i18n._({ id: "resources.text", message: "text resource" }),
     maxBytes: MAX_TEXT_RESOURCE_BYTES,
     signal
   });
   const mimeType = parseMimeType(resource.contentType);
   if (!isTextMimeType(mimeType)) {
-    throw new Error(`テキストとして扱えないContent-Typeです: ${mimeType || "不明"}`);
+    throw new Error(i18n._({ id: "errors.nonTextContentType", message: "This Content-Type cannot be handled as text: {mimeType}", values: { mimeType: mimeType || i18n._({ id: "common.unknown", message: "unknown" }) } }));
   }
 
   const charset = parseCharset(resource.contentType);
@@ -43,7 +44,7 @@ export async function loadTextResource(
   try {
     content = new TextDecoder(charset).decode(resource.buffer);
   } catch {
-    throw new Error(`未対応の文字コードです: ${charset}`);
+    throw new Error(i18n._({ id: "errors.unsupportedCharset", message: "Unsupported character encoding: {charset}", values: { charset } }));
   }
 
   return {

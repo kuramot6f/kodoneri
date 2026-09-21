@@ -1,4 +1,5 @@
 import type { ToolOutput } from "./protocol";
+import { i18n } from "./i18n.ts";
 
 export interface TextToolMetadata {
   ref: string;
@@ -28,7 +29,7 @@ export function parseTextToolCall(name: string, argumentsJson: string): ParsedTe
   const args: unknown = JSON.parse(argumentsJson);
   if (name === "grep") return { name, args: parseGrepArgs(args) };
   if (name === "read") return { name, args: parseReadArgs(args) };
-  throw new Error(`未対応のツールです: ${name}`);
+  throw new Error(i18n._({ id: "errors.unsupportedTool", message: "Unsupported tool: {name}", values: { name } }));
 }
 
 export function runTextTool(
@@ -48,26 +49,26 @@ export function runTextTool(
       } : result)
     };
   } catch (error) {
-    return { type: "error", error: getErrorMessage(error, "ツールの実行に失敗しました。") };
+    return { type: "error", error: getErrorMessage(error, i18n._({ id: "errors.toolExecutionFailed", message: "Tool execution failed." })) };
   }
 }
 
 function parseGrepArgs(value: unknown): GrepArgs {
-  if (!value || typeof value !== "object") throw new Error("引数が不正です。");
+  if (!value || typeof value !== "object") throw new Error(i18n._({ id: "errors.invalidArguments", message: "Invalid arguments." }));
   const { pattern, context, offset = 0, ref, resource_type: resourceType } = value as Record<string, unknown>;
   if (typeof pattern !== "string" || !pattern || pattern.length > 200) {
-    throw new Error("patternは1〜200文字で指定してください。");
+    throw new Error(i18n._({ id: "errors.invalidPattern", message: "pattern must be between 1 and 200 characters." }));
   }
   if (!Number.isInteger(context) || (context as number) < 0 || (context as number) > 1000) {
-    throw new Error("contextは0〜1000の整数で指定してください。");
+    throw new Error(i18n._({ id: "errors.invalidContext", message: "context must be an integer between 0 and 1000." }));
   }
   if (!Number.isInteger(offset) || (offset as number) < 0 || (offset as number) > 1_000_000) {
-    throw new Error("offsetは0〜1000000の整数で指定してください。");
+    throw new Error(i18n._({ id: "errors.invalidGrepOffset", message: "offset must be an integer between 0 and 1000000." }));
   }
   const parsedRef = parseOptionalRef(ref);
   const parsedResourceType = parseOptionalResourceType(resourceType);
   if (parsedRef !== undefined && isCollectionResourceType(parsedResourceType)) {
-    throw new Error(`resource_type=${parsedResourceType}にはrefを指定できません。`);
+    throw new Error(i18n._({ id: "errors.refWithCollection", message: "ref cannot be specified with resource_type={resourceType}.", values: { resourceType: parsedResourceType } }));
   }
   return {
     pattern,
@@ -79,13 +80,13 @@ function parseGrepArgs(value: unknown): GrepArgs {
 }
 
 function parseReadArgs(value: unknown): ReadArgs {
-  if (!value || typeof value !== "object") throw new Error("引数が不正です。");
+  if (!value || typeof value !== "object") throw new Error(i18n._({ id: "errors.invalidArguments", message: "Invalid arguments." }));
   const { offset, limit, ref } = value as Record<string, unknown>;
   if (!Number.isInteger(offset) || (offset as number) < 0) {
-    throw new Error("offsetは0以上の整数で指定してください。");
+    throw new Error(i18n._({ id: "errors.invalidReadOffset", message: "offset must be a non-negative integer." }));
   }
   if (!Number.isInteger(limit) || (limit as number) < 1 || (limit as number) > 10000) {
-    throw new Error("limitは1〜10000の整数で指定してください。");
+    throw new Error(i18n._({ id: "errors.invalidReadLimit", message: "limit must be an integer between 1 and 10000." }));
   }
   return { offset: offset as number, limit: limit as number, ref: parseOptionalRef(ref) };
 }
@@ -93,7 +94,7 @@ function parseReadArgs(value: unknown): ReadArgs {
 function parseOptionalRef(value: unknown): string | undefined {
   if (value === undefined) return undefined;
   if (typeof value !== "string" || !value.trim() || value.length > 10000) {
-    throw new Error("refは1〜10000文字の文字列で指定してください。");
+    throw new Error(i18n._({ id: "errors.invalidRefLength", message: "ref must be a string between 1 and 10000 characters." }));
   }
   return value;
 }
@@ -104,7 +105,7 @@ function parseOptionalResourceType(value: unknown): GrepResourceType | undefined
       || value === "script" || value === "style" || value === "svg") {
     return value;
   }
-  throw new Error("resource_typeはsession、tab、memory、script、style、svgのいずれかを指定してください。");
+  throw new Error(i18n._({ id: "errors.invalidResourceType", message: "resource_type must be one of session, tab, memory, script, style, or svg." }));
 }
 
 /** session/tab/memory search every stored item of that kind and therefore take no ref. */

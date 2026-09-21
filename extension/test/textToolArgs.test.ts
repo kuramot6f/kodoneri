@@ -8,7 +8,7 @@ test("grep scopes script/style/svg resource types by a single tab or iframe ref"
   assert.deepEqual(call.args, { pattern: "a", context: 10, offset: 0, ref: "tab_2", resourceType: "style" });
   assert.throws(
     () => parseTextToolCall("grep", '{"pattern":"a","context":10,"ref":["tab_2","tab_3"],"resource_type":"style"}'),
-    /文字列/
+    /string/
   );
 });
 

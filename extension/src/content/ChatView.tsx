@@ -1,5 +1,7 @@
 import { Fragment, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, KeyboardEvent, RefObject } from "react";
+import { plural, t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import hljs from "highlight.js/lib/common";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
@@ -63,6 +65,7 @@ export function ChatView({
   onSubmit,
   onStop
 }: ChatViewProps) {
+  const { t } = useLingui();
   const messagesRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
@@ -70,7 +73,7 @@ export function ChatView({
   const toolResults = useMemo(() => collectToolResults(messages), [messages]);
   const canInterrupt = busy && Boolean(question.trim());
   const showStop = busy && !canInterrupt;
-  const sendLabel = showStop ? "回答を停止" : canInterrupt ? "割り込み送信" : "送信";
+  const sendLabel = showStop ? t`Stop response` : canInterrupt ? t`Send and interrupt` : t`Send`;
 
   useEffect(() => {
     const panel = messagesRef.current?.parentElement;
@@ -90,8 +93,8 @@ export function ChatView({
         {messages.map((message, index) => (
           <MessageView message={message} toolResults={toolResults} key={index} />
         ))}
-        {step && <StepContent step={step} placeholder="回答を生成中…" />}
-        {compacting && <div className="memory-update-label">会話を圧縮中…</div>}
+        {step && <StepContent step={step} placeholder={t`Generating response…`} />}
+        {compacting && <div className="memory-update-label"><Trans>Compacting conversation…</Trans></div>}
         {memory && <MemoryUpdateView progress={memory} />}
       </div>
       <form className="bottom-bar" onSubmit={onSubmit}>
@@ -103,7 +106,7 @@ export function ChatView({
               disabled={busy}
               onChange={(event) => onIncludeSelectionChange(event.target.checked)}
             />
-            {`${selectionSummary}を含める`}
+            <Trans>Include {selectionSummary}</Trans>
           </label>
         )}
         <div className="composer-row">
@@ -111,8 +114,8 @@ export function ChatView({
             <button
               className="round"
               type="button"
-              aria-label="モデルと思考量"
-              title="モデルと思考量"
+              aria-label={t`Model and reasoning effort`}
+              title={t`Model and reasoning effort`}
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((open) => !open)}
             >
@@ -122,7 +125,7 @@ export function ChatView({
           </div>
           <textarea
             id="question"
-            placeholder="このページについて質問"
+            placeholder={t`Ask about this page`}
             required
             ref={questionRef}
             value={question}
@@ -159,7 +162,7 @@ function MessageView({
     if (kind === "browser_context" || kind === "compaction" || kind === "memory_update") return null;
     const content = getMessageText(message);
     if (kind === "selection_context") return <SelectionMessage content={content} />;
-    if (kind === "runtime_error") return <div className="message error">{`エラー: ${content}`}</div>;
+    if (kind === "runtime_error") return <div className="message error"><Trans>Error: {content}</Trans></div>;
     if (kind === "runtime_cancelled") return <div className="message error">{content}</div>;
     return <div className="message user">{content}</div>;
   }
@@ -205,7 +208,7 @@ function SelectionMessage({ content }: { content: string }) {
   return (
     <div className="message user selection">
       {text}
-      {mediaCount > 0 && <div className="selection-media">{`メディア${mediaCount}件`}</div>}
+      {mediaCount > 0 && <div className="selection-media">{plural(mediaCount, { one: "# media item", other: "# media items" })}</div>}
     </div>
   );
 }
@@ -226,11 +229,11 @@ function MarkdownMessage({ content }: { content: string }) {
 function MemoryUpdateView({ progress }: { progress: MemoryProgress }) {
   return (
     <div className="memory-update">
-      <div className="memory-update-label">{progress.done ? "メモリ更新" : "メモリ更新中…"}</div>
+      <div className="memory-update-label">{progress.done ? t`Memory updated` : t`Updating memory…`}</div>
       {progress.reasoning && <Reasoning content={progress.reasoning} />}
       {progress.tools.map((tool) => <PendingToolCall key={tool.id} tool={tool} />)}
       {progress.text && <div className="message memory-update-note">{progress.text}</div>}
-      {progress.error && <div className="message error">{`エラー: ${progress.error}`}</div>}
+      {progress.error && <div className="message error">{t`Error: ${progress.error}`}</div>}
       {progress.cacheUsage && <CacheRate usage={progress.cacheUsage} />}
     </div>
   );
@@ -239,7 +242,7 @@ function MemoryUpdateView({ progress }: { progress: MemoryProgress }) {
 function Reasoning({ content }: { content: string }) {
   return (
     <details className="reasoning">
-      <summary><Icon name="expand" />思考</summary>
+      <summary><Icon name="expand" /><Trans>Reasoning</Trans></summary>
       <pre>{content}</pre>
     </details>
   );
@@ -257,7 +260,7 @@ function StoredToolCall({
   return (
     <details className="tool-call">
       <summary><Icon name="expand" />{`${name} ${formatJson(argumentsJson)}`}</summary>
-      <pre>{output === undefined ? "実行中…" : formatStoredToolOutput(output)}</pre>
+      <pre>{output === undefined ? t`Running…` : formatStoredToolOutput(output)}</pre>
     </details>
   );
 }
@@ -266,7 +269,7 @@ function PendingToolCall({ tool }: { tool: ToolDetail }) {
   return (
     <details className="tool-call">
       <summary><Icon name="expand" />{`${tool.name} ${formatJson(tool.args)}`}</summary>
-      <pre>{tool.output ? formatPendingToolOutput(tool.output) : "実行中…"}</pre>
+      <pre>{tool.output ? formatPendingToolOutput(tool.output) : t`Running…`}</pre>
     </details>
   );
 }
@@ -281,13 +284,14 @@ function collectToolResults(messages: ModelMessage[]): Map<string, ToolResultPar
 }
 
 function CacheRate({ usage }: { usage: CacheUsage }) {
+  const { i18n, t } = useLingui();
   const inputTokens = usage.hitTokens + usage.missTokens;
   if (inputTokens === 0) return null;
 
   const rate = usage.hitTokens / inputTokens * 100;
   return (
     <div className="cache-rate">
-      {`キャッシュ率: ${rate.toFixed(1)}%（${usage.hitTokens.toLocaleString()} / ${inputTokens.toLocaleString()} tokens）`}
+      {t`Cache hit rate: ${rate.toFixed(1)}% (${usage.hitTokens.toLocaleString(i18n.locale)} / ${inputTokens.toLocaleString(i18n.locale)} tokens)`}
     </div>
   );
 }
@@ -297,14 +301,14 @@ function formatStoredToolOutput(output: ToolResultPart["output"]): string {
   if (output.type === "json" || output.type === "error-json") {
     return JSON.stringify(output.value, null, 2);
   }
-  if (output.type === "execution-denied") return output.reason ?? "実行されませんでした。";
-  return "画像またはファイル";
+  if (output.type === "execution-denied") return output.reason ?? t`Execution was denied.`;
+  return t`Image or file`;
 }
 
 function formatPendingToolOutput(output: ToolOutput): string {
-  if (output.type === "error") return `エラー:\n${output.error}`;
+  if (output.type === "error") return t`Error:\n${output.error}`;
   if (output.type === "image") {
-    return `画像: ${output.mimeType} (${formatBytes(output.byteLength)})`;
+    return t`Image: ${output.mimeType} (${formatBytes(output.byteLength)})`;
   }
   return formatJson(output.content, 2);
 }

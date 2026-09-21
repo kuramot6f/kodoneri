@@ -1,4 +1,5 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
+import { i18n } from "../shared/i18n.ts";
 import type { AnthropicLanguageModelOptions } from "@ai-sdk/anthropic";
 import { createDeepSeek } from "@ai-sdk/deepseek";
 import type { DeepSeekFilesOptions, DeepSeekLanguageModelOptions } from "@ai-sdk/deepseek";
@@ -45,7 +46,7 @@ export function resolveSettings(settings: ModelSettings): ModelSettings | null {
 export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"): ModelRuntime {
   const info = findModel(settings.model);
   const apiKey = info && apiKeys[info.provider];
-  if (!info || !apiKey) throw new Error("APIキーが設定されていません。chatextアプリでAPIキーを設定してください。");
+  if (!info || !apiKey) throw new Error(i18n._({ id: "errors.apiKeyMissing", message: "No API key is configured. Configure one in the chatext app." }));
   const level = effort === "lowest" ? lowestEffort(info) : clampEffort(info, effort);
   const expiresAfter = TOOL_HISTORY_TTL_MS / 1000;
 

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { PROVIDERS, clampEffort } from "../shared/models";
 import type { Effort, ModelSettings } from "../shared/models";
 import type { ModelsView, RuntimeMessage } from "../shared/protocol";
@@ -14,6 +15,7 @@ const EFFORT_LABELS: Record<Effort, string> = {
 
 /** Model and effort picker above the composer. Every change is saved as it is made. */
 export function ModelMenu({ onClose }: { onClose: () => void }) {
+  const { t } = useLingui();
   const [view, setView] = useState<ModelsView | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -55,13 +57,13 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
   const providers = Object.keys(PROVIDERS) as (keyof typeof PROVIDERS)[];
 
   return (
-    <div className="model-menu" ref={menuRef} role="dialog" aria-label="モデルと思考量">
+    <div className="model-menu" ref={menuRef} role="dialog" aria-label={t`Model and reasoning effort`}>
       {!view ? null : !view.settings || !model ? (
-        <p className="model-menu-empty">APIキーが設定されていません。chatextアプリで設定してください。</p>
+        <p className="model-menu-empty"><Trans>No API key is configured. Configure one in the chatext app.</Trans></p>
       ) : (
         <>
           <label className="model-menu-row">
-            <span>モデル</span>
+            <span><Trans>Model</Trans></span>
             <select
               value={model.id}
               onChange={(event) => {
@@ -81,7 +83,7 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
           </label>
           {model.efforts.length > 0 && (
             <label className="model-menu-row">
-              <span>思考量</span>
+              <span><Trans>Reasoning effort</Trans></span>
               <input
                 type="range"
                 min={0}

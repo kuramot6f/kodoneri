@@ -1,4 +1,5 @@
 import { isTouchDevice } from "./device";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { MEMORY_CONTENT_MAX_LENGTH, MEMORY_TITLE_MAX_LENGTH } from "../shared/memory";
 import type { Memory } from "../shared/memory";
 
@@ -8,15 +9,16 @@ interface MemoryEditorProps {
 }
 
 export function MemoryEditor({ memory, onChange }: MemoryEditorProps) {
+  const { t } = useLingui();
   return (
     <div id="memory-editor">
       <label className="memory-title-row">
-        <span className="memory-title-label">タイトル：</span>
+        <span className="memory-title-label"><Trans>Title:</Trans></span>
         <input
           className="memory-title"
           type="text"
-          placeholder="タイトル"
-          aria-label="タイトル"
+          placeholder={t`Title`}
+          aria-label={t`Title`}
           maxLength={MEMORY_TITLE_MAX_LENGTH}
           value={memory.title}
           onChange={(event) => onChange({ ...memory, title: event.target.value })}
@@ -24,8 +26,8 @@ export function MemoryEditor({ memory, onChange }: MemoryEditorProps) {
       </label>
       <textarea
         className="memory-content"
-        placeholder="内容"
-        aria-label="内容"
+        placeholder={t`Content`}
+        aria-label={t`Content`}
         autoFocus={!isTouchDevice()}
         maxLength={MEMORY_CONTENT_MAX_LENGTH}
         value={memory.content}

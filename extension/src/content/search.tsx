@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
+import { useLingui } from "@lingui/react/macro";
 import { isTouchDevice } from "./device";
 import { Icon } from "./Icon";
 
@@ -11,8 +12,9 @@ interface SearchBarProps {
 
 /** Sticky bottom search button shared by the chat history and memory lists; the field appears only while open. */
 export function SearchBar({ value, placeholder, onChange }: SearchBarProps) {
+  const { t } = useLingui();
   const [open, setOpen] = useState(false);
-  const label = open ? "検索を閉じる" : placeholder;
+  const label = open ? t`Close search` : placeholder;
   const toggle = () => {
     if (open) onChange("");
     setOpen(!open);
