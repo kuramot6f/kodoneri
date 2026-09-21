@@ -59,6 +59,19 @@ if (window === window.top && !document.getElementById(CHAT_HOST_ID)) {
   host.id = CHAT_HOST_ID;
 
   const shadow = host.attachShadow({ mode: "closed" });
+  const stopInputPropagation = (event: Event) => event.stopPropagation();
+  for (const type of [
+    "keydown",
+    "keypress",
+    "keyup",
+    "beforeinput",
+    "input",
+    "compositionstart",
+    "compositionupdate",
+    "compositionend"
+  ]) {
+    shadow.addEventListener(type, stopInputPropagation);
+  }
   const stylesheet = document.createElement("link");
   stylesheet.rel = "stylesheet";
   stylesheet.href = browser.runtime.getURL("styles.css");
