@@ -391,6 +391,12 @@
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			name = "Build Web Extension";
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/background.js",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/content.js",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/manifest.json",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/styles.css",
+			);
 			shellPath = /bin/sh;
 			shellScript = (
 				"if [ \"$ACTION\" = indexbuild ]; then exit 0; fi",
@@ -413,6 +419,12 @@
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			name = "Build Web Extension";
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/background.js",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/content.js",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/manifest.json",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/styles.css",
+			);
 			shellPath = /bin/sh;
 			shellScript = (
 				"if [ \"$ACTION\" = indexbuild ]; then exit 0; fi",
