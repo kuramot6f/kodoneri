@@ -137,10 +137,10 @@
 		422D2BC9305E3AA1007990AD /* Shared (Extension) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				422D2C36305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext Extension (iOS)" target */,
-				422D2C37305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext Extension (macOS)" target */,
 				422D2E01305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext (iOS)" target */,
 				422D2E02305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext (macOS)" target */,
+				422D2C36305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext Extension (iOS)" target */,
+				422D2C37305E3AA1007990AD /* Exceptions for "Shared (Extension)" folder in "chatext Extension (macOS)" target */,
 			);
 			path = "Shared (Extension)";
 			sourceTree = "<group>";
@@ -560,7 +560,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = chatext.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "chatext (App).entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V9WGCH53JN;
@@ -601,7 +601,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = chatext.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "chatext (App).entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V9WGCH53JN;
@@ -719,7 +719,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = chatext.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "chatext (App).entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V9WGCH53JN;
@@ -760,7 +760,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = chatext.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "chatext (App).entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V9WGCH53JN;

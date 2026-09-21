@@ -8,6 +8,8 @@
 import SwiftUI
 
 let extensionBundleIdentifier = "kuramot6f.chatext.Extension"
+/// The Cloudflare Worker in `gateway/`; the extension has the same URL in `provider.ts`.
+let gatewayURL = URL(string: "https://chatext-gateway.TODO.workers.dev")!
 
 @main
 struct ChatextApp: App {
