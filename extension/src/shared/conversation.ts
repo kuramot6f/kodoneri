@@ -18,6 +18,8 @@ export interface Conversation {
   title: string;
   createdAt: number;
   updatedAt: number;
+  /** Fixed system prompt created when the conversation starts. */
+  systemPrompt?: string;
   messages: ModelMessage[];
 }
 

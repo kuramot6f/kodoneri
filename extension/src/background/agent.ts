@@ -34,7 +34,8 @@ export async function streamAnswer(
   messages: ModelMessage[],
   tools: ToolSet,
   signal: AbortSignal,
-  callbacks: StreamCallbacks
+  callbacks: StreamCallbacks,
+  instructions = SYSTEM_PROMPT
 ): Promise<StreamResult> {
   let text = "";
   let reasoning = "";
@@ -45,7 +46,7 @@ export async function streamAnswer(
   try {
     const result = streamText({
       model: runtime.model,
-      instructions: SYSTEM_PROMPT,
+      instructions,
       messages,
       tools,
       // The SDK stops after one step by default; the stop button is the only limit here.

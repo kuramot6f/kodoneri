@@ -23,6 +23,8 @@ import { applyCompaction, planCompaction } from "./compaction";
 import { createRuntime, refreshApiKeys, resolveSettings } from "./provider";
 import type { ModelRuntime } from "./provider";
 import { createTools, disposeTools } from "./tools";
+import { createConversationSystemPrompt } from "./prompt";
+import { listMemories } from "./storedText";
 
 export interface Session {
   tabId: number;
@@ -175,6 +177,10 @@ async function ask(session: Session, message: Extract<PanelMessage, { type: "ask
     const firstTurn = conversation.messages.length === 0;
     // Keys live in memory and are re-read from the Keychain only when a conversation starts.
     if (firstTurn) await refreshApiKeys().catch(() => undefined);
+    if (firstTurn && !conversation.systemPrompt) {
+      const memoryList = await listMemories();
+      conversation.systemPrompt = createConversationSystemPrompt(memoryList.content);
+    }
     conversation.messages = [
       ...conversation.messages,
       stamp(taggedMessage("browser_context", JSON.stringify({
@@ -259,7 +265,7 @@ async function answer(
       session.step = { reasoning: "", text: "", tools: [] };
       pushState(session);
     }
-  });
+  }, conversation.systemPrompt);
   await disposeTools(runtime);
 
   if (result.error) {
