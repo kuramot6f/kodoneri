@@ -156,19 +156,19 @@ async function appleNotification(request: Request, env: Env): Promise<Response> 
 
 function billingResponse(row: BillingRow): Response {
   const plan = effectivePlan(row);
-  const allowance = plan === "free" ? 0 : row.allowance_microusd;
-  const used = plan === "free" ? 0 : row.used_microusd;
+  const allowance = row.allowance_microusd;
+  const used = row.used_microusd;
   return Response.json({
     plan,
-    productID: plan === "free" ? null : row.product_id,
+    productID: row.product_id,
     period: row.period_start && row.period_end ? { start: row.period_start, end: row.period_end } : null,
     currency: "USD",
     allowanceUsd: allowance / 1_000_000,
     estimatedCostUsd: used / 1_000_000,
     remainingUsd: Math.max(allowance - used, 0) / 1_000_000,
-    inputTokens: plan === "free" ? 0 : row.input_tokens,
-    outputTokens: plan === "free" ? 0 : row.output_tokens,
-    requests: plan === "free" ? 0 : row.requests,
+    inputTokens: row.input_tokens,
+    outputTokens: row.output_tokens,
+    requests: row.requests,
     appAccountToken: row.app_account_token
   });
 }
@@ -181,11 +181,13 @@ async function authenticate(request: Request, env: Env): Promise<{ token: string
 }
 
 function canUseGateway(row: BillingRow): boolean {
-  return effectivePlan(row) !== "free" && row.used_microusd < row.allowance_microusd;
+  return row.used_microusd < row.allowance_microusd;
 }
 
 function usageLimitResponse(row: BillingRow): Response {
-  const message = effectivePlan(row) === "free" ? "A Plus or Pro subscription is required." : "The usage limit for this billing period has been reached.";
+  const message = effectivePlan(row) === "free"
+    ? "The free usage limit for this month has been reached. Subscribe to Plus or Pro to continue."
+    : "The usage limit for this billing period has been reached.";
   return Response.json({ error: { message, type: "usage_limit_exceeded" } }, { status: 402 });
 }
 
