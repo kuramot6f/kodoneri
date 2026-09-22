@@ -22,7 +22,7 @@ msgstr "「{preview}」"
 msgid "{0, plural, one {# media item} other {# media items}}"
 msgstr "メディア{0}件"
 
-#: src/content/ChatView.tsx:233
+#: src/content/ChatView.tsx:208
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "メディア{mediaCount}件"
 
@@ -34,7 +34,7 @@ msgstr "お気に入りに追加"
 msgid "Add to favorites (the AI will no longer be able to edit it)"
 msgstr "お気に入りに追加（AIは編集できなくなる）"
 
-#: src/content/ChatView.tsx:147
+#: src/content/ChatView.tsx:128
 msgid "Ask about this page"
 msgstr "このページについて質問"
 
@@ -46,7 +46,7 @@ msgstr "一覧に戻る"
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:316
+#: src/content/ChatView.tsx:280
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "キャッシュ率: {0}%（{1} / {2} tokens）"
 
@@ -71,7 +71,7 @@ msgstr "パネルを閉じる"
 msgid "Close search"
 msgstr "検索を閉じる"
 
-#: src/content/ChatView.tsx:116
+#: src/content/ChatView.tsx:97
 msgid "Compacting conversation…"
 msgstr "会話を圧縮中…"
 
@@ -81,7 +81,7 @@ msgid "Content"
 msgstr "内容"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:303
+#: src/background/session.ts:292
 msgid "errors.compactionFailed"
 msgstr "会話の圧縮に失敗しました。{error}"
 
@@ -132,23 +132,16 @@ msgstr "このメモリを編集"
 msgid "Enlarge"
 msgstr "大きく表示"
 
-#. placeholder {0}: tool.result
-#: src/content/ChatView.tsx:294
-msgid "Error:\n"
-"{0}"
-msgstr "エラー:\n"
-"{0}"
-
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:258
+#: src/content/ChatView.tsx:231
 msgid "Error: {0}"
 msgstr "エラー: {0}"
 
-#: src/content/ChatView.tsx:187
+#: src/content/ChatView.tsx:173
 msgid "Error: {content}"
 msgstr "エラー: {content}"
 
-#: src/content/ChatView.tsx:326
+#: src/content/ChatView.tsx:290
 msgid "Execution was denied."
 msgstr "実行されませんでした。"
 
@@ -156,15 +149,15 @@ msgstr "実行されませんでした。"
 msgid "Finish editing and return to the list"
 msgstr "編集を終えて一覧に戻る"
 
-#: src/content/ChatView.tsx:115
+#: src/content/ChatView.tsx:96
 msgid "Generating response…"
 msgstr "回答を生成中…"
 
-#: src/content/ChatView.tsx:327
+#: src/content/ChatView.tsx:291
 msgid "Image or file"
 msgstr "画像またはファイル"
 
-#: src/content/ChatView.tsx:128
+#: src/content/ChatView.tsx:109
 msgid "Include {selectionSummary}"
 msgstr "{selectionSummary}を含める"
 
@@ -176,7 +169,7 @@ msgstr "メモリ"
 msgid "Memory"
 msgstr "メモリ"
 
-#: src/content/ChatView.tsx:254
+#: src/content/ChatView.tsx:229
 msgid "Memory updated"
 msgstr "メモリ更新"
 
@@ -188,8 +181,8 @@ msgstr "メニュー（チャット履歴・メモリ）"
 msgid "Model"
 msgstr "モデル"
 
-#: src/content/ChatView.tsx:136
-#: src/content/ChatView.tsx:137
+#: src/content/ChatView.tsx:117
+#: src/content/ChatView.tsx:118
 #: src/content/ModelMenu.tsx:80
 msgid "Model and reasoning effort"
 msgstr "モデルと思考量"
@@ -211,12 +204,12 @@ msgstr "APIキーが設定されていません。chatextアプリで設定し�
 
 #. js-lingui-explicit-id
 #: src/background/provider.ts:52
-#: src/background/session.ts:226
+#: src/background/session.ts:224
 msgid "errors.apiKeyMissing"
 msgstr "APIキーが設定されていません。chatextアプリでAPIキーを設定してください。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:126
+#: src/background/agent.ts:140
 msgid "errors.noCompaction"
 msgstr "会話の圧縮結果を取得できませんでした。"
 
@@ -229,7 +222,7 @@ msgid "No matching memories."
 msgstr "一致するメモリはありません。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:90
+#: src/background/agent.ts:102
 msgid "errors.noResponse"
 msgstr "回答を取得できませんでした。"
 
@@ -242,7 +235,7 @@ msgid "No saved memories."
 msgstr "保存されたメモリはありません。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:112
+#: src/background/agent.ts:126
 msgid "errors.noTitle"
 msgstr "タイトルを取得できませんでした。"
 
@@ -250,7 +243,7 @@ msgstr "タイトルを取得できませんでした。"
 msgid "Open this conversation"
 msgstr "この会話を開く"
 
-#: src/content/ChatView.tsx:267
+#: src/content/ChatView.tsx:240
 msgid "Reasoning"
 msgstr "思考"
 
@@ -264,8 +257,8 @@ msgid "Remove from favorites"
 msgstr "お気に入りを解除"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:85
-#: src/background/agent.ts:95
+#: src/background/agent.ts:97
+#: src/background/agent.ts:109
 msgid "errors.responseCancelled"
 msgstr "回答の生成を中止しました。"
 
@@ -273,8 +266,7 @@ msgstr "回答の生成を中止しました。"
 msgid "Restore size"
 msgstr "元の大きさに戻す"
 
-#: src/content/ChatView.tsx:285
-#: src/content/ChatView.tsx:294
+#: src/content/ChatView.tsx:258
 msgid "Running…"
 msgstr "実行中…"
 
@@ -290,11 +282,11 @@ msgstr "履歴を検索"
 msgid "Search memories"
 msgstr "メモリを検索"
 
-#: src/content/ChatView.tsx:79
+#: src/content/ChatView.tsx:62
 msgid "Send"
 msgstr "送信"
 
-#: src/content/ChatView.tsx:79
+#: src/content/ChatView.tsx:62
 msgid "Send and interrupt"
 msgstr "割り込み送信"
 
@@ -302,7 +294,7 @@ msgstr "割り込み送信"
 msgid "Show in sidebar"
 msgstr "サイドバーに表示"
 
-#: src/content/ChatView.tsx:79
+#: src/content/ChatView.tsx:62
 msgid "Stop response"
 msgstr "回答を停止"
 
@@ -327,7 +319,7 @@ msgstr "今日"
 msgid "Untitled"
 msgstr "無題"
 
-#: src/content/ChatView.tsx:254
+#: src/content/ChatView.tsx:229
 msgid "Updating memory…"
 msgstr "メモリ更新中…"
 

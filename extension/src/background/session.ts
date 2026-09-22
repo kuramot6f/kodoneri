@@ -13,10 +13,8 @@ import type {
   MemoryProgress,
   PanelState,
   RuntimeMessage,
-  StepView,
   TabMessage,
-  TabView,
-  ToolDetail
+  TabView
 } from "../shared/protocol";
 import { loadConversation, loadSettings, saveConversation } from "../shared/store";
 import { compact, generateTitle, MEMORY_UPDATE_PROMPT, streamAnswer } from "./agent";
@@ -34,7 +32,7 @@ interface Session {
   panel: PanelState;
   conversation: Conversation | null;
   run: { requestId: string; controller: AbortController; done: Promise<void> } | null;
-  step: StepView | null;
+  step: ModelMessage[] | null;
   compacting: boolean;
   memory: MemoryProgress | null;
   cacheUsage: CacheUsage | null;
@@ -187,7 +185,7 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
     ];
     conversation.updatedAt = now;
     session.conversation = conversation;
-    session.step = { reasoning: "", text: "", tools: [] };
+    session.step = [];
     persist(session);
     pushView(session);
     await save(conversation);
@@ -247,24 +245,19 @@ async function answer(
   const live = () => session.conversation === conversation;
   const instructions = `${systemPrompt}\n\n${createRuntimeContext(browser.i18n.getUILanguage())}`;
   const result = await streamAnswer(models.main, conversation.messages, createTools(runtime), signal, {
-    onDelta: (channel, text) => {
+    onUpdate: (step) => {
       if (!live() || !session.step) return;
-      session.step[channel] += text;
-      scheduleLive(session);
-    },
-    onTool: (detail) => {
-      if (detail.error) debugEvent("tool_failed", { requestId, toolName: detail.name, errorMessage: detail.result });
-      if (!live() || !session.step) return;
-      session.step.tools = upsert(session.step.tools, detail);
+      session.step = step;
       scheduleLive(session);
     },
     onStep: (messages) => {
       append(conversation, messages);
       void save(conversation).catch(() => undefined);
       if (!live()) return;
-      session.step = { reasoning: "", text: "", tools: [] };
+      session.step = [];
       pushView(session);
-    }
+    },
+    onToolError: (toolName, errorMessage) => debugEvent("tool_failed", { requestId, toolName, errorMessage })
   }, instructions);
   debugEvent("answer_finished", {
     tabId: session.tabId,
@@ -275,12 +268,8 @@ async function answer(
   });
 
   if (result.error) {
-    const { text, reasoning } = result.partial;
     append(conversation, [
-      ...(text ? [{
-        role: "assistant" as const,
-        content: [...(reasoning ? [{ type: "reasoning" as const, text: reasoning }] : []), { type: "text" as const, text }]
-      }] : []),
+      ...(result.partial ? [result.partial] : []),
       taggedMessage(result.cancelled ? "runtime_cancelled" : "runtime_error", result.error)
     ]);
   }
@@ -320,7 +309,8 @@ async function answer(
 }
 
 async function maintainMemory(session: Session, conversation: Conversation, model: ModelRuntime, instructions: string): Promise<void> {
-  const progress: MemoryProgress = { reasoning: "", text: "", tools: [], done: false, cacheUsage: null };
+  const progress: MemoryProgress = { messages: [], done: false, cacheUsage: null };
+  let finished: ModelMessage[] = [];
   session.memory = progress;
   pushView(session);
   const live = () => session.memory === progress;
@@ -338,15 +328,14 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
     createTools(runtime),
     runtime.signal,
     {
-      onDelta: (channel, text) => {
-        progress[channel] += text;
+      onUpdate: (step) => {
+        progress.messages = [...finished, ...step];
         if (live()) scheduleLive(session);
       },
-      onTool: (detail) => {
-        progress.tools = upsert(progress.tools, detail);
-        if (live()) scheduleLive(session);
-      },
-      onStep: () => undefined
+      onStep: (messages) => {
+        finished = [...finished, ...messages];
+        progress.messages = finished;
+      }
     },
     instructions
   );
@@ -380,12 +369,6 @@ async function save(conversation: Conversation): Promise<void> {
 function lastAnswer(conversation: Conversation): string {
   const message = conversation.messages.findLast((candidate) => candidate.role === "assistant" && getMessageText(candidate));
   return message ? getMessageText(message) : "";
-}
-
-function upsert(tools: ToolDetail[], detail: ToolDetail): ToolDetail[] {
-  return tools.some((tool) => tool.id === detail.id)
-    ? tools.map((tool) => tool.id === detail.id ? detail : tool)
-    : [...tools, detail];
 }
 
 function persist(session: Session): void {

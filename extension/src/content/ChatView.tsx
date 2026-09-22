@@ -2,9 +2,6 @@ import { Fragment, useCallback, useDeferredValue, useLayoutEffect, useMemo, useR
 import type { FormEvent, KeyboardEvent, RefObject } from "react";
 import { plural, t } from "@lingui/core/macro";
 import { Trans, useLingui } from "@lingui/react/macro";
-import hljs from "highlight.js/lib/common";
-import { Marked } from "marked";
-import { markedHighlight } from "marked-highlight";
 import type {
   CacheUsage,
   Conversation,
@@ -12,31 +9,18 @@ import type {
   ToolResultPart
 } from "../shared/conversation";
 import { getMeta, getMessageText, getToolResults } from "../shared/conversation";
-import type { MemoryProgress, SelectionContext, StepView, ToolDetail } from "../shared/protocol";
+import type { MemoryProgress, SelectionContext } from "../shared/protocol";
 import { Icon } from "./Icon";
+import { markdown } from "./markdown";
 import { ModelMenu } from "./ModelMenu";
 
 /** Within this distance of the bottom, new content keeps the view pinned to the bottom. */
 const STICK_DISTANCE_PX = 48;
 
-const plainTextLanguages = new Set(["nohighlight", "plaintext", "text", "txt"]);
-const markdown = new Marked(markedHighlight({
-  emptyLangClass: "hljs",
-  langPrefix: "hljs language-",
-  highlight(code, language) {
-    const normalizedLanguage = language.toLowerCase();
-    if (plainTextLanguages.has(normalizedLanguage)) return code;
-    if (normalizedLanguage && hljs.getLanguage(normalizedLanguage)) {
-      return hljs.highlight(code, { language: normalizedLanguage }).value;
-    }
-    return hljs.highlightAuto(code).value;
-  }
-}));
-
 interface ChatViewProps {
   conversation: Conversation | null;
   /** The step currently streaming; finished steps are already in the conversation. */
-  step: StepView | null;
+  step: ModelMessage[] | null;
   memory: MemoryProgress | null;
   compacting: boolean;
   cacheUsage: CacheUsage | null;
@@ -73,7 +57,6 @@ export function ChatView({
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const messages = conversation?.messages ?? [];
-  const toolResults = useMemo(() => collectToolResults(messages), [messages]);
   const canInterrupt = busy && Boolean(question.trim());
   const showStop = busy && !canInterrupt;
   const sendLabel = showStop ? t`Stop response` : canInterrupt ? t`Send and interrupt` : t`Send`;
@@ -109,10 +92,8 @@ export function ChatView({
   return (
     <>
       <div id="messages" aria-live="polite" ref={messagesRef}>
-        {messages.map((message, index) => (
-          <MessageView message={message} toolResults={toolResults} key={index} />
-        ))}
-        {step && <StepContent step={step} placeholder={t`Generating response…`} />}
+        <Messages messages={step ? [...messages, ...step] : messages} />
+        {step?.length === 0 && <MarkdownMessage content={t`Generating response…`} />}
         {compacting && <div className="memory-update-label"><Trans>Compacting conversation…</Trans></div>}
         {memory && <MemoryUpdateView progress={memory} />}
       </div>
@@ -168,6 +149,11 @@ export function ChatView({
   );
 }
 
+function Messages({ messages }: { messages: ModelMessage[] }) {
+  const toolResults = useMemo(() => collectToolResults(messages), [messages]);
+  return messages.map((message, index) => <MessageView message={message} toolResults={toolResults} key={index} />);
+}
+
 function MessageView({
   message,
   toolResults
@@ -198,10 +184,10 @@ function MessageView({
         if (part.type === "reasoning") return <Reasoning key={index} content={part.text} />;
         if (part.type === "tool-call") {
           return (
-            <StoredToolCall
+            <ToolCall
               key={part.toolCallId}
               name={part.toolName}
-              argumentsJson={JSON.stringify(part.input)}
+              input={part.input}
               output={toolResults.get(part.toolCallId)}
             />
           );
@@ -210,17 +196,6 @@ function MessageView({
         return null;
       })}
     </Fragment>
-  );
-}
-
-function StepContent({ step, placeholder }: { step: StepView; placeholder?: string }) {
-  const empty = !step.reasoning && !step.text && step.tools.length === 0;
-  return (
-    <>
-      {step.reasoning && <Reasoning content={step.reasoning} />}
-      {step.text ? <MarkdownMessage content={step.text} /> : empty && placeholder && <MarkdownMessage content={placeholder} />}
-      {step.tools.map((tool) => <PendingToolCall key={tool.id} tool={tool} />)}
-    </>
   );
 }
 
@@ -252,9 +227,7 @@ function MemoryUpdateView({ progress }: { progress: MemoryProgress }) {
   return (
     <div className="memory-update">
       <div className="memory-update-label">{progress.done ? t`Memory updated` : t`Updating memory…`}</div>
-      {progress.reasoning && <Reasoning content={progress.reasoning} />}
-      {progress.tools.map((tool) => <PendingToolCall key={tool.id} tool={tool} />)}
-      {progress.text && <div className="message memory-update-note">{progress.text}</div>}
+      <Messages messages={progress.messages} />
       {progress.error && <div className="message error">{t`Error: ${progress.error}`}</div>}
       {progress.cacheUsage && <CacheRate usage={progress.cacheUsage} />}
     </div>
@@ -270,28 +243,19 @@ function Reasoning({ content }: { content: string }) {
   );
 }
 
-function StoredToolCall({
+function ToolCall({
   name,
-  argumentsJson,
+  input,
   output
 }: {
   name: string;
-  argumentsJson: string;
+  input: unknown;
   output: ToolResultPart["output"] | undefined;
 }) {
   return (
     <details className="tool-call">
-      <summary><Icon name="expand" />{`${name} ${formatJson(argumentsJson)}`}</summary>
-      <pre>{output === undefined ? t`Running…` : formatStoredToolOutput(output)}</pre>
-    </details>
-  );
-}
-
-function PendingToolCall({ tool }: { tool: ToolDetail }) {
-  return (
-    <details className="tool-call">
-      <summary><Icon name="expand" />{`${tool.name} ${formatJson(tool.args)}`}</summary>
-      <pre>{tool.result === null ? t`Running…` : tool.error ? t`Error:\n${tool.result}` : tool.result}</pre>
+      <summary><Icon name="expand" />{`${name} ${JSON.stringify(input)}`}</summary>
+      <pre>{output === undefined ? t`Running…` : formatToolOutput(output)}</pre>
     </details>
   );
 }
@@ -318,8 +282,8 @@ function CacheRate({ usage }: { usage: CacheUsage }) {
   );
 }
 
-function formatStoredToolOutput(output: ToolResultPart["output"]): string {
-  if (output.type === "text" || output.type === "error-text") return formatJson(output.value, 2);
+function formatToolOutput(output: ToolResultPart["output"]): string {
+  if (output.type === "text" || output.type === "error-text") return formatJson(output.value);
   if (output.type === "json" || output.type === "error-json") {
     return JSON.stringify(output.value, null, 2);
   }
@@ -327,9 +291,9 @@ function formatStoredToolOutput(output: ToolResultPart["output"]): string {
   return t`Image or file`;
 }
 
-function formatJson(value: string, indent = 0): string {
+function formatJson(value: string): string {
   try {
-    return JSON.stringify(JSON.parse(value), null, indent);
+    return JSON.stringify(JSON.parse(value), null, 2);
   } catch {
     return value;
   }

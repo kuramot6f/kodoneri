@@ -22,7 +22,7 @@ msgstr "“{preview}”"
 msgid "{0, plural, one {# media item} other {# media items}}"
 msgstr "{0, plural, one {# media item} other {# media items}}"
 
-#: src/content/ChatView.tsx:233
+#: src/content/ChatView.tsx:208
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "{mediaCount, plural, one {# media item} other {# media items}}"
 
@@ -34,7 +34,7 @@ msgstr "Add to favorites"
 msgid "Add to favorites (the AI will no longer be able to edit it)"
 msgstr "Add to favorites (the AI will no longer be able to edit it)"
 
-#: src/content/ChatView.tsx:147
+#: src/content/ChatView.tsx:128
 msgid "Ask about this page"
 msgstr "Ask about this page"
 
@@ -46,7 +46,7 @@ msgstr "Back to list"
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:316
+#: src/content/ChatView.tsx:280
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Cache hit rate: {0}% ({1} / {2} tokens)"
 
@@ -71,7 +71,7 @@ msgstr "Close panel"
 msgid "Close search"
 msgstr "Close search"
 
-#: src/content/ChatView.tsx:116
+#: src/content/ChatView.tsx:97
 msgid "Compacting conversation…"
 msgstr "Compacting conversation…"
 
@@ -81,7 +81,7 @@ msgid "Content"
 msgstr "Content"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:303
+#: src/background/session.ts:292
 msgid "errors.compactionFailed"
 msgstr "Conversation compaction failed. {error}"
 
@@ -132,23 +132,16 @@ msgstr "Edit this memory"
 msgid "Enlarge"
 msgstr "Enlarge"
 
-#. placeholder {0}: tool.result
-#: src/content/ChatView.tsx:294
-msgid "Error:\n"
-"{0}"
-msgstr "Error:\n"
-"{0}"
-
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:258
+#: src/content/ChatView.tsx:231
 msgid "Error: {0}"
 msgstr "Error: {0}"
 
-#: src/content/ChatView.tsx:187
+#: src/content/ChatView.tsx:173
 msgid "Error: {content}"
 msgstr "Error: {content}"
 
-#: src/content/ChatView.tsx:326
+#: src/content/ChatView.tsx:290
 msgid "Execution was denied."
 msgstr "Execution was denied."
 
@@ -156,15 +149,15 @@ msgstr "Execution was denied."
 msgid "Finish editing and return to the list"
 msgstr "Finish editing and return to the list"
 
-#: src/content/ChatView.tsx:115
+#: src/content/ChatView.tsx:96
 msgid "Generating response…"
 msgstr "Generating response…"
 
-#: src/content/ChatView.tsx:327
+#: src/content/ChatView.tsx:291
 msgid "Image or file"
 msgstr "Image or file"
 
-#: src/content/ChatView.tsx:128
+#: src/content/ChatView.tsx:109
 msgid "Include {selectionSummary}"
 msgstr "Include {selectionSummary}"
 
@@ -176,7 +169,7 @@ msgstr "memory"
 msgid "Memory"
 msgstr "Memory"
 
-#: src/content/ChatView.tsx:254
+#: src/content/ChatView.tsx:229
 msgid "Memory updated"
 msgstr "Memory updated"
 
@@ -188,8 +181,8 @@ msgstr "Menu (chat history and memory)"
 msgid "Model"
 msgstr "Model"
 
-#: src/content/ChatView.tsx:136
-#: src/content/ChatView.tsx:137
+#: src/content/ChatView.tsx:117
+#: src/content/ChatView.tsx:118
 #: src/content/ModelMenu.tsx:80
 msgid "Model and reasoning effort"
 msgstr "Model and reasoning effort"
@@ -211,12 +204,12 @@ msgstr "No API key is configured. Configure one in the chatext app."
 
 #. js-lingui-explicit-id
 #: src/background/provider.ts:52
-#: src/background/session.ts:226
+#: src/background/session.ts:224
 msgid "errors.apiKeyMissing"
 msgstr "No API key is configured. Configure one in the chatext app."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:126
+#: src/background/agent.ts:140
 msgid "errors.noCompaction"
 msgstr "No conversation compaction result was received."
 
@@ -229,7 +222,7 @@ msgid "No matching memories."
 msgstr "No matching memories."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:90
+#: src/background/agent.ts:102
 msgid "errors.noResponse"
 msgstr "No response was received."
 
@@ -242,7 +235,7 @@ msgid "No saved memories."
 msgstr "No saved memories."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:112
+#: src/background/agent.ts:126
 msgid "errors.noTitle"
 msgstr "No title was received."
 
@@ -250,7 +243,7 @@ msgstr "No title was received."
 msgid "Open this conversation"
 msgstr "Open this conversation"
 
-#: src/content/ChatView.tsx:267
+#: src/content/ChatView.tsx:240
 msgid "Reasoning"
 msgstr "Reasoning"
 
@@ -264,8 +257,8 @@ msgid "Remove from favorites"
 msgstr "Remove from favorites"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:85
-#: src/background/agent.ts:95
+#: src/background/agent.ts:97
+#: src/background/agent.ts:109
 msgid "errors.responseCancelled"
 msgstr "Response generation was cancelled."
 
@@ -273,8 +266,7 @@ msgstr "Response generation was cancelled."
 msgid "Restore size"
 msgstr "Restore size"
 
-#: src/content/ChatView.tsx:285
-#: src/content/ChatView.tsx:294
+#: src/content/ChatView.tsx:258
 msgid "Running…"
 msgstr "Running…"
 
@@ -290,11 +282,11 @@ msgstr "Search history"
 msgid "Search memories"
 msgstr "Search memories"
 
-#: src/content/ChatView.tsx:79
+#: src/content/ChatView.tsx:62
 msgid "Send"
 msgstr "Send"
 
-#: src/content/ChatView.tsx:79
+#: src/content/ChatView.tsx:62
 msgid "Send and interrupt"
 msgstr "Send and interrupt"
 
@@ -302,7 +294,7 @@ msgstr "Send and interrupt"
 msgid "Show in sidebar"
 msgstr "Show in sidebar"
 
-#: src/content/ChatView.tsx:79
+#: src/content/ChatView.tsx:62
 msgid "Stop response"
 msgstr "Stop response"
 
@@ -327,7 +319,7 @@ msgstr "Today"
 msgid "Untitled"
 msgstr "Untitled"
 
-#: src/content/ChatView.tsx:254
+#: src/content/ChatView.tsx:229
 msgid "Updating memory…"
 msgstr "Updating memory…"
 
