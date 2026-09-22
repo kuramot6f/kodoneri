@@ -23,7 +23,7 @@ import { applyCompaction, planCompaction } from "./compaction";
 import { createRuntime, refreshApiKeys, resolveSettings } from "./provider";
 import type { ModelRuntime } from "./provider";
 import { createTools, disposeTools } from "./tools";
-import { createConversationSystemPrompt } from "./prompt";
+import { createConversationSystemPrompt, createRuntimeContext } from "./prompt";
 import { listMemories } from "./storedText";
 import { debugEvent } from "./debug";
 import { errorData } from "../shared/debugLog";
@@ -205,10 +205,9 @@ async function ask(session: Session, message: Extract<PanelMessage, { type: "ask
     const firstTurn = conversation.messages.length === 0;
     // Keys live in memory and are re-read from the Keychain only when a conversation starts.
     if (firstTurn) await refreshApiKeys().catch(() => undefined);
-    if (firstTurn && !conversation.systemPrompt) {
-      const memoryList = await listMemories();
-      conversation.systemPrompt = createConversationSystemPrompt(memoryList.content);
-    }
+    // Refresh instructions for resumed conversations too; runtime metadata is never persisted here.
+    const memoryList = await listMemories();
+    conversation.systemPrompt = createConversationSystemPrompt(memoryList.content);
     conversation.messages = [
       ...conversation.messages,
       stamp(taggedMessage("browser_context", JSON.stringify({
@@ -288,6 +287,7 @@ async function answer(
   // The asking tab prepared page tools for this request even if no tool ever reaches it.
   session.touched.add(`${session.tabId}:0`);
   const live = () => session.conversation === conversation;
+  const instructions = `${conversation.systemPrompt}\n\n${createRuntimeContext(browser.i18n.getUILanguage())}`;
   let firstTextDelta = true;
   let firstReasoningDelta = true;
   const result = await streamAnswer(models.main, conversation.messages, createTools(runtime), signal, {
@@ -321,7 +321,7 @@ async function answer(
       session.step = { reasoning: "", text: "", tools: [] };
       pushState(session);
     }
-  }, conversation.systemPrompt);
+  }, instructions);
   await disposeTools(runtime);
   debugEvent("answer_stream_finished", {
     tabId: session.tabId,
@@ -376,10 +376,10 @@ async function answer(
       if (live()) pushState(session);
     }).catch(() => undefined);
   }
-  void maintainMemory(session, conversation, models.low);
+  void maintainMemory(session, conversation, models.low, instructions);
 }
 
-async function maintainMemory(session: Session, conversation: Conversation, model: ModelRuntime): Promise<void> {
+async function maintainMemory(session: Session, conversation: Conversation, model: ModelRuntime, instructions: string): Promise<void> {
   debugEvent("memory_update_started", { tabId: session.tabId, conversationId: conversation.id, model: model.info.key });
   const progress: MemoryProgress = { reasoning: "", text: "", tools: [], done: false, cacheUsage: null };
   session.memory = progress;
@@ -408,7 +408,8 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
         if (live()) pushState(session);
       },
       onStep: () => undefined
-    }
+    },
+    instructions
   );
   progress.done = true;
   progress.cacheUsage = result.cacheUsage;
