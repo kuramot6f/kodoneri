@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS billing (
   environment TEXT,
   period_start TEXT,
   period_end TEXT,
-  allowance_microusd INTEGER NOT NULL DEFAULT 0,
+  allowance_microusd INTEGER NOT NULL DEFAULT 500000,
   used_microusd INTEGER NOT NULL DEFAULT 0,
   input_tokens INTEGER NOT NULL DEFAULT 0,
   output_tokens INTEGER NOT NULL DEFAULT 0,
