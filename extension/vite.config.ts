@@ -1,16 +1,20 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
 import babel from "@rolldown/plugin-babel";
 
 export default defineConfig(({ mode }) => {
   const isContent = mode === "content";
+  const babelPresets = [
+    linguiTransformerBabelPreset(),
+    ...(isContent ? [reactCompilerPreset()] : [])
+  ];
 
   return {
     plugins: [
       react(),
       lingui(),
-      babel({ presets: [linguiTransformerBabelPreset()] })
+      babel({ presets: babelPresets })
     ],
     publicDir: isContent ? "public" : false,
     define: {
