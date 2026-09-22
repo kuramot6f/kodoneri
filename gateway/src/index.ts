@@ -117,9 +117,15 @@ async function usage(request: Request, env: Env): Promise<Response> {
     url.searchParams.set("page", String(page));
 
     const response = await fetch(url, { headers: { authorization: `Bearer ${env.CLOUDFLARE_API_TOKEN}` } });
-    if (!response.ok) return status(502);
+    if (!response.ok) {
+      console.error("AI Gateway logs request failed", response.status, (await response.text()).slice(0, 1_000));
+      return status(502);
+    }
     const payload = await response.json<CloudflareLogsResponse>();
-    if (!payload.success) return status(502);
+    if (!payload.success) {
+      console.error("AI Gateway logs request was unsuccessful", JSON.stringify(payload).slice(0, 1_000));
+      return status(502);
+    }
 
     for (const log of payload.result) {
       if (!belongsTo(log.metadata, user.billingId) || !log.path.endsWith("/chat/completions")) continue;
