@@ -7,6 +7,7 @@
 
 import AuthenticationServices
 import CryptoKit
+import StoreKit
 import SwiftUI
 
 /// A grouped form, so the window reads like Settings on both platforms.
@@ -100,10 +101,17 @@ private struct ApiKeysSection: View {
 /// Sign in with Apple is traded for a gateway token, which is kept in the Keychain like an API key.
 private struct GatewaySection: View {
 
+    private static let subscriptionProductIDs = [
+        "kuramot6f.chatext.plus.monthly",
+        "kuramot6f.chatext.pro.monthly"
+    ]
+
     @State private var isSignedIn = false
     @State private var nonce: String?
     @State private var usage: GatewayUsage?
+    @State private var products: [Product] = []
     @State private var isLoading = false
+    @State private var purchasingProductID: String?
     @State private var error: String?
 
     var body: some View {
@@ -114,20 +122,46 @@ private struct GatewaySection: View {
                         ApiKeyStore.delete("chatext")
                         isSignedIn = false
                         usage = nil
+                        products = []
                         Task { await prepareNonce() }
                     }
                 }
                 if let usage {
-                    LabeledContent("This month") {
-                        Text(usage.estimatedCostUsd, format: .currency(code: usage.currency))
+                    LabeledContent("Plan") {
+                        Text(usage.plan.capitalized)
+                    }
+                    LabeledContent("This period") {
+                        Text("\(usage.estimatedCostUsd.formatted(.currency(code: usage.currency))) / \(usage.allowanceUsd.formatted(.currency(code: usage.currency)))")
                     }
                     LabeledContent("Usage") {
                         Text("\(usage.requests.formatted()) requests · \((usage.inputTokens + usage.outputTokens).formatted()) tokens")
                             .foregroundStyle(.secondary)
                     }
                 }
+                ForEach(products, id: \.id) { product in
+                    Button {
+                        Task { await purchase(product) }
+                    } label: {
+                        HStack {
+                            Text(product.displayName)
+                            Spacer()
+                            if purchasingProductID == product.id {
+                                ProgressView()
+                                    .controlSize(.small)
+                            } else {
+                                Text(product.displayPrice)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    .disabled(isLoading || purchasingProductID != nil || usage?.productID == product.id)
+                }
+                Button("Restore Purchases") {
+                    Task { await restorePurchases() }
+                }
+                .disabled(isLoading || purchasingProductID != nil)
                 Button("Refresh Usage") {
-                    Task { await loadUsage() }
+                    Task { await loadAccount() }
                 }
                 .disabled(isLoading)
             } else {
@@ -148,14 +182,20 @@ private struct GatewaySection: View {
         } header: {
             Text("chatext")
         } footer: {
-            Text(isSignedIn ? "Usage is estimated by Cloudflare AI Gateway and may be delayed." : "Signing in adds a model that needs no API key.")
+            Text(isSignedIn ? "Usage is recorded after each response and may take a moment to appear." : "Signing in lets you subscribe to the chatext model.")
         }
         .task {
             isSignedIn = await Task.detached { ApiKeyStore.read("chatext") != nil }.value
             if isSignedIn {
-                await loadUsage()
+                await loadAccount()
             } else {
                 await prepareNonce()
+            }
+        }
+        .task(id: isSignedIn) {
+            guard isSignedIn else { return }
+            for await verification in Transaction.updates {
+                await handle(verification)
             }
         }
     }
@@ -178,7 +218,7 @@ private struct GatewaySection: View {
             isSignedIn = true
             self.nonce = nil
             error = nil
-            await loadUsage()
+            await loadAccount()
         } catch ASAuthorizationError.canceled {
             // The user dismissed the sheet; nothing to report.
         } catch {
@@ -224,6 +264,87 @@ private struct GatewaySection: View {
         }
     }
 
+    private func loadAccount() async {
+        await loadUsage()
+        await loadProducts()
+        await syncCurrentEntitlements()
+        await loadUsage()
+    }
+
+    private func loadProducts() async {
+        do {
+            products = try await Product.products(for: Self.subscriptionProductIDs)
+                .sorted { Self.subscriptionProductIDs.firstIndex(of: $0.id)! < Self.subscriptionProductIDs.firstIndex(of: $1.id)! }
+        } catch {
+            self.error = error.localizedDescription
+        }
+    }
+
+    private func purchase(_ product: Product) async {
+        guard let accountToken = usage.flatMap({ UUID(uuidString: $0.appAccountToken) }) else { return }
+        purchasingProductID = product.id
+        defer { purchasingProductID = nil }
+        do {
+            switch try await product.purchase(options: [.appAccountToken(accountToken)]) {
+            case .success(let verification):
+                await handle(verification)
+            case .pending, .userCancelled:
+                break
+            @unknown default:
+                break
+            }
+        } catch {
+            self.error = error.localizedDescription
+        }
+    }
+
+    private func restorePurchases() async {
+        guard !isLoading else { return }
+        isLoading = true
+        do {
+            try await AppStore.sync()
+            await syncCurrentEntitlements()
+            isLoading = false
+            await loadUsage()
+        } catch {
+            isLoading = false
+            self.error = error.localizedDescription
+        }
+    }
+
+    private func syncCurrentEntitlements() async {
+        for await verification in Transaction.currentEntitlements {
+            guard Self.subscriptionProductIDs.contains(verification.unsafePayloadValue.productID) else { continue }
+            await handle(verification)
+        }
+    }
+
+    private func handle(_ verification: VerificationResult<StoreKit.Transaction>) async {
+        guard case .verified(let transaction) = verification,
+              Self.subscriptionProductIDs.contains(transaction.productID) else { return }
+        do {
+            try await submit(verification.jwsRepresentation)
+            await transaction.finish()
+            await loadUsage()
+            error = nil
+        } catch {
+            self.error = error.localizedDescription
+        }
+    }
+
+    private func submit(_ signedTransaction: String) async throws {
+        guard let token = await Task.detached(operation: { ApiKeyStore.read("chatext") }).value else {
+            throw URLError(.userAuthenticationRequired)
+        }
+        var request = URLRequest(url: gatewayURL.appending(path: "billing/transaction"))
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(["signedTransaction": signedTransaction])
+        let (_, response) = try await URLSession.shared.data(for: request)
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw URLError(.badServerResponse) }
+    }
+
     private static func sha256(_ value: String) -> String {
         SHA256.hash(data: Data(value.utf8)).map { String(format: "%02x", $0) }.joined()
     }
@@ -231,11 +352,16 @@ private struct GatewaySection: View {
 }
 
 private struct GatewayUsage: Decodable {
+    let plan: String
+    let productID: String?
     let currency: String
+    let allowanceUsd: Double
     let estimatedCostUsd: Double
+    let remainingUsd: Double
     let inputTokens: Int
     let outputTokens: Int
     let requests: Int
+    let appAccountToken: String
 }
 
 #if os(macOS)

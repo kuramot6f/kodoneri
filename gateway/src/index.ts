@@ -1,15 +1,16 @@
 import { createRemoteJWKSet, jwtVerify } from "jose";
+import { effectivePlan, ensureBilling, syncTransaction, verifyNotification, type BillingRow } from "./billing";
 
 const MODEL = "deepseek-flash";
 const APPLE_ISSUER = "https://appleid.apple.com";
 const NONCE_TTL_MINUTES = 10;
-const LOGS_PER_PAGE = 50;
 
 const appleKeys = createRemoteJWKSet(new URL(`${APPLE_ISSUER}/auth/keys`));
 
 // Secrets are not in wrangler.jsonc, so `wrangler types` does not know them.
 declare global {
   interface Env {
+    APPLE_APP_ID?: string;
     CLOUDFLARE_API_TOKEN: string;
     DEEPSEEK_API_KEY: string;
   }
@@ -21,6 +22,8 @@ export default {
     if (pathname === "/auth/apple/nonce") return request.method === "POST" ? createNonce(env) : status(405);
     if (pathname === "/auth/apple") return request.method === "POST" ? signIn(request, env) : status(405);
     if (pathname === "/usage") return request.method === "GET" ? usage(request, env) : status(405);
+    if (pathname === "/billing/transaction") return request.method === "POST" ? updateSubscription(request, env) : status(405);
+    if (pathname === "/billing/apple/notifications") return request.method === "POST" ? appleNotification(request, env) : status(405);
     if (pathname === "/chat/completions" || pathname === "/files" || pathname.startsWith("/files/")) {
       return proxy(request, env, ctx, pathname);
     }
@@ -69,6 +72,7 @@ async function signIn(request: Request, env: Env): Promise<Response> {
     env.DB.prepare("INSERT OR IGNORE INTO users (id) VALUES (?)").bind(subject),
     env.DB.prepare("INSERT INTO tokens (token, user_id) VALUES (?, ?)").bind(token, subject)
   ]);
+  await ensureBilling(env, subject);
   return Response.json({ token });
 }
 
@@ -76,6 +80,8 @@ async function signIn(request: Request, env: Env): Promise<Response> {
 async function proxy(request: Request, env: Env, ctx: ExecutionContext, pathname: string): Promise<Response> {
   const user = await authenticate(request, env);
   if (!user) return status(401);
+  const billing = await ensureBilling(env, user.userId);
+  if (!canUseGateway(billing)) return usageLimitResponse(billing);
   ctx.waitUntil(env.DB.prepare("UPDATE tokens SET last_used_at = datetime('now') WHERE token = ?").bind(user.token).run());
 
   const headers = new Headers(request.headers);
@@ -93,65 +99,112 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, pathname
   }
 
   const upstream = `https://gateway.ai.cloudflare.com/v1/${env.CLOUDFLARE_ACCOUNT_ID}/${env.CLOUDFLARE_AI_GATEWAY_ID}/deepseek`;
-  return fetch(`${upstream}${pathname}`, { method: request.method, headers, body });
+  const response = await fetch(`${upstream}${pathname}`, { method: request.method, headers, body });
+  if (pathname !== "/chat/completions" || !response.ok) return response;
+
+  const logId = response.headers.get("cf-aig-log-id");
+  if (!logId || !billing.period_start) return response;
+  if (!response.body) {
+    ctx.waitUntil(recordUsage(env, user.userId, user.billingId, billing.period_start, logId));
+    return response;
+  }
+
+  const [clientBody, meterBody] = response.body.tee();
+  ctx.waitUntil(drain(meterBody).catch(() => undefined).then(() => recordUsage(env, user.userId, user.billingId, billing.period_start!, logId)));
+  return new Response(clientBody, response);
 }
 
-/** Returns the current user's month-to-date AI Gateway cost and token totals. */
+/** Returns the current StoreKit period and D1-backed usage totals. */
 async function usage(request: Request, env: Env): Promise<Response> {
   const user = await authenticate(request, env);
   if (!user) return status(401);
+  return billingResponse(await ensureBilling(env, user.userId));
+}
 
-  const now = new Date();
-  const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
-  const end = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
-  const totals = { estimatedCostUsd: 0, inputTokens: 0, outputTokens: 0, requests: 0 };
+async function updateSubscription(request: Request, env: Env): Promise<Response> {
+  const user = await authenticate(request, env);
+  if (!user) return status(401);
+  await ensureBilling(env, user.userId);
+  const body = await request.json().catch(() => null) as { signedTransaction?: unknown } | null;
+  if (typeof body?.signedTransaction !== "string") return status(400);
+  try {
+    const billing = await syncTransaction(env, body.signedTransaction, user.userId);
+    return billing ? billingResponse(billing) : status(400);
+  } catch (error) {
+    console.error("StoreKit transaction verification failed", error);
+    return status(error instanceof Error && error.message.includes("APPLE_APP_ID") ? 503 : 400);
+  }
+}
 
-  let page = 1;
-  let totalCount = 0;
-  do {
-    const url = new URL(`https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/ai-gateway/gateways/${env.CLOUDFLARE_AI_GATEWAY_ID}/logs`);
-    url.searchParams.set("start_date", start.toISOString());
-    url.searchParams.set("end_date", end.toISOString());
-    url.searchParams.set("filters.key", "metadata.value");
-    url.searchParams.set("filters.operator", "eq");
-    url.searchParams.set("filters.value", user.billingId);
-    url.searchParams.set("per_page", String(LOGS_PER_PAGE));
-    url.searchParams.set("page", String(page));
+async function appleNotification(request: Request, env: Env): Promise<Response> {
+  const body = await request.json().catch(() => null) as { signedPayload?: unknown } | null;
+  if (typeof body?.signedPayload !== "string") return status(400);
+  try {
+    const signedTransaction = await verifyNotification(env, body.signedPayload);
+    if (signedTransaction) await syncTransaction(env, signedTransaction);
+    return status(200);
+  } catch (error) {
+    console.error("App Store notification verification failed", error);
+    return status(error instanceof Error && error.message.includes("APPLE_APP_ID") ? 503 : 400);
+  }
+}
 
-    const response = await fetch(url, { headers: { authorization: `Bearer ${env.CLOUDFLARE_API_TOKEN}` } });
-    if (!response.ok) {
-      console.error("AI Gateway logs request failed", response.status, (await response.text()).slice(0, 1_000));
-      return status(502);
-    }
-    const payload = await response.json<CloudflareLogsResponse>();
-    if (!payload.success) {
-      console.error("AI Gateway logs request was unsuccessful", JSON.stringify(payload).slice(0, 1_000));
-      return status(502);
-    }
-
-    for (const log of payload.result) {
-      if (!belongsTo(log.metadata, user.billingId) || !log.path.endsWith("/chat/completions")) continue;
-      totals.estimatedCostUsd += log.cost ?? 0;
-      totals.inputTokens += log.tokens_in ?? 0;
-      totals.outputTokens += log.tokens_out ?? 0;
-      totals.requests += 1;
-    }
-    totalCount = payload.result_info.total_count ?? payload.result.length;
-    page += 1;
-  } while ((page - 1) * LOGS_PER_PAGE < totalCount);
-
+function billingResponse(row: BillingRow): Response {
+  const plan = effectivePlan(row);
+  const allowance = plan === "free" ? 0 : row.allowance_microusd;
+  const used = plan === "free" ? 0 : row.used_microusd;
   return Response.json({
-    period: { start: start.toISOString(), end: end.toISOString() },
+    plan,
+    productID: plan === "free" ? null : row.product_id,
+    period: row.period_start && row.period_end ? { start: row.period_start, end: row.period_end } : null,
     currency: "USD",
-    ...totals
+    allowanceUsd: allowance / 1_000_000,
+    estimatedCostUsd: used / 1_000_000,
+    remainingUsd: Math.max(allowance - used, 0) / 1_000_000,
+    inputTokens: plan === "free" ? 0 : row.input_tokens,
+    outputTokens: plan === "free" ? 0 : row.output_tokens,
+    requests: plan === "free" ? 0 : row.requests,
+    appAccountToken: row.app_account_token
   });
 }
 
-async function authenticate(request: Request, env: Env): Promise<{ token: string; billingId: string } | null> {
+async function authenticate(request: Request, env: Env): Promise<{ token: string; userId: string; billingId: string } | null> {
   const token = request.headers.get("authorization")?.match(/^Bearer (\S+)$/)?.[1];
   if (!token) return null;
   const row = await env.DB.prepare("SELECT user_id FROM tokens WHERE token = ?").bind(token).first<{ user_id: string }>();
-  return row ? { token, billingId: await sha256(row.user_id) } : null;
+  return row ? { token, userId: row.user_id, billingId: await sha256(row.user_id) } : null;
+}
+
+function canUseGateway(row: BillingRow): boolean {
+  return effectivePlan(row) !== "free" && row.used_microusd < row.allowance_microusd;
+}
+
+function usageLimitResponse(row: BillingRow): Response {
+  const message = effectivePlan(row) === "free" ? "A Plus or Pro subscription is required." : "The usage limit for this billing period has been reached.";
+  return Response.json({ error: { message, type: "usage_limit_exceeded" } }, { status: 402 });
+}
+
+async function drain(body: ReadableStream<Uint8Array>): Promise<void> {
+  await body.pipeTo(new WritableStream());
+}
+
+async function recordUsage(env: Env, userId: string, billingId: string, periodStart: string, logId: string): Promise<void> {
+  const url = `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/ai-gateway/gateways/${env.CLOUDFLARE_AI_GATEWAY_ID}/logs/${encodeURIComponent(logId)}`;
+  for (const delay of [0, 250, 750, 1_500, 3_000, 5_000]) {
+    if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
+    const response = await fetch(url, { headers: { authorization: `Bearer ${env.CLOUDFLARE_API_TOKEN}` } });
+    if (!response.ok) continue;
+    const payload = await response.json<CloudflareLogResponse>();
+    const log = payload.result;
+    if (!payload.success || !log || log.cost == null || !belongsTo(log.metadata, billingId)) continue;
+    await env.DB.prepare(`
+      INSERT OR IGNORE INTO usage_events
+        (log_id, user_id, period_start, cost_microusd, input_tokens, output_tokens)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).bind(logId, userId, periodStart, Math.max(0, Math.round(log.cost * 1_000_000)), log.tokens_in ?? 0, log.tokens_out ?? 0).run();
+    return;
+  }
+  console.error("AI Gateway usage log was not ready", logId);
 }
 
 function belongsTo(metadata: unknown, billingId: string): boolean {
@@ -168,16 +221,15 @@ async function sha256(value: string): Promise<string> {
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-interface CloudflareLogsResponse {
+interface CloudflareLogResponse {
   success: boolean;
-  result: Array<{
+  result?: {
     path: string;
     tokens_in: number | null;
     tokens_out: number | null;
     cost?: number;
     metadata?: unknown;
-  }>;
-  result_info: { total_count?: number };
+  };
 }
 
 function status(code: number): Response {
