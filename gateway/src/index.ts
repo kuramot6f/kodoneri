@@ -89,7 +89,7 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, pathname
   if (pathname === "/chat/completions" && request.method === "POST") {
     const input = await request.json<object>().catch(() => null);
     if (!input) return status(400);
-    body = JSON.stringify({ ...input, model: MODEL });
+    body = JSON.stringify({ ...input, model: MODEL, user_id: user.billingId });
   }
 
   const upstream = `https://gateway.ai.cloudflare.com/v1/${env.CLOUDFLARE_ACCOUNT_ID}/${env.CLOUDFLARE_AI_GATEWAY_ID}/deepseek`;
