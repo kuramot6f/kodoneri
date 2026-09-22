@@ -12,9 +12,11 @@
     "db:init:local": "wrangler d1 execute chatext-gateway --local --file schema.sql"
   },
   "dependencies": {
+    "@apple/app-store-server-library": "3.1.0",
     "jose": "^6.2.12"
   },
   "devDependencies": {
+    "@types/node": "25.4.0",
     "typescript": "^7.0.2",
     "wrangler": "^4.135.0"
   }
