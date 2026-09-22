@@ -42,7 +42,7 @@ msgstr "{action}にはvalueが必要です。"
 msgid "errors.resourceTooLarge"
 msgstr "{label}のサイズが{size} MiBを超えています。"
 
-#: src/content/ChatView.tsx:211
+#: src/content/ChatView.tsx:225
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "メディア{mediaCount}件"
 
@@ -65,13 +65,13 @@ msgid "errors.cannotReturnImage"
 msgstr "画像結果は返せません。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:172
-#: src/background/session.ts:382
-#: src/background/tools.ts:226
+#: src/background/agent.ts:173
+#: src/background/session.ts:472
+#: src/background/tools.ts:253
 msgid "errors.unknown"
 msgstr "不明なエラーが発生しました。"
 
-#: src/content/ChatView.tsx:128
+#: src/content/ChatView.tsx:142
 msgid "Ask about this page"
 msgstr "このページについて質問"
 
@@ -93,7 +93,7 @@ msgstr "{resourceType}の一括検索はバックグラウンドで実行され�
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:294
+#: src/content/ChatView.tsx:308
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "キャッシュ率: {0}%（{1} / {2} tokens）"
 
@@ -110,6 +110,10 @@ msgstr "チャット"
 msgid "errors.notCheckable"
 msgstr "checkはcheckboxまたはradioにのみ使用できます。"
 
+#: src/content/ModelMenu.tsx:122
+msgid "Clear"
+msgstr "消去"
+
 #: src/content/App.tsx:167
 #: src/content/App.tsx:167
 msgid "Close panel"
@@ -119,7 +123,7 @@ msgstr "パネルを閉じる"
 msgid "Close search"
 msgstr "検索を閉じる"
 
-#: src/content/ChatView.tsx:97
+#: src/content/ChatView.tsx:111
 msgid "Compacting conversation…"
 msgstr "会話を圧縮中…"
 
@@ -144,12 +148,20 @@ msgid "errors.invalidContext"
 msgstr "contextは0〜1000の整数で指定してください。"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:280
+#: src/background/session.ts:362
 msgid "errors.compactionFailed"
 msgstr "会話の圧縮に失敗しました。{error}"
 
+#: src/content/ModelMenu.tsx:121
+msgid "Copy diagnostics"
+msgstr "診断情報をコピー"
+
+#: src/content/ModelMenu.tsx:75
+msgid "Could not clear diagnostics"
+msgstr "診断情報を消去できませんでした"
+
 #. js-lingui-explicit-id
-#: src/background/tools.ts:134
+#: src/background/tools.ts:160
 msgid "errors.connectIframe"
 msgstr "iframeに接続できませんでした: {ref}"
 
@@ -164,6 +176,10 @@ msgstr "canvasをPNGへ変換できませんでした。"
 msgid "errors.imageToDataUrl"
 msgstr "画像をdata URLへ変換できませんでした。"
 
+#: src/content/ModelMenu.tsx:66
+msgid "Could not copy diagnostics"
+msgstr "診断情報をコピーできませんでした"
+
 #. js-lingui-explicit-id
 #: src/content/imageTools.ts:125
 msgid "errors.videoCanvasContext"
@@ -175,7 +191,7 @@ msgid "errors.fetchResource"
 msgstr "{label}を取得できませんでした。{cause}"
 
 #. js-lingui-explicit-id
-#: src/background/main.ts:47
+#: src/background/main.ts:66
 #: src/content/pageTools.ts:79
 msgid "errors.fetchTextResource"
 msgstr "テキスト資源を取得できませんでした。"
@@ -201,7 +217,7 @@ msgid "errors.resolveResourceUrl"
 msgstr "refを{label}URLとして解決できませんでした。"
 
 #. js-lingui-explicit-id
-#: src/background/tools.ts:144
+#: src/background/tools.ts:171
 msgid "errors.noToolResult"
 msgstr "ツール結果を取得できませんでした。"
 
@@ -219,6 +235,14 @@ msgstr "この会話を削除"
 #: src/content/MemoryListView.tsx:67
 msgid "Delete this memory"
 msgstr "このメモリを削除"
+
+#: src/content/ModelMenu.tsx:73
+msgid "Diagnostics cleared"
+msgstr "診断情報を消去しました"
+
+#: src/content/ModelMenu.tsx:64
+msgid "Diagnostics copied"
+msgstr "診断情報をコピーしました"
 
 #: src/content/App.tsx:162
 msgid "Done"
@@ -248,22 +272,22 @@ msgid "Enlarge"
 msgstr "大きく表示"
 
 #. placeholder {0}: output.error
-#: src/content/ChatView.tsx:309
+#: src/content/ChatView.tsx:323
 msgid "Error:\n"
 "{0}"
 msgstr "エラー:\n"
 "{0}"
 
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:236
+#: src/content/ChatView.tsx:250
 msgid "Error: {0}"
 msgstr "エラー: {0}"
 
-#: src/content/ChatView.tsx:165
+#: src/content/ChatView.tsx:179
 msgid "Error: {content}"
 msgstr "エラー: {content}"
 
-#: src/content/ChatView.tsx:304
+#: src/content/ChatView.tsx:318
 msgid "Execution was denied."
 msgstr "実行されませんでした。"
 
@@ -276,13 +300,13 @@ msgstr "{label}の取得に失敗しました（HTTP {status}）。"
 msgid "Finish editing and return to the list"
 msgstr "編集を終えて一覧に戻る"
 
-#: src/content/ChatView.tsx:96
+#: src/content/ChatView.tsx:110
 msgid "Generating response…"
 msgstr "回答を生成中…"
 
 #. js-lingui-explicit-id
 #: src/background/storedText.ts:45
-#: src/background/tools.ts:119
+#: src/background/tools.ts:145
 msgid "errors.grepReturnedImage"
 msgstr "grepが画像結果を返しました。"
 
@@ -291,7 +315,7 @@ msgstr "grepが画像結果を返しました。"
 msgid "resources.image"
 msgstr "画像"
 
-#: src/content/ChatView.tsx:305
+#: src/content/ChatView.tsx:319
 msgid "Image or file"
 msgstr "画像またはファイル"
 
@@ -307,11 +331,11 @@ msgstr "画像ツールの実行に失敗しました。"
 
 #. placeholder {0}: output.mimeType
 #. placeholder {1}: formatBytes(output.byteLength)
-#: src/content/ChatView.tsx:311
+#: src/content/ChatView.tsx:325
 msgid "Image: {0} ({1})"
 msgstr "画像: {0} ({1})"
 
-#: src/content/ChatView.tsx:109
+#: src/content/ChatView.tsx:123
 msgid "Include {selectionSummary}"
 msgstr "{selectionSummary}を含める"
 
@@ -335,12 +359,12 @@ msgid "errors.invalidArguments"
 msgstr "引数が不正です。"
 
 #. js-lingui-explicit-id
-#: src/background/tools.ts:209
+#: src/background/tools.ts:236
 msgid "errors.invalidImageData"
 msgstr "画像データの形式が不正です。"
 
 #. js-lingui-explicit-id
-#: src/background/tools.ts:94
+#: src/background/tools.ts:120
 msgid "errors.invalidStoredRef"
 msgstr "参照が無効です: {ref}。会話はgrep(resource_type=session)、メモリはlist(type=memory)で参照を再取得してください。"
 
@@ -372,7 +396,7 @@ msgstr "メモリ"
 msgid "Memory"
 msgstr "メモリ"
 
-#: src/content/ChatView.tsx:232
+#: src/content/ChatView.tsx:246
 msgid "Memory updated"
 msgstr "メモリ更新"
 
@@ -380,13 +404,13 @@ msgstr "メモリ更新"
 msgid "Menu (chat history and memory)"
 msgstr "メニュー（チャット履歴・メモリ）"
 
-#: src/content/ModelMenu.tsx:66
+#: src/content/ModelMenu.tsx:86
 msgid "Model"
 msgstr "モデル"
 
-#: src/content/ChatView.tsx:117
-#: src/content/ChatView.tsx:118
-#: src/content/ModelMenu.tsx:60
+#: src/content/ChatView.tsx:131
+#: src/content/ChatView.tsx:132
+#: src/content/ModelMenu.tsx:80
 msgid "Model and reasoning effort"
 msgstr "モデルと思考量"
 
@@ -426,18 +450,18 @@ msgstr "新規チャット"
 msgid "New memory"
 msgstr "新規メモリ"
 
-#: src/content/ModelMenu.tsx:62
+#: src/content/ModelMenu.tsx:82
 msgid "No API key is configured. Configure one in the chatext app."
 msgstr "APIキーが設定されていません。chatextアプリで設定してください。"
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:49
-#: src/background/session.ts:211
+#: src/background/provider.ts:52
+#: src/background/session.ts:262
 msgid "errors.apiKeyMissing"
 msgstr "APIキーが設定されていません。chatextアプリでAPIキーを設定してください。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:126
+#: src/background/agent.ts:127
 msgid "errors.noCompaction"
 msgstr "会話の圧縮結果を取得できませんでした。"
 
@@ -460,7 +484,7 @@ msgid "errors.optionNotFound"
 msgstr "valueに一致するoptionがありません: {value}"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:90
+#: src/background/agent.ts:91
 msgid "errors.noResponse"
 msgstr "回答を取得できませんでした。"
 
@@ -473,7 +497,7 @@ msgid "No saved memories."
 msgstr "保存されたメモリはありません。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:112
+#: src/background/agent.ts:113
 msgid "errors.noTitle"
 msgstr "タイトルを取得できませんでした。"
 
@@ -516,11 +540,11 @@ msgstr "patternは1〜200文字で指定してください。"
 msgid "errors.invalidQuery"
 msgstr "queryは1〜10000文字のCSSセレクタで指定してください。"
 
-#: src/content/ChatView.tsx:245
+#: src/content/ChatView.tsx:259
 msgid "Reasoning"
 msgstr "思考"
 
-#: src/content/ModelMenu.tsx:86
+#: src/content/ModelMenu.tsx:106
 msgid "Reasoning effort"
 msgstr "思考量"
 
@@ -535,8 +559,8 @@ msgid "errors.refWithCollection"
 msgstr "resource_type={resourceType}にはrefを指定できません。"
 
 #. js-lingui-explicit-id
-#: src/background/tools.ts:89
-#: src/background/tools.ts:129
+#: src/background/tools.ts:115
+#: src/background/tools.ts:155
 msgid "errors.refRequiredCurrentPage"
 msgstr "refを指定してください。現在のページはbrowser_contextのrefを使います。"
 
@@ -566,8 +590,8 @@ msgid "errors.invalidResourceType"
 msgstr "resource_typeはsession、tab、memory、script、style、svgのいずれかを指定してください。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:85
-#: src/background/agent.ts:95
+#: src/background/agent.ts:86
+#: src/background/agent.ts:96
 #: src/background/navigate.ts:64
 msgid "errors.responseCancelled"
 msgstr "回答の生成を中止しました。"
@@ -576,8 +600,8 @@ msgstr "回答の生成を中止しました。"
 msgid "Restore size"
 msgstr "元の大きさに戻す"
 
-#: src/content/ChatView.tsx:263
-#: src/content/ChatView.tsx:272
+#: src/content/ChatView.tsx:277
+#: src/content/ChatView.tsx:286
 msgid "Running…"
 msgstr "実行中…"
 
@@ -598,11 +622,11 @@ msgstr "メモリを検索"
 msgid "errors.notSelectable"
 msgstr "selectはselect要素にのみ使用できます。"
 
-#: src/content/ChatView.tsx:76
+#: src/content/ChatView.tsx:78
 msgid "Send"
 msgstr "送信"
 
-#: src/content/ChatView.tsx:76
+#: src/content/ChatView.tsx:78
 msgid "Send and interrupt"
 msgstr "割り込み送信"
 
@@ -610,7 +634,7 @@ msgstr "割り込み送信"
 msgid "Show in sidebar"
 msgstr "サイドバーに表示"
 
-#: src/content/ChatView.tsx:76
+#: src/content/ChatView.tsx:78
 msgid "Stop response"
 msgstr "回答を停止"
 
@@ -619,7 +643,7 @@ msgid "Switch to floating panel"
 msgstr "フローティングに戻す"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:310
+#: src/background/session.ts:393
 msgid "errors.switchDuringMemoryUpdate"
 msgstr "メモリ更新中はタブを切り替えられません。"
 
@@ -645,7 +669,7 @@ msgid "errors.emptyMemoryContent"
 msgstr "本文が空になります。トピックごと削除するにはdeleteを使ってください。"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:107
+#: src/background/session.ts:131
 msgid "errors.targetTabBusy"
 msgstr "移動先のタブでは別の回答を処理中のため、会話を移動できません。"
 
@@ -670,12 +694,12 @@ msgid "errors.closeConversationTab"
 msgstr "この会話を実行中のタブは閉じられません。"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:111
+#: src/background/session.ts:135
 msgid "errors.targetTabUnavailable"
 msgstr "タブは切り替えましたが、このタブでは会話を表示できないため、会話は元のタブに残っています。"
 
 #. js-lingui-explicit-id
-#: src/background/tools.ts:169
+#: src/background/tools.ts:196
 msgid "errors.tabNotVisible"
 msgstr "対象タブが表示中ではありません。タブを表示してから再試行してください。"
 
@@ -738,7 +762,7 @@ msgid "Today"
 msgstr "今日"
 
 #. js-lingui-explicit-id
-#: src/content/main.tsx:26
+#: src/content/main.tsx:38
 #: src/shared/htmlTools.ts:52
 msgid "errors.toolExecutionFailed"
 msgstr "ツールの実行に失敗しました。"
@@ -765,7 +789,7 @@ msgstr "未対応の文字コードです: {charset}"
 
 #. js-lingui-explicit-id
 #: src/background/memoryTools.ts:19
-#: src/background/tools.ts:77
+#: src/background/tools.ts:103
 #: src/shared/htmlTools.ts:32
 msgid "errors.unsupportedTool"
 msgstr "未対応のツールです: {name}"
@@ -779,7 +803,7 @@ msgstr "未対応のURL schemeです: {scheme}"
 msgid "Untitled"
 msgstr "無題"
 
-#: src/content/ChatView.tsx:232
+#: src/content/ChatView.tsx:246
 msgid "Updating memory…"
 msgstr "メモリ更新中…"
 

@@ -25,6 +25,8 @@ import type { ModelRuntime } from "./provider";
 import { createTools, disposeTools } from "./tools";
 import { createConversationSystemPrompt } from "./prompt";
 import { listMemories } from "./storedText";
+import { debugEvent } from "./debug";
+import { errorData } from "../shared/debugLog";
 
 export interface Session {
   tabId: number;
@@ -61,13 +63,15 @@ export function getSession(tabId: number): Promise<Session> {
 }
 
 async function restoreSession(tabId: number): Promise<Session> {
+  debugEvent("session_restore_started", { tabId });
   const key = `tab:${tabId}`;
   let stored: StoredTabState | undefined;
   let conversation: Conversation | null = null;
   try {
     stored = (await browser.storage.session.get(key))[key] as StoredTabState | undefined;
     if (stored?.conversationId) conversation = await loadConversation(stored.conversationId);
-  } catch {
+  } catch (error) {
+    debugEvent("session_restore_failed", { tabId, ...errorData(error) });
     // Stored tab state that cannot be read would otherwise keep this tab without a panel for good.
     stored = undefined;
   }
@@ -84,10 +88,12 @@ async function restoreSession(tabId: number): Promise<Session> {
     touched: new Set()
   };
   sessions.set(tabId, session);
+  debugEvent("session_restored", { tabId, hasConversation: Boolean(conversation), panelOpen: session.panel.open });
   return session;
 }
 
 export function removeSession(tabId: number): void {
+  debugEvent("session_removed", { tabId, wasRunning: Boolean(sessions.get(tabId)?.run) });
   sessions.get(tabId)?.run?.controller.abort();
   sessions.delete(tabId);
   void browser.storage.session.remove(`tab:${tabId}`);
@@ -104,11 +110,19 @@ export async function attachPort(port: browser.runtime.Port): Promise<void> {
   const tabId = port.sender?.tab?.id;
   if (tabId === undefined || port.sender?.frameId !== 0) return;
   const session = await getSession(tabId);
+  debugEvent("panel_port_attached", { tabId });
   session.port = port;
   pushState(session);
-  port.onMessage.addListener((message: object) => void handle(session, message as PanelMessage));
+  port.onMessage.addListener((message: object) => {
+    void handle(session, message as PanelMessage).catch((error) => {
+      debugEvent("panel_message_failed", { tabId: session.tabId, ...errorData(error) });
+    });
+  });
   port.onDisconnect.addListener(() => {
-    if (session.port === port) session.port = null;
+    if (session.port === port) {
+      debugEvent("panel_port_detached", { tabId: session.tabId });
+      session.port = null;
+    }
   });
 }
 
@@ -143,8 +157,12 @@ async function handle(session: Session, message: PanelMessage): Promise<void> {
   // Replied before any await so a slow ask or open never looks like a dead port.
   if (message.type === "ping") return pushState(session);
   if (message.type === "ask") return ask(session, message);
-  if (message.type === "cancel") return session.run?.controller.abort();
+  if (message.type === "cancel") {
+    debugEvent("request_cancelled_by_user", { tabId: session.tabId, hasRun: Boolean(session.run) });
+    return session.run?.controller.abort();
+  }
   if (message.type === "open") {
+    debugEvent("conversation_opened", { tabId: session.tabId, hasConversationId: Boolean(message.conversationId) });
     session.run?.controller.abort();
     session.conversation = message.conversationId ? await loadConversation(message.conversationId) : null;
     session.step = null;
@@ -164,10 +182,20 @@ async function ask(session: Session, message: Extract<PanelMessage, { type: "ask
   let finish!: () => void;
   const done = new Promise<void>((resolve) => { finish = resolve; });
   session.run = { requestId: message.requestId, controller, done };
+  const startedAt = performance.now();
+  debugEvent("request_started", {
+    tabId: session.tabId,
+    requestId: message.requestId,
+    questionLength: message.text.length,
+    selectionIncluded: Boolean(message.selection),
+    interruptedPrevious: Boolean(previous)
+  });
   try {
     if (previous) {
+      debugEvent("previous_request_interrupting", { tabId: session.tabId, requestId: previous.requestId });
       previous.controller.abort();
       await previous.done;
+      debugEvent("previous_request_finished", { tabId: session.tabId, requestId: previous.requestId });
     }
     session.memory = null;
     session.cacheUsage = null;
@@ -197,20 +225,27 @@ async function ask(session: Session, message: Extract<PanelMessage, { type: "ask
     session.step = { reasoning: "", text: "", tools: [] };
     persist(session);
     pushState(session);
-    await saveConversation(conversation);
+    await saveConversationWithDebug(conversation, "question");
 
     let models: Models;
     try {
       models = await resolveModels();
     } catch (error) {
+      debugEvent("model_resolution_failed", { tabId: session.tabId, requestId: message.requestId, ...errorData(error) });
       append(conversation, [taggedMessage("runtime_error", getErrorMessage(error))]);
       session.step = null;
-      await saveConversation(conversation);
+      await saveConversationWithDebug(conversation, "model_error");
       pushState(session);
       return;
     }
     await answer(session, conversation, models, message.requestId, controller.signal, firstTurn ? message.text : null);
   } finally {
+    debugEvent("request_finished", {
+      tabId: session.tabId,
+      requestId: message.requestId,
+      durationMs: Math.round(performance.now() - startedAt),
+      aborted: controller.signal.aborted
+    });
     finish();
     if (session.run?.requestId === message.requestId) session.run = null;
   }
@@ -236,6 +271,12 @@ async function answer(
   signal: AbortSignal,
   titleQuestion: string | null
 ): Promise<void> {
+  debugEvent("answer_stream_started", {
+    tabId: session.tabId,
+    requestId,
+    model: models.main.info.key,
+    messageCount: conversation.messages.length
+  });
   const runtime = {
     session,
     requestId,
@@ -247,26 +288,49 @@ async function answer(
   // The asking tab prepared page tools for this request even if no tool ever reaches it.
   session.touched.add(`${session.tabId}:0`);
   const live = () => session.conversation === conversation;
+  let firstTextDelta = true;
+  let firstReasoningDelta = true;
   const result = await streamAnswer(models.main, conversation.messages, createTools(runtime), signal, {
     onDelta: (channel, text) => {
+      if (channel === "text" ? firstTextDelta : firstReasoningDelta) {
+        debugEvent("answer_first_delta", { tabId: session.tabId, requestId, channel });
+        if (channel === "text") firstTextDelta = false;
+        else firstReasoningDelta = false;
+      }
       if (!live() || !session.step) return;
       session.step[channel] += text;
       post(session, { type: "delta", phase: "answer", channel, text });
     },
     onTool: (detail) => {
+      debugEvent(detail.output ? "tool_completed" : "tool_started", {
+        tabId: session.tabId,
+        requestId,
+        toolCallId: detail.id,
+        toolName: detail.name,
+        ...(detail.output ? { outputType: detail.output.type } : {})
+      });
       if (!live() || !session.step) return;
       session.step.tools = upsert(session.step.tools, detail);
       pushState(session);
     },
     onStep: (messages) => {
+      debugEvent("answer_step_completed", { tabId: session.tabId, requestId, messageCount: messages.length });
       append(conversation, messages);
-      void saveConversation(conversation);
+      void saveConversationWithDebug(conversation, "step").catch(() => undefined);
       if (!live()) return;
       session.step = { reasoning: "", text: "", tools: [] };
       pushState(session);
     }
   }, conversation.systemPrompt);
   await disposeTools(runtime);
+  debugEvent("answer_stream_finished", {
+    tabId: session.tabId,
+    requestId,
+    cancelled: Boolean(result.cancelled),
+    hasError: Boolean(result.error),
+    errorMessage: result.error ?? null,
+    contextTokens: result.contextTokens
+  });
 
   if (result.error) {
     const { text, reasoning } = result.partial;
@@ -279,7 +343,7 @@ async function answer(
     ]);
   }
   if (!live()) {
-    await saveConversation(conversation);
+    await saveConversationWithDebug(conversation, "inactive_answer");
     return;
   }
   session.step = null;
@@ -287,17 +351,20 @@ async function answer(
 
   const plan = result.error ? null : planCompaction(conversation.messages, result.contextTokens, models.main.info.contextWindow);
   if (plan) {
+    debugEvent("compaction_started", { tabId: session.tabId, requestId, prefixMessageCount: plan.prefixMessageCount });
     session.compacting = true;
     pushState(session);
     try {
       const content = await compact(models.low, plan.prefix, signal);
       conversation.messages = applyCompaction(conversation.messages, { prefixMessageCount: plan.prefixMessageCount, content });
+      debugEvent("compaction_completed", { tabId: session.tabId, requestId });
     } catch (error) {
+      debugEvent("compaction_failed", { tabId: session.tabId, requestId, ...errorData(error) });
       append(conversation, [taggedMessage("runtime_error", i18n._({ id: "errors.compactionFailed", message: "Conversation compaction failed. {error}", values: { error: getErrorMessage(error) } }))]);
     }
     session.compacting = false;
   }
-  await saveConversation(conversation);
+  await saveConversationWithDebug(conversation, "answer");
   pushState(session);
   if (result.error) return;
 
@@ -305,7 +372,7 @@ async function answer(
   if (titleQuestion) {
     void generateTitle(models.low, titleQuestion, lastAnswer(conversation)).then(async (title) => {
       conversation.title = title;
-      await saveConversation(conversation);
+      await saveConversationWithDebug(conversation, "title");
       if (live()) pushState(session);
     }).catch(() => undefined);
   }
@@ -313,6 +380,7 @@ async function answer(
 }
 
 async function maintainMemory(session: Session, conversation: Conversation, model: ModelRuntime): Promise<void> {
+  debugEvent("memory_update_started", { tabId: session.tabId, conversationId: conversation.id, model: model.info.key });
   const progress: MemoryProgress = { reasoning: "", text: "", tools: [], done: false, cacheUsage: null };
   session.memory = progress;
   pushState(session);
@@ -345,6 +413,14 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
   progress.done = true;
   progress.cacheUsage = result.cacheUsage;
   if (result.error) progress.error = result.error;
+  debugEvent("memory_update_finished", {
+    tabId: session.tabId,
+    conversationId: conversation.id,
+    cancelled: Boolean(result.cancelled),
+    hasError: Boolean(result.error),
+    errorMessage: result.error ?? null,
+    contextTokens: result.contextTokens
+  });
   if (live()) pushState(session);
 }
 
@@ -352,6 +428,27 @@ function append(conversation: Conversation, messages: ModelMessage[]): void {
   const now = Date.now();
   conversation.messages = [...conversation.messages, ...messages.map((message) => stamp(message, now))];
   conversation.updatedAt = now;
+}
+
+async function saveConversationWithDebug(conversation: Conversation, phase: string): Promise<void> {
+  const startedAt = performance.now();
+  try {
+    await saveConversation(conversation);
+    debugEvent("conversation_saved", {
+      conversationId: conversation.id,
+      phase,
+      messageCount: conversation.messages.length,
+      durationMs: Math.round(performance.now() - startedAt)
+    });
+  } catch (error) {
+    debugEvent("conversation_save_failed", {
+      conversationId: conversation.id,
+      phase,
+      durationMs: Math.round(performance.now() - startedAt),
+      ...errorData(error)
+    });
+    throw error;
+  }
 }
 
 function lastAnswer(conversation: Conversation): string {

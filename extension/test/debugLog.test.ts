@@ -1,0 +1,54 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { DebugLog, DEBUG_LOG_KEY, DEBUG_LOG_LIMIT, errorData } from "../src/shared/debugLog.ts";
+
+class MemoryStorage {
+  readonly values: Record<string, unknown> = {};
+
+  async get(key: string): Promise<Record<string, unknown>> {
+    return { [key]: this.values[key] };
+  }
+
+  async set(items: Record<string, unknown>): Promise<void> {
+    Object.assign(this.values, items);
+  }
+
+  async remove(key: string): Promise<void> {
+    delete this.values[key];
+  }
+}
+
+test("debug log serializes concurrent writes and keeps the newest 500 events", async () => {
+  const storage = new MemoryStorage();
+  let tick = 0;
+  const log = new DebugLog(storage, "worker-1", () => new Date(tick++));
+
+  await Promise.all(Array.from({ length: DEBUG_LOG_LIMIT + 20 }, (_, index) => (
+    log.record("background", "tick", { index })
+  )));
+
+  const events = storage.values[DEBUG_LOG_KEY] as Array<{ data: { index: number } }>;
+  assert.equal(events.length, DEBUG_LOG_LIMIT);
+  assert.equal(events[0]?.data.index, 20);
+  assert.equal(events.at(-1)?.data.index, DEBUG_LOG_LIMIT + 19);
+});
+
+test("debug export includes metadata and clear removes the buffer", async () => {
+  const storage = new MemoryStorage();
+  const log = new DebugLog(storage, "worker-1", () => new Date(0));
+  await log.record("content", "connected", { tabId: 4 });
+
+  const exported = JSON.parse(await log.export({ extensionVersion: "1.2.3" }));
+  assert.equal(exported.metadata.extensionVersion, "1.2.3");
+  assert.equal(exported.events[0].event, "connected");
+
+  await log.clear();
+  assert.equal(storage.values[DEBUG_LOG_KEY], undefined);
+});
+
+test("error data contains only the error name and message", () => {
+  assert.deepEqual(errorData(new TypeError("broken")), {
+    errorName: "TypeError",
+    errorMessage: "broken"
+  });
+});

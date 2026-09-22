@@ -1,4 +1,5 @@
 import type { CacheUsage, Conversation } from "./conversation";
+import type { DebugData } from "./debugLog";
 import type { ModelInfo, ModelSettings } from "./models";
 
 export interface PanelFrame {
@@ -113,7 +114,10 @@ export type RuntimeMessage =
   | { type: "frame"; ref: string }
   | { type: "fetch"; url: string }
   | { type: "models" }
-  | { type: "settings"; settings: ModelSettings };
+  | { type: "settings"; settings: ModelSettings }
+  | { type: "debug"; contextId: string; event: string; data?: DebugData }
+  | { type: "debug_export" }
+  | { type: "debug_clear" };
 
 /** Models whose provider has a key, and the selection clamped to them; settings is null without any key. */
 export interface ModelsView {

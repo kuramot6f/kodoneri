@@ -16,6 +16,7 @@ import type { MemoryProgress, StepView, ToolDetail, ToolOutput } from "../shared
 import { Icon } from "./Icon";
 import { ModelMenu } from "./ModelMenu";
 import { parseSelectionContext } from "../shared/selectionContext";
+import { debugEvent } from "./debug";
 
 const plainTextLanguages = new Set(["nohighlight", "plaintext", "text", "txt"]);
 const markdown = new Marked(markedHighlight({
@@ -67,6 +68,7 @@ export function ChatView({
 }: ChatViewProps) {
   const { t } = useLingui();
   const messagesRef = useRef<HTMLDivElement>(null);
+  const lastScrollLogRef = useRef(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const messages = conversation?.messages ?? [];
@@ -77,7 +79,19 @@ export function ChatView({
 
   useEffect(() => {
     const panel = messagesRef.current?.parentElement;
-    if (panel) panel.scrollTop = panel.scrollHeight;
+    if (panel) {
+      const distance = panel.scrollHeight - panel.clientHeight - panel.scrollTop;
+      if (distance > 48 && performance.now() - lastScrollLogRef.current > 1000) {
+        lastScrollLogRef.current = performance.now();
+        debugEvent("chat_autoscroll", {
+          distancePx: Math.round(distance),
+          hasConversationChange: Boolean(conversation),
+          hasStreamingStep: Boolean(step),
+          hasMemoryUpdate: Boolean(memory)
+        });
+      }
+      panel.scrollTop = panel.scrollHeight;
+    }
   }, [conversation, step, memory]);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {

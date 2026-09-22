@@ -3,10 +3,12 @@ import { activateBrowserLocale, i18n } from "../shared/i18n.ts";
 import { loadSettings, saveSettings } from "../shared/store";
 import { loadTextResource } from "../shared/textResource";
 import { clearFrames, registerFrame } from "./frames";
+import { clearDebugLog, debugEvent, exportDebugLog } from "./debug";
 import { availableModels, refreshApiKeys, resolveSettings } from "./provider";
 import { attachPort, removeSession, togglePanel } from "./session";
 
 activateBrowserLocale();
+debugEvent("worker_started");
 void refreshApiKeys().catch(() => undefined);
 
 browser.action.onClicked.addListener((tab) => {
@@ -19,10 +21,27 @@ browser.tabs.onRemoved.addListener((tabId) => {
 });
 
 browser.runtime.onConnect.addListener((port) => {
-  if (port.name === "panel") void attachPort(port);
+  if (port.name === "panel") {
+    debugEvent("panel_port_received", {
+      tabId: port.sender?.tab?.id ?? null,
+      frameId: port.sender?.frameId ?? null
+    });
+    void attachPort(port);
+  }
 });
 
 browser.runtime.onMessage.addListener((message: RuntimeMessage, sender) => {
+  if (message.type === "debug") {
+    debugEvent(message.event, {
+      contentContextId: message.contextId,
+      tabId: sender.tab?.id ?? null,
+      frameId: sender.frameId ?? null,
+      ...message.data
+    }, "content");
+    return;
+  }
+  if (message.type === "debug_export") return exportDebugLog();
+  if (message.type === "debug_clear") return clearDebugLog();
   if (message.type === "whoami") {
     if (sender.tab?.id === undefined || sender.frameId === undefined) return;
     return Promise.resolve({ tabId: sender.tab.id, frameId: sender.frameId } satisfies WhoAmI);
