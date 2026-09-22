@@ -1,17 +1,16 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { I18nProvider } from "@lingui/react";
-import type { RuntimeMessage, TabMessage, ToolOutput } from "../shared/protocol";
+import type { PageToolReply, RuntimeMessage, TabMessage } from "../shared/protocol";
+import { errorMessage } from "../shared/errors";
 import { activateBrowserLocale, i18n } from "../shared/i18n.ts";
 import { App } from "./App";
 import { CHAT_HOST_ID } from "./pageSelection";
-import { disposePageTools, getPageTools } from "./pageTools";
+import { getPageTools } from "./pageTools";
 import { receivePanelMessage } from "./usePanel";
-import { debugEvent } from "./debug";
 import "./styles.css";
 
 activateBrowserLocale();
-debugEvent("content_started", { topFrame: window === window.top });
 
 browser.runtime.onMessage.addListener((message: TabMessage) => {
   if (message.type === "view" || message.type === "live") {
@@ -20,36 +19,9 @@ browser.runtime.onMessage.addListener((message: TabMessage) => {
   }
   if (message.type === "ping") return Promise.resolve(true);
   if (message.type === "refresh_frame") return registerFrame();
-  if (message.type === "dispose") {
-    disposePageTools(message.requestId);
-    return;
-  }
   if (message.type === "tool") {
-    const startedAt = performance.now();
-    debugEvent("page_tool_received", { requestId: message.requestId, toolName: message.name });
     return getPageTools(message.requestId, message.refPrefix).run(message.name, message.args)
-      .then((output) => {
-        debugEvent("page_tool_finished", {
-          requestId: message.requestId,
-          toolName: message.name,
-          outputType: output.type,
-          durationMs: Math.round(performance.now() - startedAt)
-        });
-        return output;
-      })
-      .catch((error: unknown): ToolOutput => {
-        const errorMessage = error instanceof Error && error.message
-          ? error.message
-          : i18n._({ id: "errors.toolExecutionFailed", message: "Tool execution failed." });
-        debugEvent("page_tool_failed", {
-          requestId: message.requestId,
-          toolName: message.name,
-          durationMs: Math.round(performance.now() - startedAt),
-          errorName: error instanceof Error ? error.name : "Unknown",
-          errorMessage
-        });
-        return { type: "error", error: errorMessage };
-      });
+      .then((output): PageToolReply => ({ output }), (error: unknown): PageToolReply => ({ error: errorMessage(error) }));
   }
 });
 

@@ -42,9 +42,9 @@ const echo = tool({
   inputSchema: jsonSchema<{ value: string }>({ type: "object", properties: { value: { type: "string" } } }),
   execute: async ({ value }) => {
     if (value === "boom") throw new Error("failed");
-    return { type: "text" as const, content: value };
+    return { value };
   },
-  toModelOutput: ({ output }) => ({ type: "text" as const, value: output.content })
+  toModelOutput: ({ output }) => ({ type: "text" as const, value: output.value })
 });
 
 test("streamAnswer runs tool steps, reports tools, and hands each step's messages back", async () => {
@@ -64,11 +64,11 @@ test("streamAnswer runs tool steps, reports tools, and hands each step's message
   assert.equal(result.error, undefined);
   assert.equal(text, "done");
   assert.deepEqual(steps, [2, 2, 1]);
-  assert.deepEqual(tools.map((detail) => [detail.id, detail.output]), [
-    ["call-1", null],
-    ["call-1", { type: "text", content: "hi" }],
-    ["call-2", null],
-    ["call-2", { type: "error", error: "failed" }]
+  assert.deepEqual(tools.map((detail) => [detail.id, detail.result, detail.error ?? false]), [
+    ["call-1", null, false],
+    ["call-1", JSON.stringify({ value: "hi" }, null, 2), false],
+    ["call-2", null, false],
+    ["call-2", "failed", true]
   ]);
   const prompt = model.doStreamCalls.at(-1)!.prompt;
   assert.equal(prompt.find((message) => message.role === "system")?.content, instructions);
@@ -102,7 +102,7 @@ test("streamAnswer reports cancellation and keeps the partial text", async () =>
     onDelta: () => controller.abort(),
     onTool: () => undefined,
     onStep: () => assert.fail("no step should finish")
-  });
+  }, "instructions");
   assert.equal(result.cancelled, true);
   assert.equal(result.partial.text, "par");
 });

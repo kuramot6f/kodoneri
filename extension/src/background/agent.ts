@@ -4,14 +4,14 @@ import type { CacheUsage } from "../shared/conversation";
 import { i18n } from "../shared/i18n.ts";
 import { taggedMessage } from "../shared/conversation.ts";
 import { MEMORY_CONTENT_MAX_LENGTH, MEMORY_MAX_COUNT } from "../shared/memory.ts";
-import type { ToolDetail, ToolOutput } from "../shared/protocol";
-import { stripToolImageData } from "../shared/toolOutput.ts";
+import { errorMessage } from "../shared/errors.ts";
+import { isImageOutput, type ToolDetail } from "../shared/protocol.ts";
 import { SYSTEM_PROMPT } from "./prompt.ts";
 import type { ModelRuntime } from "./provider.ts";
 
 const TITLE_MAX_LENGTH = 30;
 
-export interface StreamCallbacks {
+interface StreamCallbacks {
   onDelta: (channel: "text" | "reasoning", text: string) => void;
   /** Called when a tool starts (output null) and again when it finishes. */
   onTool: (detail: ToolDetail) => void;
@@ -19,7 +19,7 @@ export interface StreamCallbacks {
   onStep: (messages: ModelMessage[]) => void;
 }
 
-export interface StreamResult {
+interface StreamResult {
   error?: string;
   cancelled?: boolean;
   /** Text of the step that was cut off, so it can still be shown and saved. */
@@ -35,7 +35,7 @@ export async function streamAnswer(
   tools: ToolSet,
   signal: AbortSignal,
   callbacks: StreamCallbacks,
-  instructions = SYSTEM_PROMPT
+  instructions: string
 ): Promise<StreamResult> {
   let text = "";
   let reasoning = "";
@@ -70,16 +70,15 @@ export async function streamAnswer(
         reasoning += part.text;
         callbacks.onDelta("reasoning", part.text);
       } else if (part.type === "tool-call") {
-        const detail = { id: part.toolCallId, name: part.toolName, args: JSON.stringify(part.input), output: null };
+        const detail = { id: part.toolCallId, name: part.toolName, args: JSON.stringify(part.input), result: null };
         calls.set(part.toolCallId, detail);
         callbacks.onTool(detail);
-      } else if (part.type === "tool-result" || part.type === "tool-error") {
+      } else if (part.type === "tool-result") {
         const call = calls.get(part.toolCallId);
-        if (!call) continue;
-        const output: ToolOutput = part.type === "tool-result"
-          ? stripToolImageData(part.output as ToolOutput)
-          : { type: "error", error: getErrorMessage(part.error) };
-        callbacks.onTool({ ...call, output });
+        if (call) callbacks.onTool({ ...call, result: formatToolResult(part.output) });
+      } else if (part.type === "tool-error") {
+        const call = calls.get(part.toolCallId);
+        if (call) callbacks.onTool({ ...call, result: errorMessage(part.error), error: true });
       } else if (part.type === "error") {
         throw part.error;
       } else if (part.type === "abort") {
@@ -93,7 +92,7 @@ export async function streamAnswer(
   } catch (error) {
     const cancelled = isAbortError(error);
     return {
-      error: cancelled ? i18n._({ id: "errors.responseCancelled", message: "Response generation was cancelled." }) : getErrorMessage(error),
+      error: cancelled ? i18n._({ id: "errors.responseCancelled", message: "Response generation was cancelled." }) : errorMessage(error),
       cancelled,
       partial: { text, reasoning },
       cacheUsage,
@@ -167,8 +166,8 @@ function isAbortError(error: unknown): boolean {
   return (error instanceof DOMException || error instanceof Error) && error.name === "AbortError";
 }
 
-function getErrorMessage(error: unknown): string {
-  return error instanceof Error && error.message
-    ? error.message
-    : i18n._({ id: "errors.unknown", message: "An unknown error occurred." });
+/** Display text for the panel; image data stays out of the view. */
+function formatToolResult(output: unknown): string {
+  if (isImageOutput(output)) return `${output.mimeType} (${(output.byteLength / 1024).toFixed(1)} KiB)`;
+  return typeof output === "string" ? output : JSON.stringify(output, null, 2);
 }

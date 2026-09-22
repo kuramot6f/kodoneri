@@ -22,34 +22,9 @@ msgstr "「{preview}」"
 msgid "{0, plural, one {# media item} other {# media items}}"
 msgstr "メディア{0}件"
 
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:50
-msgid "errors.navigateRefRequired"
-msgstr "{action}にはrefが必要です。現在のタブはbrowser_contextのrefを使います。"
-
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:45
-msgid "errors.navigateUrlRequired"
-msgstr "{action}にはurlが必要です。"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:48
-msgid "errors.actionValueRequired"
-msgstr "{action}にはvalueが必要です。"
-
-#. js-lingui-explicit-id
-#: src/shared/resourceLoader.ts:110
-msgid "errors.resourceTooLarge"
-msgstr "{label}のサイズが{size} MiBを超えています。"
-
-#: src/content/ChatView.tsx:225
+#: src/content/ChatView.tsx:233
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "メディア{mediaCount}件"
-
-#. js-lingui-explicit-id
-#: src/background/memoryTools.ts:33
-msgid "errors.favoriteMemory"
-msgstr "お気に入りのメモリ（is_editable=false）は変更できません。"
 
 #: src/content/MemoryListView.tsx:60
 msgid "Add to favorites"
@@ -59,63 +34,36 @@ msgstr "お気に入りに追加"
 msgid "Add to favorites (the AI will no longer be able to edit it)"
 msgstr "お気に入りに追加（AIは編集できなくなる）"
 
-#. js-lingui-explicit-id
-#: src/background/storedText.ts:56
-msgid "errors.cannotReturnImage"
-msgstr "画像結果は返せません。"
-
-#. js-lingui-explicit-id
-#: src/background/agent.ts:173
-#: src/background/session.ts:472
-#: src/background/tools.ts:253
-msgid "errors.unknown"
-msgstr "不明なエラーが発生しました。"
-
-#: src/content/ChatView.tsx:142
+#: src/content/ChatView.tsx:147
 msgid "Ask about this page"
 msgstr "このページについて質問"
 
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:134
-msgid "errors.memoryEditsRequired"
-msgstr "editsは1件以上指定してください。"
-
-#: src/content/App.tsx:158
-#: src/content/App.tsx:158
+#: src/content/App.tsx:159
+#: src/content/App.tsx:159
 msgid "Back to list"
 msgstr "一覧に戻る"
-
-#. js-lingui-explicit-id
-#: src/content/textTools.ts:48
-msgid "errors.backgroundSearch"
-msgstr "{resourceType}の一括検索はバックグラウンドで実行されます。"
 
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:308
+#: src/content/ChatView.tsx:316
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "キャッシュ率: {0}%（{1} / {2} tokens）"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:148
 msgid "Chat history"
 msgstr "チャット履歴"
 
-#: src/content/App.tsx:141
+#: src/content/App.tsx:142
 msgid "Chats"
 msgstr "チャット"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:178
-msgid "errors.notCheckable"
-msgstr "checkはcheckboxまたはradioにのみ使用できます。"
 
 #: src/content/ModelMenu.tsx:122
 msgid "Clear"
 msgstr "消去"
 
-#: src/content/App.tsx:167
-#: src/content/App.tsx:167
+#: src/content/App.tsx:168
+#: src/content/App.tsx:168
 msgid "Close panel"
 msgstr "パネルを閉じる"
 
@@ -123,7 +71,7 @@ msgstr "パネルを閉じる"
 msgid "Close search"
 msgstr "検索を閉じる"
 
-#: src/content/ChatView.tsx:111
+#: src/content/ChatView.tsx:116
 msgid "Compacting conversation…"
 msgstr "会話を圧縮中…"
 
@@ -133,22 +81,7 @@ msgid "Content"
 msgstr "内容"
 
 #. js-lingui-explicit-id
-#: src/shared/memory.ts:126
-msgid "errors.memoryContentRequired"
-msgstr "contentを指定してください。"
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:128
-msgid "errors.memoryContentTooLong"
-msgstr "本文は{max}文字以内にしてください（現在{length}文字）。不要な記述を削るか要約してください。"
-
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:63
-msgid "errors.invalidContext"
-msgstr "contextは0〜1000の整数で指定してください。"
-
-#. js-lingui-explicit-id
-#: src/background/session.ts:362
+#: src/background/session.ts:303
 msgid "errors.compactionFailed"
 msgstr "会話の圧縮に失敗しました。{error}"
 
@@ -160,71 +93,9 @@ msgstr "診断情報をコピー"
 msgid "Could not clear diagnostics"
 msgstr "診断情報を消去できませんでした"
 
-#. js-lingui-explicit-id
-#: src/background/tools.ts:160
-msgid "errors.connectIframe"
-msgstr "iframeに接続できませんでした: {ref}"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:137
-msgid "errors.canvasToPng"
-msgstr "canvasをPNGへ変換できませんでした。"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:185
-#: src/content/imageTools.ts:188
-msgid "errors.imageToDataUrl"
-msgstr "画像をdata URLへ変換できませんでした。"
-
 #: src/content/ModelMenu.tsx:66
 msgid "Could not copy diagnostics"
 msgstr "診断情報をコピーできませんでした"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:125
-msgid "errors.videoCanvasContext"
-msgstr "videoフレームの描画先を作成できませんでした。"
-
-#. js-lingui-explicit-id
-#: src/shared/resourceLoader.ts:47
-msgid "errors.fetchResource"
-msgstr "{label}を取得できませんでした。{cause}"
-
-#. js-lingui-explicit-id
-#: src/background/main.ts:66
-#: src/content/pageTools.ts:79
-msgid "errors.fetchTextResource"
-msgstr "テキスト資源を取得できませんでした。"
-
-#. js-lingui-explicit-id
-#: src/content/pageTools.ts:30
-msgid "errors.identifyTab"
-msgstr "タブを特定できませんでした。"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:33
-msgid "errors.interactionFailed"
-msgstr "ページを操作できませんでした。"
-
-#. js-lingui-explicit-id
-#: src/shared/aggregateGrep.ts:50
-msgid "errors.parseGrepResult"
-msgstr "grep結果を解析できませんでした。"
-
-#. js-lingui-explicit-id
-#: src/shared/resourceLoader.ts:26
-msgid "errors.resolveResourceUrl"
-msgstr "refを{label}URLとして解決できませんでした。"
-
-#. js-lingui-explicit-id
-#: src/background/tools.ts:171
-msgid "errors.noToolResult"
-msgstr "ツール結果を取得できませんでした。"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:103
-msgid "errors.setInputValue"
-msgstr "入力値を設定できませんでした。"
 
 #: src/content/HistoryView.tsx:47
 #: src/content/HistoryView.tsx:47
@@ -244,22 +115,12 @@ msgstr "診断情報を消去しました"
 msgid "Diagnostics copied"
 msgstr "診断情報をコピーしました"
 
-#: src/content/App.tsx:162
+#: src/content/App.tsx:163
 msgid "Done"
 msgstr "完了"
 
-#. js-lingui-explicit-id
-#: src/background/memoryTools.ts:79
-msgid "errors.memoryToolScope"
-msgstr "メモリ更新中は{name}をメモリ以外に使えません。list(type=memory)、resource_type=memoryのgrep、memory_<id>のread/grep、patch/rename/new/deleteだけを使ってください。"
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:138
-msgid "errors.invalidMemoryEdit"
-msgstr "各editはold（1文字以上）とnewの文字列で指定してください。"
-
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:161
+#: src/content/App.tsx:162
 msgid "Edit {0}"
 msgstr "{0}を編集"
 
@@ -267,140 +128,59 @@ msgstr "{0}を編集"
 msgid "Edit this memory"
 msgstr "このメモリを編集"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:146
 msgid "Enlarge"
 msgstr "大きく表示"
 
-#. placeholder {0}: output.error
-#: src/content/ChatView.tsx:323
+#. placeholder {0}: tool.result
+#: src/content/ChatView.tsx:294
 msgid "Error:\n"
 "{0}"
 msgstr "エラー:\n"
 "{0}"
 
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:250
+#: src/content/ChatView.tsx:258
 msgid "Error: {0}"
 msgstr "エラー: {0}"
 
-#: src/content/ChatView.tsx:179
+#: src/content/ChatView.tsx:187
 msgid "Error: {content}"
 msgstr "エラー: {content}"
 
-#: src/content/ChatView.tsx:318
+#: src/content/ChatView.tsx:326
 msgid "Execution was denied."
 msgstr "実行されませんでした。"
 
-#. js-lingui-explicit-id
-#: src/shared/resourceLoader.ts:49
-msgid "errors.fetchResourceHttp"
-msgstr "{label}の取得に失敗しました（HTTP {status}）。"
-
-#: src/content/App.tsx:162
+#: src/content/App.tsx:163
 msgid "Finish editing and return to the list"
 msgstr "編集を終えて一覧に戻る"
 
-#: src/content/ChatView.tsx:110
+#: src/content/ChatView.tsx:115
 msgid "Generating response…"
 msgstr "回答を生成中…"
 
-#. js-lingui-explicit-id
-#: src/background/storedText.ts:45
-#: src/background/tools.ts:145
-msgid "errors.grepReturnedImage"
-msgstr "grepが画像結果を返しました。"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:91
-msgid "resources.image"
-msgstr "画像"
-
-#: src/content/ChatView.tsx:319
+#: src/content/ChatView.tsx:327
 msgid "Image or file"
 msgstr "画像またはファイル"
 
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:96
-msgid "resources.imageOrSvg"
-msgstr "画像またはSVG"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:197
-msgid "errors.imageToolFailed"
-msgstr "画像ツールの実行に失敗しました。"
-
-#. placeholder {0}: output.mimeType
-#. placeholder {1}: formatBytes(output.byteLength)
-#: src/content/ChatView.tsx:325
-msgid "Image: {0} ({1})"
-msgstr "画像: {0} ({1})"
-
-#: src/content/ChatView.tsx:123
+#: src/content/ChatView.tsx:128
 msgid "Include {selectionSummary}"
 msgstr "{selectionSummary}を含める"
 
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:46
-msgid "errors.invalidInteractionRef"
-msgstr "interactのrefはタブかiframeの参照を指定してください。"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:41
-msgid "errors.invalidAction"
-msgstr "actionが不正です。"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:44
-#: src/content/interactionTools.ts:39
-#: src/shared/htmlTools.ts:57
-#: src/shared/htmlTools.ts:83
-#: src/shared/memory.ts:64
-msgid "errors.invalidArguments"
-msgstr "引数が不正です。"
-
-#. js-lingui-explicit-id
-#: src/background/tools.ts:236
-msgid "errors.invalidImageData"
-msgstr "画像データの形式が不正です。"
-
-#. js-lingui-explicit-id
-#: src/background/tools.ts:120
-msgid "errors.invalidStoredRef"
-msgstr "参照が無効です: {ref}。会話はgrep(resource_type=session)、メモリはlist(type=memory)で参照を再取得してください。"
-
-#. js-lingui-explicit-id
-#: src/background/memoryTools.ts:87
-msgid "errors.invalidMemoryReference"
-msgstr "参照が無効です: {ref}。list(type=memory)で参照を再取得してください。"
-
-#. js-lingui-explicit-id
-#: src/background/navigate.ts:47
-msgid "errors.invalidTabRef"
-msgstr "タブ参照が無効です: {ref}。list(type=tab)で参照を再取得してください。"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:149
-msgid "errors.notKeyable"
-msgstr "キー入力できない要素です。"
-
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:89
-msgid "errors.invalidReadLimit"
-msgstr "limitは1〜10000の整数で指定してください。"
-
-#: src/content/App.tsx:161
+#: src/content/App.tsx:162
 msgid "memory"
 msgstr "メモリ"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:143
 msgid "Memory"
 msgstr "メモリ"
 
-#: src/content/ChatView.tsx:246
+#: src/content/ChatView.tsx:254
 msgid "Memory updated"
 msgstr "メモリ更新"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:148
 msgid "Menu (chat history and memory)"
 msgstr "メニュー（チャット履歴・メモリ）"
 
@@ -408,39 +188,14 @@ msgstr "メニュー（チャット履歴・メモリ）"
 msgid "Model"
 msgstr "モデル"
 
-#: src/content/ChatView.tsx:131
-#: src/content/ChatView.tsx:132
+#: src/content/ChatView.tsx:136
+#: src/content/ChatView.tsx:137
 #: src/content/ModelMenu.tsx:80
 msgid "Model and reasoning effort"
 msgstr "モデルと思考量"
 
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:33
-msgid "errors.navigateInvalidAction"
-msgstr "navigateのactionが不正です。"
-
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:24
-msgid "errors.navigateObject"
-msgstr "navigateの引数はオブジェクトで指定してください。"
-
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:30
-msgid "errors.navigateUnsupportedArgument"
-msgstr "navigateに未対応の引数が含まれています。"
-
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:36
-msgid "errors.navigateInvalidRef"
-msgstr "navigateのrefにはlist(type=tab)かbrowser_contextのタブ参照を指定してください。"
-
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:39
-msgid "errors.navigateInvalidUrl"
-msgstr "navigateのurlには空でない文字列を指定してください。"
-
-#: src/content/App.tsx:194
-#: src/content/App.tsx:194
+#: src/content/App.tsx:195
+#: src/content/App.tsx:195
 msgid "New chat"
 msgstr "新規チャット"
 
@@ -456,19 +211,14 @@ msgstr "APIキーが設定されていません。chatextアプリで設定し�
 
 #. js-lingui-explicit-id
 #: src/background/provider.ts:52
-#: src/background/session.ts:262
+#: src/background/session.ts:226
 msgid "errors.apiKeyMissing"
 msgstr "APIキーが設定されていません。chatextアプリでAPIキーを設定してください。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:127
+#: src/background/agent.ts:126
 msgid "errors.noCompaction"
 msgstr "会話の圧縮結果を取得できませんでした。"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:16
-msgid "errors.elementNotFound"
-msgstr "queryに一致する要素がありません: {query}"
 
 #: src/content/HistoryView.tsx:37
 msgid "No matching conversations."
@@ -479,12 +229,7 @@ msgid "No matching memories."
 msgstr "一致するメモリはありません。"
 
 #. js-lingui-explicit-id
-#: src/content/interactionTools.ts:167
-msgid "errors.optionNotFound"
-msgstr "valueに一致するoptionがありません: {value}"
-
-#. js-lingui-explicit-id
-#: src/background/agent.ts:91
+#: src/background/agent.ts:90
 msgid "errors.noResponse"
 msgstr "回答を取得できませんでした。"
 
@@ -497,50 +242,15 @@ msgid "No saved memories."
 msgstr "保存されたメモリはありません。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:113
+#: src/background/agent.ts:112
 msgid "errors.noTitle"
 msgstr "タイトルを取得できませんでした。"
-
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:86
-msgid "errors.invalidReadOffset"
-msgstr "offsetは0以上の整数で指定してください。"
-
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:66
-msgid "errors.invalidGrepOffset"
-msgstr "offsetは0〜1000000の整数で指定してください。"
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:84
-msgid "errors.memoryEditMissing"
-msgstr "oldが本文と一致しません: {old}。readで現在の内容を確認してから再試行してください。"
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:87
-msgid "errors.memoryEditAmbiguous"
-msgstr "oldが本文に複数回含まれます: {old}。一意になるよう前後を含めてください。"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:106
-msgid "errors.unsupportedImageFormat"
-msgstr "JPEG、PNG、GIF、WebP、SVG以外の形式には対応していません。"
 
 #: src/content/HistoryView.tsx:43
 msgid "Open this conversation"
 msgstr "この会話を開く"
 
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:60
-msgid "errors.invalidPattern"
-msgstr "patternは1〜200文字で指定してください。"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:43
-msgid "errors.invalidQuery"
-msgstr "queryは1〜10000文字のCSSセレクタで指定してください。"
-
-#: src/content/ChatView.tsx:259
+#: src/content/ChatView.tsx:267
 msgid "Reasoning"
 msgstr "思考"
 
@@ -548,64 +258,27 @@ msgstr "思考"
 msgid "Reasoning effort"
 msgstr "思考量"
 
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:48
-msgid "errors.openTabRefForbidden"
-msgstr "open_tabにはrefを指定できません。"
-
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:71
-msgid "errors.refWithCollection"
-msgstr "resource_type={resourceType}にはrefを指定できません。"
-
-#. js-lingui-explicit-id
-#: src/background/tools.ts:115
-#: src/background/tools.ts:155
-msgid "errors.refRequiredCurrentPage"
-msgstr "refを指定してください。現在のページはbrowser_contextのrefを使います。"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:48
-msgid "errors.refRequired"
-msgstr "refは空でない文字列で指定してください。"
-
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:97
-msgid "errors.invalidRefLength"
-msgstr "refは1〜10000文字の文字列で指定してください。"
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:71
-msgid "errors.invalidMemoryRef"
-msgstr "refはlist(type=memory)が返すmemory_<id>形式で指定してください。"
-
 #: src/content/MemoryListView.tsx:60
 #: src/content/MemoryListView.tsx:61
 msgid "Remove from favorites"
 msgstr "お気に入りを解除"
 
 #. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:108
-msgid "errors.invalidResourceType"
-msgstr "resource_typeはsession、tab、memory、script、style、svgのいずれかを指定してください。"
-
-#. js-lingui-explicit-id
-#: src/background/agent.ts:86
-#: src/background/agent.ts:96
-#: src/background/navigate.ts:64
+#: src/background/agent.ts:85
+#: src/background/agent.ts:95
 msgid "errors.responseCancelled"
 msgstr "回答の生成を中止しました。"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:146
 msgid "Restore size"
 msgstr "元の大きさに戻す"
 
-#: src/content/ChatView.tsx:277
-#: src/content/ChatView.tsx:286
+#: src/content/ChatView.tsx:285
+#: src/content/ChatView.tsx:294
 msgid "Running…"
 msgstr "実行中…"
 
-#: src/content/App.tsx:141
+#: src/content/App.tsx:142
 msgid "Saved conversations"
 msgstr "保存した会話の一覧"
 
@@ -617,141 +290,30 @@ msgstr "履歴を検索"
 msgid "Search memories"
 msgstr "メモリを検索"
 
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:164
-msgid "errors.notSelectable"
-msgstr "selectはselect要素にのみ使用できます。"
-
-#: src/content/ChatView.tsx:78
+#: src/content/ChatView.tsx:79
 msgid "Send"
 msgstr "送信"
 
-#: src/content/ChatView.tsx:78
+#: src/content/ChatView.tsx:79
 msgid "Send and interrupt"
 msgstr "割り込み送信"
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:147
 msgid "Show in sidebar"
 msgstr "サイドバーに表示"
 
-#: src/content/ChatView.tsx:78
+#: src/content/ChatView.tsx:79
 msgid "Stop response"
 msgstr "回答を停止"
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:147
 msgid "Switch to floating panel"
 msgstr "フローティングに戻す"
-
-#. js-lingui-explicit-id
-#: src/background/session.ts:393
-msgid "errors.switchDuringMemoryUpdate"
-msgstr "メモリ更新中はタブを切り替えられません。"
-
-#. js-lingui-explicit-id
-#: src/shared/textResource.ts:25
-#: src/shared/textResource.ts:33
-msgid "resources.text"
-msgstr "テキスト資源"
-
-#. js-lingui-explicit-id
-#: src/content/textTools.ts:177
-msgid "errors.textToolFailed"
-msgstr "テキストツールの実行に失敗しました。"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:110
-msgid "errors.emptyCanvas"
-msgstr "canvasのサイズが0です。"
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:91
-msgid "errors.emptyMemoryContent"
-msgstr "本文が空になります。トピックごと削除するにはdeleteを使ってください。"
-
-#. js-lingui-explicit-id
-#: src/background/session.ts:131
-msgid "errors.targetTabBusy"
-msgstr "移動先のタブでは別の回答を処理中のため、会話を移動できません。"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:117
-msgid "errors.videoFrameUnavailable"
-msgstr "videoの現在フレームをまだ読み取れません。"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:146
-msgid "errors.imageTooLarge"
-msgstr "画像サイズが32 MiBを超えています。"
-
-#. js-lingui-explicit-id
-#: src/background/navigate.ts:65
-msgid "errors.navigationTimeout"
-msgstr "ページ遷移後の読み込みを30秒以内に確認できませんでした。"
-
-#. js-lingui-explicit-id
-#: src/background/navigate.ts:16
-msgid "errors.closeConversationTab"
-msgstr "この会話を実行中のタブは閉じられません。"
-
-#. js-lingui-explicit-id
-#: src/background/session.ts:135
-msgid "errors.targetTabUnavailable"
-msgstr "タブは切り替えましたが、このタブでは会話を表示できないため、会話は元のタブに残っています。"
-
-#. js-lingui-explicit-id
-#: src/background/tools.ts:196
-msgid "errors.tabNotVisible"
-msgstr "対象タブが表示中ではありません。タブを表示してから再試行してください。"
-
-#. js-lingui-explicit-id
-#: src/content/textTools.ts:159
-msgid "errors.totalTextSize"
-msgstr "この質問で取得できるテキスト資源の合計サイズが20 MiBを超えました。"
-
-#. js-lingui-explicit-id
-#: src/content/textTools.ts:99
-msgid "errors.textToolReturnedImage"
-msgstr "テキストツールが画像を返しました。"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:32
-msgid "errors.totalImageSize"
-msgstr "この質問で送信できる画像・SVGの合計サイズを超えました。"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:119
-msgid "errors.emptyVideo"
-msgstr "videoのサイズが0です。"
-
-#. js-lingui-explicit-id
-#: src/shared/textResource.ts:39
-msgid "errors.nonTextContentType"
-msgstr "テキストとして扱えないContent-Typeです: {mimeType}"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:62
-msgid "errors.notClickable"
-msgstr "clickできない要素です。"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:73
-msgid "errors.textRefAsImage"
-msgstr "このrefはscriptまたはstyleです。readかgrepを使用してください。"
-
-#. js-lingui-explicit-id
-#: src/content/textTools.ts:144
-msgid "errors.imageRefAsText"
-msgstr "このrefは画像資源です。read_imageを使用してください。"
 
 #: src/content/MemoryEditor.tsx:20
 #: src/content/MemoryEditor.tsx:21
 msgid "Title"
 msgstr "タイトル"
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:120
-msgid "errors.invalidMemoryTitle"
-msgstr "titleは1〜{max}文字で指定してください。"
 
 #: src/content/MemoryEditor.tsx:16
 msgid "Title:"
@@ -761,79 +323,21 @@ msgstr "タイトル："
 msgid "Today"
 msgstr "今日"
 
-#. js-lingui-explicit-id
-#: src/content/main.tsx:38
-#: src/shared/htmlTools.ts:52
-msgid "errors.toolExecutionFailed"
-msgstr "ツールの実行に失敗しました。"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:90
-msgid "errors.notTypeable"
-msgstr "typeはinput、textarea、contenteditableにのみ使用できます。"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:135
-msgid "errors.beforeInputCancelled"
-msgstr "typeがbeforeinputイベントでキャンセルされました。"
-
-#. js-lingui-explicit-id
-#: src/shared/textResource.ts:39
-msgid "common.unknown"
-msgstr "不明"
-
-#. js-lingui-explicit-id
-#: src/shared/textResource.ts:47
-msgid "errors.unsupportedCharset"
-msgstr "未対応の文字コードです: {charset}"
-
-#. js-lingui-explicit-id
-#: src/background/memoryTools.ts:19
-#: src/background/tools.ts:103
-#: src/shared/htmlTools.ts:32
-msgid "errors.unsupportedTool"
-msgstr "未対応のツールです: {name}"
-
-#. js-lingui-explicit-id
-#: src/shared/resourceLoader.ts:29
-msgid "errors.unsupportedUrlScheme"
-msgstr "未対応のURL schemeです: {scheme}"
-
 #: src/content/MemoryListView.tsx:50
 msgid "Untitled"
 msgstr "無題"
 
-#: src/content/ChatView.tsx:246
+#: src/content/ChatView.tsx:254
 msgid "Updating memory…"
 msgstr "メモリ更新中…"
 
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:53
-msgid "errors.navigateUrlForbidden"
-msgstr "{action}にはurlを指定できません。"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:50
-msgid "errors.actionValueForbidden"
-msgstr "{action}ではvalueを指定できません。"
-
-#: src/content/App.tsx:142
+#: src/content/App.tsx:143
 msgid "What the AI remembers"
 msgstr "AIが覚えている内容の一覧"
-
-#. js-lingui-explicit-id
-#: src/content/textTools.ts:52
-msgid "errors.resourceTypeRef"
-msgstr "resource_typeと併用するrefはタブかiframeの参照を指定してください。"
 
 #: src/content/HistoryView.tsx:24
 msgid "Yesterday"
 msgstr "昨日"
-
-#. js-lingui-explicit-id
-#: src/background/memoryTools.ts:24
-msgid "errors.memoryLimit"
-msgstr "メモリは最大{max}件です。既存のトピックへ統合するか、不要なトピックを削除してください。"
 
 #: src/content/MemoryListView.tsx:37
 msgid "You can save up to {MEMORY_MAX_COUNT} memories"

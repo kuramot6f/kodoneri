@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useDeferredValue, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, KeyboardEvent, RefObject } from "react";
 import { plural, t } from "@lingui/core/macro";
 import { Trans, useLingui } from "@lingui/react/macro";
@@ -12,11 +12,12 @@ import type {
   ToolResultPart
 } from "../shared/conversation";
 import { getMeta, getMessageText, getToolResults } from "../shared/conversation";
-import type { MemoryProgress, StepView, ToolDetail, ToolOutput } from "../shared/protocol";
+import type { MemoryProgress, SelectionContext, StepView, ToolDetail } from "../shared/protocol";
 import { Icon } from "./Icon";
 import { ModelMenu } from "./ModelMenu";
-import { parseSelectionContext } from "../shared/selectionContext";
-import { debugEvent } from "./debug";
+
+/** Within this distance of the bottom, new content keeps the view pinned to the bottom. */
+const STICK_DISTANCE_PX = 48;
 
 const plainTextLanguages = new Set(["nohighlight", "plaintext", "text", "txt"]);
 const markdown = new Marked(markedHighlight({
@@ -68,7 +69,7 @@ export function ChatView({
 }: ChatViewProps) {
   const { t } = useLingui();
   const messagesRef = useRef<HTMLDivElement>(null);
-  const lastScrollLogRef = useRef(0);
+  const stickRef = useRef(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const messages = conversation?.messages ?? [];
@@ -77,22 +78,26 @@ export function ChatView({
   const showStop = busy && !canInterrupt;
   const sendLabel = showStop ? t`Stop response` : canInterrupt ? t`Send and interrupt` : t`Send`;
 
-  useEffect(() => {
-    const panel = messagesRef.current?.parentElement;
-    if (panel) {
-      const distance = panel.scrollHeight - panel.clientHeight - panel.scrollTop;
-      if (distance > 48 && performance.now() - lastScrollLogRef.current > 1000) {
-        lastScrollLogRef.current = performance.now();
-        debugEvent("chat_autoscroll", {
-          distancePx: Math.round(distance),
-          hasConversationChange: Boolean(conversation),
-          hasStreamingStep: Boolean(step),
-          hasMemoryUpdate: Boolean(memory)
-        });
-      }
-      panel.scrollTop = panel.scrollHeight;
-    }
+  // Follows new content only while the reader is at the bottom; scrolling up to read stops it.
+  useLayoutEffect(() => {
+    const scroller = messagesRef.current?.parentElement;
+    if (!scroller) return;
+    const onScroll = () => {
+      stickRef.current = scroller.scrollHeight - scroller.clientHeight - scroller.scrollTop < STICK_DISTANCE_PX;
+    };
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    return () => scroller.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useLayoutEffect(() => {
+    const scroller = messagesRef.current?.parentElement;
+    if (scroller && stickRef.current) scroller.scrollTop = scroller.scrollHeight;
   }, [conversation, step, memory]);
+
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    stickRef.current = true;
+    onSubmit(event);
+  };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -111,7 +116,7 @@ export function ChatView({
         {compacting && <div className="memory-update-label"><Trans>Compacting conversation…</Trans></div>}
         {memory && <MemoryUpdateView progress={memory} />}
       </div>
-      <form className="bottom-bar" onSubmit={onSubmit}>
+      <form className="bottom-bar" onSubmit={submit}>
         {selectionSummary && (
           <label className="selection-option">
             <input
@@ -174,8 +179,11 @@ function MessageView({
   if (message.role === "user") {
     const { kind } = getMeta(message);
     if (kind === "browser_context" || kind === "compaction" || kind === "memory_update") return null;
+    if (kind === "selection_context") {
+      const { selection } = getMeta(message);
+      return selection ? <SelectionMessage selection={selection} /> : null;
+    }
     const content = getMessageText(message);
-    if (kind === "selection_context") return <SelectionMessage content={content} />;
     if (kind === "runtime_error") return <div className="message error"><Trans>Error: {content}</Trans></div>;
     if (kind === "runtime_cancelled") return <div className="message error">{content}</div>;
     return <div className="message user">{content}</div>;
@@ -217,11 +225,11 @@ function StepContent({ step, placeholder }: { step: StepView; placeholder?: stri
 }
 
 // 質問の直前に送ったページの選択範囲。ユーザー吹き出しと同じ配置で枠線だけにする
-function SelectionMessage({ content }: { content: string }) {
-  const { text, mediaCount } = useMemo(() => parseSelectionContext(content), [content]);
+function SelectionMessage({ selection }: { selection: SelectionContext }) {
+  const mediaCount = selection.media.length;
   return (
     <div className="message user selection">
-      {text}
+      {selection.text}
       {mediaCount > 0 && <div className="selection-media">{plural(mediaCount, { one: "# media item", other: "# media items" })}</div>}
     </div>
   );
@@ -283,7 +291,7 @@ function PendingToolCall({ tool }: { tool: ToolDetail }) {
   return (
     <details className="tool-call">
       <summary><Icon name="expand" />{`${tool.name} ${formatJson(tool.args)}`}</summary>
-      <pre>{tool.output ? formatPendingToolOutput(tool.output) : t`Running…`}</pre>
+      <pre>{tool.result === null ? t`Running…` : tool.error ? t`Error:\n${tool.result}` : tool.result}</pre>
     </details>
   );
 }
@@ -317,20 +325,6 @@ function formatStoredToolOutput(output: ToolResultPart["output"]): string {
   }
   if (output.type === "execution-denied") return output.reason ?? t`Execution was denied.`;
   return t`Image or file`;
-}
-
-function formatPendingToolOutput(output: ToolOutput): string {
-  if (output.type === "error") return t`Error:\n${output.error}`;
-  if (output.type === "image") {
-    return t`Image: ${output.mimeType} (${formatBytes(output.byteLength)})`;
-  }
-  return formatJson(output.content, 2);
-}
-
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KiB`;
-  return `${(bytes / 1024 / 1024).toFixed(1)} MiB`;
 }
 
 function formatJson(value: string, indent = 0): string {

@@ -12,16 +12,7 @@ interface TabApi {
   };
 }
 
-export function isClickInteraction(name: string, argumentsJson: string): boolean {
-  if (name !== "interact") return false;
-  try {
-    const args: unknown = JSON.parse(argumentsJson);
-    return Boolean(args && typeof args === "object" && "action" in args && args.action === "click");
-  } catch {
-    return false;
-  }
-}
-
+/** Tabs a click opens stay behind the tab the user was looking at. */
 export async function keepNewTabsInBackground<T>(
   openerTabId: number | undefined,
   operation: () => Promise<T>,

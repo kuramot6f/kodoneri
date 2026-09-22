@@ -6,6 +6,8 @@ import type {
   UserModelMessage
 } from "ai";
 
+import type { SelectionContext } from "./protocol";
+
 export type { AssistantModelMessage, ModelMessage, ToolModelMessage, ToolResultPart, UserModelMessage } from "ai";
 
 export interface CacheUsage {
@@ -18,12 +20,10 @@ export interface Conversation {
   title: string;
   createdAt: number;
   updatedAt: number;
-  /** Fixed system prompt created when the conversation starts. */
-  systemPrompt?: string;
   messages: ModelMessage[];
 }
 
-export type MessageKind =
+type MessageKind =
   | "browser_context"
   | "selection_context"
   | "runtime_error"
@@ -38,6 +38,8 @@ export const TOOL_HISTORY_TTL_MS = 6 * 60 * 60 * 1000;
 interface Meta {
   kind?: MessageKind;
   at?: number;
+  /** The structured selection behind a selection_context message, for display. */
+  selection?: SelectionContext;
 }
 
 export function createConversation(firstQuestion: string): Conversation {
@@ -51,8 +53,8 @@ export function createConversation(firstQuestion: string): Conversation {
   };
 }
 
-export function taggedMessage(kind: MessageKind, content: string): UserModelMessage {
-  return withMeta({ role: "user", content: [{ type: "text", text: `[${kind}]\n${content}` }] }, { kind });
+export function taggedMessage(kind: MessageKind, content: string, meta: Omit<Meta, "kind"> = {}): UserModelMessage {
+  return withMeta({ role: "user", content: [{ type: "text", text: `[${kind}]\n${content}` }] }, { ...meta, kind });
 }
 
 export function stamp<T extends ModelMessage>(message: T, at = Date.now()): T {
@@ -72,7 +74,7 @@ export function getMessageText(message: ModelMessage): string {
   return prefix && text.startsWith(prefix) ? text.slice(prefix.length) : text;
 }
 
-export function getToolCalls(message: AssistantModelMessage) {
+function getToolCalls(message: AssistantModelMessage) {
   return typeof message.content === "string" ? [] : message.content.filter((part) => part.type === "tool-call");
 }
 

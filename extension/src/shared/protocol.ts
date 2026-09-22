@@ -16,33 +16,26 @@ export interface PanelState {
   frame: PanelFrame | null;
 }
 
-export interface TextToolOutput {
-  type: "text";
-  content: string;
-}
-
-export interface ImageToolOutput {
+/** An image a tool returns; the background uploads it through the provider's Files API. */
+export interface ImageOutput {
   type: "image";
   dataUrl: string;
   mimeType: string;
   byteLength: number;
 }
 
-export interface ErrorToolOutput {
-  type: "error";
-  error: string;
+export function isImageOutput(value: unknown): value is ImageOutput {
+  return typeof value === "object" && value !== null && "type" in value && value.type === "image" && "dataUrl" in value;
 }
 
-export type ToolSuccessOutput = TextToolOutput | ImageToolOutput;
-export type ToolOutput = ToolSuccessOutput | ErrorToolOutput;
-
-export interface TextResourceOutput {
-  type: "text_resource";
+export interface TextResource {
   content: string;
   url: string;
-  contentType: string;
   byteLength: number;
 }
+
+/** What a content frame answers to a tool message. */
+export type PageToolReply = { output: unknown } | { error: string };
 
 export interface SelectionMediaContext {
   type: "img" | "canvas" | "video";
@@ -59,8 +52,9 @@ export interface ToolDetail {
   id: string;
   name: string;
   args: string;
-  /** Null while the tool is still running. */
-  output: ToolOutput | null;
+  /** Display text of the result or error; null while the tool is still running. */
+  result: string | null;
+  error?: boolean;
 }
 
 /** One model step as it streams; finished steps live in the conversation messages. */
@@ -120,12 +114,13 @@ export interface ModelsView {
   settings: ModelSettings | null;
 }
 
+export type PageToolName = "grep" | "read" | "read_image" | "interact";
+
 /** Background → a content frame via tabs.sendMessage. */
 export type TabMessage =
   | { type: "view"; view: TabView }
   /** The streaming parts of the view, sent at most every few dozen milliseconds while a response streams. */
   | { type: "live"; version: number; step: StepView | null; memory: MemoryProgress | null }
-  | { type: "tool"; requestId: string; refPrefix: string; name: string; args: string }
-  | { type: "dispose"; requestId: string }
+  | { type: "tool"; requestId: string; refPrefix: string; name: PageToolName; args: Record<string, unknown> }
   | { type: "refresh_frame" }
   | { type: "ping" };

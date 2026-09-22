@@ -22,34 +22,9 @@ msgstr "“{preview}”"
 msgid "{0, plural, one {# media item} other {# media items}}"
 msgstr "{0, plural, one {# media item} other {# media items}}"
 
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:50
-msgid "errors.navigateRefRequired"
-msgstr "{action} requires ref. Use the browser_context ref for the current tab."
-
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:45
-msgid "errors.navigateUrlRequired"
-msgstr "{action} requires url."
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:48
-msgid "errors.actionValueRequired"
-msgstr "{action} requires value."
-
-#. js-lingui-explicit-id
-#: src/shared/resourceLoader.ts:110
-msgid "errors.resourceTooLarge"
-msgstr "{label} exceeds {size} MiB."
-
-#: src/content/ChatView.tsx:225
+#: src/content/ChatView.tsx:233
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "{mediaCount, plural, one {# media item} other {# media items}}"
-
-#. js-lingui-explicit-id
-#: src/background/memoryTools.ts:33
-msgid "errors.favoriteMemory"
-msgstr "A favorite memory (is_editable=false) cannot be changed."
 
 #: src/content/MemoryListView.tsx:60
 msgid "Add to favorites"
@@ -59,63 +34,36 @@ msgstr "Add to favorites"
 msgid "Add to favorites (the AI will no longer be able to edit it)"
 msgstr "Add to favorites (the AI will no longer be able to edit it)"
 
-#. js-lingui-explicit-id
-#: src/background/storedText.ts:56
-msgid "errors.cannotReturnImage"
-msgstr "An image result cannot be returned here."
-
-#. js-lingui-explicit-id
-#: src/background/agent.ts:173
-#: src/background/session.ts:472
-#: src/background/tools.ts:253
-msgid "errors.unknown"
-msgstr "An unknown error occurred."
-
-#: src/content/ChatView.tsx:142
+#: src/content/ChatView.tsx:147
 msgid "Ask about this page"
 msgstr "Ask about this page"
 
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:134
-msgid "errors.memoryEditsRequired"
-msgstr "At least one edit is required."
-
-#: src/content/App.tsx:158
-#: src/content/App.tsx:158
+#: src/content/App.tsx:159
+#: src/content/App.tsx:159
 msgid "Back to list"
 msgstr "Back to list"
-
-#. js-lingui-explicit-id
-#: src/content/textTools.ts:48
-msgid "errors.backgroundSearch"
-msgstr "Bulk {resourceType} searches run in the background."
 
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:308
+#: src/content/ChatView.tsx:316
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Cache hit rate: {0}% ({1} / {2} tokens)"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:148
 msgid "Chat history"
 msgstr "Chat history"
 
-#: src/content/App.tsx:141
+#: src/content/App.tsx:142
 msgid "Chats"
 msgstr "Chats"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:178
-msgid "errors.notCheckable"
-msgstr "check can only be used with checkbox or radio elements."
 
 #: src/content/ModelMenu.tsx:122
 msgid "Clear"
 msgstr "Clear"
 
-#: src/content/App.tsx:167
-#: src/content/App.tsx:167
+#: src/content/App.tsx:168
+#: src/content/App.tsx:168
 msgid "Close panel"
 msgstr "Close panel"
 
@@ -123,7 +71,7 @@ msgstr "Close panel"
 msgid "Close search"
 msgstr "Close search"
 
-#: src/content/ChatView.tsx:111
+#: src/content/ChatView.tsx:116
 msgid "Compacting conversation…"
 msgstr "Compacting conversation…"
 
@@ -133,22 +81,7 @@ msgid "Content"
 msgstr "Content"
 
 #. js-lingui-explicit-id
-#: src/shared/memory.ts:126
-msgid "errors.memoryContentRequired"
-msgstr "content is required."
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:128
-msgid "errors.memoryContentTooLong"
-msgstr "Content must be no more than {max} characters (currently {length}). Remove unnecessary details or summarize it."
-
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:63
-msgid "errors.invalidContext"
-msgstr "context must be an integer between 0 and 1000."
-
-#. js-lingui-explicit-id
-#: src/background/session.ts:362
+#: src/background/session.ts:303
 msgid "errors.compactionFailed"
 msgstr "Conversation compaction failed. {error}"
 
@@ -160,71 +93,9 @@ msgstr "Copy diagnostics"
 msgid "Could not clear diagnostics"
 msgstr "Could not clear diagnostics"
 
-#. js-lingui-explicit-id
-#: src/background/tools.ts:160
-msgid "errors.connectIframe"
-msgstr "Could not connect to iframe: {ref}"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:137
-msgid "errors.canvasToPng"
-msgstr "Could not convert the canvas to PNG."
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:185
-#: src/content/imageTools.ts:188
-msgid "errors.imageToDataUrl"
-msgstr "Could not convert the image to a data URL."
-
 #: src/content/ModelMenu.tsx:66
 msgid "Could not copy diagnostics"
 msgstr "Could not copy diagnostics"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:125
-msgid "errors.videoCanvasContext"
-msgstr "Could not create a drawing context for the video frame."
-
-#. js-lingui-explicit-id
-#: src/shared/resourceLoader.ts:47
-msgid "errors.fetchResource"
-msgstr "Could not fetch {label}.{cause}"
-
-#. js-lingui-explicit-id
-#: src/background/main.ts:66
-#: src/content/pageTools.ts:79
-msgid "errors.fetchTextResource"
-msgstr "Could not fetch the text resource."
-
-#. js-lingui-explicit-id
-#: src/content/pageTools.ts:30
-msgid "errors.identifyTab"
-msgstr "Could not identify the tab."
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:33
-msgid "errors.interactionFailed"
-msgstr "Could not interact with the page."
-
-#. js-lingui-explicit-id
-#: src/shared/aggregateGrep.ts:50
-msgid "errors.parseGrepResult"
-msgstr "Could not parse the grep result."
-
-#. js-lingui-explicit-id
-#: src/shared/resourceLoader.ts:26
-msgid "errors.resolveResourceUrl"
-msgstr "Could not resolve ref as a {label} URL."
-
-#. js-lingui-explicit-id
-#: src/background/tools.ts:171
-msgid "errors.noToolResult"
-msgstr "Could not retrieve the tool result."
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:103
-msgid "errors.setInputValue"
-msgstr "Could not set the input value."
 
 #: src/content/HistoryView.tsx:47
 #: src/content/HistoryView.tsx:47
@@ -244,22 +115,12 @@ msgstr "Diagnostics cleared"
 msgid "Diagnostics copied"
 msgstr "Diagnostics copied"
 
-#: src/content/App.tsx:162
+#: src/content/App.tsx:163
 msgid "Done"
 msgstr "Done"
 
-#. js-lingui-explicit-id
-#: src/background/memoryTools.ts:79
-msgid "errors.memoryToolScope"
-msgstr "During a memory update, {name} cannot be used outside memory. Use only list(type=memory), grep with resource_type=memory, read/grep with memory_<id>, and patch/rename/new/delete."
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:138
-msgid "errors.invalidMemoryEdit"
-msgstr "Each edit must provide old (at least one character) and new strings."
-
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:161
+#: src/content/App.tsx:162
 msgid "Edit {0}"
 msgstr "Edit {0}"
 
@@ -267,140 +128,59 @@ msgstr "Edit {0}"
 msgid "Edit this memory"
 msgstr "Edit this memory"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:146
 msgid "Enlarge"
 msgstr "Enlarge"
 
-#. placeholder {0}: output.error
-#: src/content/ChatView.tsx:323
+#. placeholder {0}: tool.result
+#: src/content/ChatView.tsx:294
 msgid "Error:\n"
 "{0}"
 msgstr "Error:\n"
 "{0}"
 
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:250
+#: src/content/ChatView.tsx:258
 msgid "Error: {0}"
 msgstr "Error: {0}"
 
-#: src/content/ChatView.tsx:179
+#: src/content/ChatView.tsx:187
 msgid "Error: {content}"
 msgstr "Error: {content}"
 
-#: src/content/ChatView.tsx:318
+#: src/content/ChatView.tsx:326
 msgid "Execution was denied."
 msgstr "Execution was denied."
 
-#. js-lingui-explicit-id
-#: src/shared/resourceLoader.ts:49
-msgid "errors.fetchResourceHttp"
-msgstr "Failed to fetch {label} (HTTP {status})."
-
-#: src/content/App.tsx:162
+#: src/content/App.tsx:163
 msgid "Finish editing and return to the list"
 msgstr "Finish editing and return to the list"
 
-#: src/content/ChatView.tsx:110
+#: src/content/ChatView.tsx:115
 msgid "Generating response…"
 msgstr "Generating response…"
 
-#. js-lingui-explicit-id
-#: src/background/storedText.ts:45
-#: src/background/tools.ts:145
-msgid "errors.grepReturnedImage"
-msgstr "grep returned an image result."
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:91
-msgid "resources.image"
-msgstr "image"
-
-#: src/content/ChatView.tsx:319
+#: src/content/ChatView.tsx:327
 msgid "Image or file"
 msgstr "Image or file"
 
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:96
-msgid "resources.imageOrSvg"
-msgstr "image or SVG"
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:197
-msgid "errors.imageToolFailed"
-msgstr "Image tool execution failed."
-
-#. placeholder {0}: output.mimeType
-#. placeholder {1}: formatBytes(output.byteLength)
-#: src/content/ChatView.tsx:325
-msgid "Image: {0} ({1})"
-msgstr "Image: {0} ({1})"
-
-#: src/content/ChatView.tsx:123
+#: src/content/ChatView.tsx:128
 msgid "Include {selectionSummary}"
 msgstr "Include {selectionSummary}"
 
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:46
-msgid "errors.invalidInteractionRef"
-msgstr "interact ref must identify a tab or iframe."
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:41
-msgid "errors.invalidAction"
-msgstr "Invalid action."
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:44
-#: src/content/interactionTools.ts:39
-#: src/shared/htmlTools.ts:57
-#: src/shared/htmlTools.ts:83
-#: src/shared/memory.ts:64
-msgid "errors.invalidArguments"
-msgstr "Invalid arguments."
-
-#. js-lingui-explicit-id
-#: src/background/tools.ts:236
-msgid "errors.invalidImageData"
-msgstr "Invalid image data format."
-
-#. js-lingui-explicit-id
-#: src/background/tools.ts:120
-msgid "errors.invalidStoredRef"
-msgstr "Invalid ref: {ref}. Use grep(resource_type=session) to refresh conversation refs or list(type=memory) to refresh memory refs."
-
-#. js-lingui-explicit-id
-#: src/background/memoryTools.ts:87
-msgid "errors.invalidMemoryReference"
-msgstr "Invalid ref: {ref}. Use list(type=memory) to refresh memory refs."
-
-#. js-lingui-explicit-id
-#: src/background/navigate.ts:47
-msgid "errors.invalidTabRef"
-msgstr "Invalid tab ref: {ref}. Use list(type=tab) to refresh tab refs."
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:149
-msgid "errors.notKeyable"
-msgstr "Keyboard input cannot be sent to this element."
-
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:89
-msgid "errors.invalidReadLimit"
-msgstr "limit must be an integer between 1 and 10000."
-
-#: src/content/App.tsx:161
+#: src/content/App.tsx:162
 msgid "memory"
 msgstr "memory"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:143
 msgid "Memory"
 msgstr "Memory"
 
-#: src/content/ChatView.tsx:246
+#: src/content/ChatView.tsx:254
 msgid "Memory updated"
 msgstr "Memory updated"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:148
 msgid "Menu (chat history and memory)"
 msgstr "Menu (chat history and memory)"
 
@@ -408,39 +188,14 @@ msgstr "Menu (chat history and memory)"
 msgid "Model"
 msgstr "Model"
 
-#: src/content/ChatView.tsx:131
-#: src/content/ChatView.tsx:132
+#: src/content/ChatView.tsx:136
+#: src/content/ChatView.tsx:137
 #: src/content/ModelMenu.tsx:80
 msgid "Model and reasoning effort"
 msgstr "Model and reasoning effort"
 
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:33
-msgid "errors.navigateInvalidAction"
-msgstr "navigate action is invalid."
-
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:24
-msgid "errors.navigateObject"
-msgstr "navigate arguments must be an object."
-
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:30
-msgid "errors.navigateUnsupportedArgument"
-msgstr "navigate contains an unsupported argument."
-
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:36
-msgid "errors.navigateInvalidRef"
-msgstr "navigate ref must be a tab ref from list(type=tab) or browser_context."
-
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:39
-msgid "errors.navigateInvalidUrl"
-msgstr "navigate url must be a non-empty string."
-
-#: src/content/App.tsx:194
-#: src/content/App.tsx:194
+#: src/content/App.tsx:195
+#: src/content/App.tsx:195
 msgid "New chat"
 msgstr "New chat"
 
@@ -456,19 +211,14 @@ msgstr "No API key is configured. Configure one in the chatext app."
 
 #. js-lingui-explicit-id
 #: src/background/provider.ts:52
-#: src/background/session.ts:262
+#: src/background/session.ts:226
 msgid "errors.apiKeyMissing"
 msgstr "No API key is configured. Configure one in the chatext app."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:127
+#: src/background/agent.ts:126
 msgid "errors.noCompaction"
 msgstr "No conversation compaction result was received."
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:16
-msgid "errors.elementNotFound"
-msgstr "No element matches query: {query}"
 
 #: src/content/HistoryView.tsx:37
 msgid "No matching conversations."
@@ -479,12 +229,7 @@ msgid "No matching memories."
 msgstr "No matching memories."
 
 #. js-lingui-explicit-id
-#: src/content/interactionTools.ts:167
-msgid "errors.optionNotFound"
-msgstr "No option matches value: {value}"
-
-#. js-lingui-explicit-id
-#: src/background/agent.ts:91
+#: src/background/agent.ts:90
 msgid "errors.noResponse"
 msgstr "No response was received."
 
@@ -497,50 +242,15 @@ msgid "No saved memories."
 msgstr "No saved memories."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:113
+#: src/background/agent.ts:112
 msgid "errors.noTitle"
 msgstr "No title was received."
-
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:86
-msgid "errors.invalidReadOffset"
-msgstr "offset must be a non-negative integer."
-
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:66
-msgid "errors.invalidGrepOffset"
-msgstr "offset must be an integer between 0 and 1000000."
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:84
-msgid "errors.memoryEditMissing"
-msgstr "old does not match the content: {old}. Use read to check the current content and try again."
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:87
-msgid "errors.memoryEditAmbiguous"
-msgstr "old occurs more than once in the content: {old}. Include surrounding text to make it unique."
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:106
-msgid "errors.unsupportedImageFormat"
-msgstr "Only JPEG, PNG, GIF, WebP, and SVG formats are supported."
 
 #: src/content/HistoryView.tsx:43
 msgid "Open this conversation"
 msgstr "Open this conversation"
 
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:60
-msgid "errors.invalidPattern"
-msgstr "pattern must be between 1 and 200 characters."
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:43
-msgid "errors.invalidQuery"
-msgstr "query must be a CSS selector between 1 and 10000 characters."
-
-#: src/content/ChatView.tsx:259
+#: src/content/ChatView.tsx:267
 msgid "Reasoning"
 msgstr "Reasoning"
 
@@ -548,64 +258,27 @@ msgstr "Reasoning"
 msgid "Reasoning effort"
 msgstr "Reasoning effort"
 
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:48
-msgid "errors.openTabRefForbidden"
-msgstr "ref cannot be specified for open_tab."
-
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:71
-msgid "errors.refWithCollection"
-msgstr "ref cannot be specified with resource_type={resourceType}."
-
-#. js-lingui-explicit-id
-#: src/background/tools.ts:115
-#: src/background/tools.ts:155
-msgid "errors.refRequiredCurrentPage"
-msgstr "ref is required. Use the browser_context ref for the current page."
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:48
-msgid "errors.refRequired"
-msgstr "ref must be a non-empty string."
-
-#. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:97
-msgid "errors.invalidRefLength"
-msgstr "ref must be a string between 1 and 10000 characters."
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:71
-msgid "errors.invalidMemoryRef"
-msgstr "ref must use the memory_<id> format returned by list(type=memory)."
-
 #: src/content/MemoryListView.tsx:60
 #: src/content/MemoryListView.tsx:61
 msgid "Remove from favorites"
 msgstr "Remove from favorites"
 
 #. js-lingui-explicit-id
-#: src/shared/htmlTools.ts:108
-msgid "errors.invalidResourceType"
-msgstr "resource_type must be one of session, tab, memory, script, style, or svg."
-
-#. js-lingui-explicit-id
-#: src/background/agent.ts:86
-#: src/background/agent.ts:96
-#: src/background/navigate.ts:64
+#: src/background/agent.ts:85
+#: src/background/agent.ts:95
 msgid "errors.responseCancelled"
 msgstr "Response generation was cancelled."
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:146
 msgid "Restore size"
 msgstr "Restore size"
 
-#: src/content/ChatView.tsx:277
-#: src/content/ChatView.tsx:286
+#: src/content/ChatView.tsx:285
+#: src/content/ChatView.tsx:294
 msgid "Running…"
 msgstr "Running…"
 
-#: src/content/App.tsx:141
+#: src/content/App.tsx:142
 msgid "Saved conversations"
 msgstr "Saved conversations"
 
@@ -617,141 +290,30 @@ msgstr "Search history"
 msgid "Search memories"
 msgstr "Search memories"
 
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:164
-msgid "errors.notSelectable"
-msgstr "select can only be used with select elements."
-
-#: src/content/ChatView.tsx:78
+#: src/content/ChatView.tsx:79
 msgid "Send"
 msgstr "Send"
 
-#: src/content/ChatView.tsx:78
+#: src/content/ChatView.tsx:79
 msgid "Send and interrupt"
 msgstr "Send and interrupt"
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:147
 msgid "Show in sidebar"
 msgstr "Show in sidebar"
 
-#: src/content/ChatView.tsx:78
+#: src/content/ChatView.tsx:79
 msgid "Stop response"
 msgstr "Stop response"
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:147
 msgid "Switch to floating panel"
 msgstr "Switch to floating panel"
-
-#. js-lingui-explicit-id
-#: src/background/session.ts:393
-msgid "errors.switchDuringMemoryUpdate"
-msgstr "Tabs cannot be switched while memory is being updated."
-
-#. js-lingui-explicit-id
-#: src/shared/textResource.ts:25
-#: src/shared/textResource.ts:33
-msgid "resources.text"
-msgstr "text resource"
-
-#. js-lingui-explicit-id
-#: src/content/textTools.ts:177
-msgid "errors.textToolFailed"
-msgstr "Text tool execution failed."
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:110
-msgid "errors.emptyCanvas"
-msgstr "The canvas has zero size."
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:91
-msgid "errors.emptyMemoryContent"
-msgstr "The content would become empty. Use delete to remove the entire topic."
-
-#. js-lingui-explicit-id
-#: src/background/session.ts:131
-msgid "errors.targetTabBusy"
-msgstr "The conversation cannot be moved because the target tab is processing another response."
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:117
-msgid "errors.videoFrameUnavailable"
-msgstr "The current video frame is not available yet."
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:146
-msgid "errors.imageTooLarge"
-msgstr "The image exceeds 32 MiB."
-
-#. js-lingui-explicit-id
-#: src/background/navigate.ts:65
-msgid "errors.navigationTimeout"
-msgstr "The page did not finish loading within 30 seconds after navigation."
-
-#. js-lingui-explicit-id
-#: src/background/navigate.ts:16
-msgid "errors.closeConversationTab"
-msgstr "The tab running this conversation cannot be closed."
-
-#. js-lingui-explicit-id
-#: src/background/session.ts:135
-msgid "errors.targetTabUnavailable"
-msgstr "The tab was switched, but the conversation remains in the original tab because it cannot be displayed here."
-
-#. js-lingui-explicit-id
-#: src/background/tools.ts:196
-msgid "errors.tabNotVisible"
-msgstr "The target tab is not visible. Show the tab and try again."
-
-#. js-lingui-explicit-id
-#: src/content/textTools.ts:159
-msgid "errors.totalTextSize"
-msgstr "The text resources fetched for this question exceed 20 MiB in total."
-
-#. js-lingui-explicit-id
-#: src/content/textTools.ts:99
-msgid "errors.textToolReturnedImage"
-msgstr "The text tool returned an image."
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:32
-msgid "errors.totalImageSize"
-msgstr "The total image and SVG size allowed for this question has been exceeded."
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:119
-msgid "errors.emptyVideo"
-msgstr "The video has zero size."
-
-#. js-lingui-explicit-id
-#: src/shared/textResource.ts:39
-msgid "errors.nonTextContentType"
-msgstr "This Content-Type cannot be handled as text: {mimeType}"
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:62
-msgid "errors.notClickable"
-msgstr "This element cannot be clicked."
-
-#. js-lingui-explicit-id
-#: src/content/imageTools.ts:73
-msgid "errors.textRefAsImage"
-msgstr "This ref identifies a script or style. Use read or grep."
-
-#. js-lingui-explicit-id
-#: src/content/textTools.ts:144
-msgid "errors.imageRefAsText"
-msgstr "This ref identifies an image resource. Use read_image."
 
 #: src/content/MemoryEditor.tsx:20
 #: src/content/MemoryEditor.tsx:21
 msgid "Title"
 msgstr "Title"
-
-#. js-lingui-explicit-id
-#: src/shared/memory.ts:120
-msgid "errors.invalidMemoryTitle"
-msgstr "title must be between 1 and {max} characters."
 
 #: src/content/MemoryEditor.tsx:16
 msgid "Title:"
@@ -761,79 +323,21 @@ msgstr "Title:"
 msgid "Today"
 msgstr "Today"
 
-#. js-lingui-explicit-id
-#: src/content/main.tsx:38
-#: src/shared/htmlTools.ts:52
-msgid "errors.toolExecutionFailed"
-msgstr "Tool execution failed."
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:90
-msgid "errors.notTypeable"
-msgstr "type can only be used with input, textarea, or contenteditable elements."
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:135
-msgid "errors.beforeInputCancelled"
-msgstr "type was cancelled by a beforeinput event."
-
-#. js-lingui-explicit-id
-#: src/shared/textResource.ts:39
-msgid "common.unknown"
-msgstr "unknown"
-
-#. js-lingui-explicit-id
-#: src/shared/textResource.ts:47
-msgid "errors.unsupportedCharset"
-msgstr "Unsupported character encoding: {charset}"
-
-#. js-lingui-explicit-id
-#: src/background/memoryTools.ts:19
-#: src/background/tools.ts:103
-#: src/shared/htmlTools.ts:32
-msgid "errors.unsupportedTool"
-msgstr "Unsupported tool: {name}"
-
-#. js-lingui-explicit-id
-#: src/shared/resourceLoader.ts:29
-msgid "errors.unsupportedUrlScheme"
-msgstr "Unsupported URL scheme: {scheme}"
-
 #: src/content/MemoryListView.tsx:50
 msgid "Untitled"
 msgstr "Untitled"
 
-#: src/content/ChatView.tsx:246
+#: src/content/ChatView.tsx:254
 msgid "Updating memory…"
 msgstr "Updating memory…"
 
-#. js-lingui-explicit-id
-#: src/background/navigationTools.ts:53
-msgid "errors.navigateUrlForbidden"
-msgstr "url cannot be specified for {action}."
-
-#. js-lingui-explicit-id
-#: src/content/interactionTools.ts:50
-msgid "errors.actionValueForbidden"
-msgstr "value cannot be specified for {action}."
-
-#: src/content/App.tsx:142
+#: src/content/App.tsx:143
 msgid "What the AI remembers"
 msgstr "What the AI remembers"
-
-#. js-lingui-explicit-id
-#: src/content/textTools.ts:52
-msgid "errors.resourceTypeRef"
-msgstr "When used with resource_type, ref must identify a tab or iframe."
 
 #: src/content/HistoryView.tsx:24
 msgid "Yesterday"
 msgstr "Yesterday"
-
-#. js-lingui-explicit-id
-#: src/background/memoryTools.ts:24
-msgid "errors.memoryLimit"
-msgstr "You can save up to {max} memories. Merge this into an existing topic or delete an unnecessary topic."
 
 #: src/content/MemoryListView.tsx:37
 msgid "You can save up to {MEMORY_MAX_COUNT} memories"

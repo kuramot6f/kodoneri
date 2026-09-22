@@ -1,7 +1,8 @@
 import type { ModelsView, RuntimeMessage } from "../shared/protocol";
-import { activateBrowserLocale, i18n } from "../shared/i18n.ts";
+import { activateBrowserLocale } from "../shared/i18n.ts";
 import { loadSettings, saveSettings } from "../shared/store";
-import { loadTextResource } from "../shared/textResource";
+import { errorMessage } from "../shared/errors";
+import { fetchText } from "../shared/fetch";
 import { clearFrames, registerFrame } from "./frames";
 import { clearDebugLog, debugEvent, exportDebugLog } from "./debug";
 import { availableModels, refreshApiKeys, resolveSettings } from "./provider";
@@ -49,11 +50,6 @@ browser.runtime.onMessage.addListener((message: RuntimeMessage, sender) => {
     return saveSettings(message.settings);
   }
   if (message.type === "fetch") {
-    return loadTextResource(message.url).catch((error: unknown) => ({
-      type: "error",
-      error: error instanceof Error && error.message
-        ? error.message
-        : i18n._({ id: "errors.fetchTextResource", message: "Could not fetch the text resource." })
-    }));
+    return fetchText(message.url).catch((error: unknown) => ({ error: errorMessage(error) }));
   }
 });

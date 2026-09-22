@@ -1,16 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import {
-  isClickInteraction,
-  keepNewTabsInBackground
-} from "../src/background/backgroundTabPolicy.ts";
-
-test("identifies only interact click calls", () => {
-  assert.equal(isClickInteraction("interact", '{"action":"click","query":"a"}'), true);
-  assert.equal(isClickInteraction("interact", '{"action":"type","query":"input"}'), false);
-  assert.equal(isClickInteraction("read", '{"action":"click"}'), false);
-  assert.equal(isClickInteraction("interact", "{"), false);
-});
+import { keepNewTabsInBackground } from "../src/background/backgroundTabPolicy.ts";
 
 test("reactivates the previously active tab when a click opens a tab", async () => {
   const listeners = new Set<(tab: browser.tabs.Tab) => void>();

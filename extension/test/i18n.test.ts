@@ -10,11 +10,11 @@ test("browser languages resolve to Japanese or the English fallback", () => {
 });
 
 test("English source messages and Japanese translations both load", () => {
-  const descriptor = { id: "errors.unknown", message: "An unknown error occurred." };
+  const descriptor = { id: "errors.noResponse", message: "No response was received." };
 
   activateLocale("en");
-  assert.equal(i18n._(descriptor), "An unknown error occurred.");
+  assert.equal(i18n._(descriptor), "No response was received.");
 
   activateLocale("ja");
-  assert.equal(i18n._(descriptor), "不明なエラーが発生しました。");
+  assert.equal(i18n._(descriptor), "回答を取得できませんでした。");
 });

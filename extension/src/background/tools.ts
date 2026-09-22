@@ -1,220 +1,192 @@
-import { jsonSchema, tool, uploadFile } from "ai";
+import { tool, uploadFile } from "ai";
 import type { ToolResultPart, ToolSet } from "ai";
-import { aggregateGrep } from "../shared/aggregateGrep";
-import { parseTextToolCall, type GrepArgs } from "../shared/htmlTools";
-import { isMemoryWriteTool } from "../shared/memory";
-import { i18n } from "../shared/i18n.ts";
-import type { ImageToolOutput, TabMessage, ToolSuccessOutput } from "../shared/protocol";
-import { isToolOutput } from "../shared/toolOutput";
-import { isClickInteraction, keepNewTabsInBackground } from "./backgroundTabPolicy";
-import { resolveFrame } from "./frames";
-import { runMemoryScopedTool, runMemoryWrite } from "./memoryTools";
-import { navigate, resolveTab } from "./navigate";
-import { parseNavigateArgs } from "./navigationTools";
-import { BROWSER_TOOLS } from "./prompt";
-import type { ModelRuntime } from "./provider";
-import { grepStored, listMemories, memoryTexts, runStoredTextTool, sessionTexts } from "./storedText";
-import { debugEvent } from "./debug";
-import { errorData } from "../shared/debugLog";
+import type { z } from "zod";
+import { isImageOutput, type ImageOutput, type PageToolName, type PageToolReply, type TabMessage } from "../shared/protocol.ts";
+import { aggregateGrep, type GrepResult } from "../shared/text.ts";
+import { keepNewTabsInBackground } from "./backgroundTabPolicy.ts";
+import { resolveFrame } from "./frames.ts";
+import { navigate, resolveTab } from "./navigate.ts";
+import type { ModelRuntime } from "./provider.ts";
+import {
+  grepStored,
+  grepStoredRef,
+  isMemoryRef,
+  isStoredRef,
+  listMemories,
+  newMemory,
+  patchMemory,
+  readStoredRef,
+  removeMemory,
+  renameMemory
+} from "./stored.ts";
+import {
+  captureViewportInput,
+  deleteInput,
+  grepInput,
+  interactInput,
+  listInput,
+  navigateInput,
+  newInput,
+  patchInput,
+  readImageInput,
+  readInput,
+  renameInput,
+  TOOL_DESCRIPTIONS,
+  type GrepInput,
+  type ReadInput
+} from "./toolDefinitions.ts";
 
-export interface ToolRuntime {
-  session: { tabId: number; touched: Set<string> };
+export interface ToolContext {
+  session: { tabId: number };
   requestId: string;
   signal: AbortSignal;
   model: Pick<ModelRuntime, "files" | "fileOptions">;
-  /** The memory branch only gets memory tools. */
+  /** The memory branch shares the tool definitions (and so the prompt cache) but may only touch memories. */
   scope: "browser" | "memory";
   moveSession: (tabId: number) => Promise<void>;
 }
 
 const MUTATING_TOOLS = new Set(["interact", "navigate", "patch", "rename", "new", "delete"]);
+const MEMORY_SCOPE_ERROR = "During a memory update only memories are available: list(type=memory), grep with resource_type=memory, read/grep with memory_<id>, and patch/rename/new/delete.";
 
-export function createTools(runtime: ToolRuntime): ToolSet {
+export function createTools(context: ToolContext): ToolSet {
   // Mutations run one at a time in call order; reads wait for any mutation already queued.
   let chain: Promise<unknown> = Promise.resolve();
-  return Object.fromEntries(BROWSER_TOOLS.map(({ function: definition }) => [
-    definition.name,
-    tool<unknown, ToolSuccessOutput, Record<string, unknown>>({
-      description: definition.description,
-      inputSchema: jsonSchema(definition.parameters as Parameters<typeof jsonSchema>[0]),
-      execute: (input, { abortSignal }) => {
-        const run = () => executeTool(runtime, definition.name, JSON.stringify(input), abortSignal ?? runtime.signal);
-        if (!MUTATING_TOOLS.has(definition.name)) return chain.then(run, run);
-        const result = chain.then(run, run);
-        chain = result.catch(() => undefined);
-        return result;
-      },
-      toModelOutput: ({ output }) => toModelOutput(runtime, output)
+  const define = <S extends z.ZodType>(name: keyof typeof TOOL_DESCRIPTIONS, inputSchema: S, run: (input: z.infer<S>) => Promise<unknown>) => tool({
+    description: TOOL_DESCRIPTIONS[name],
+    inputSchema,
+    execute: (input: z.infer<S>) => {
+      const result = chain.then(() => run(input), () => run(input));
+      if (MUTATING_TOOLS.has(name)) chain = result.catch(() => undefined);
+      return result;
+    },
+    toModelOutput: ({ output }) => toModelOutput(context, output)
+  });
+  const browserOnly = () => {
+    if (context.scope === "memory") throw new Error(MEMORY_SCOPE_ERROR);
+  };
+
+  return {
+    grep: define("grep", grepInput, (args) => grep(context, args)),
+    read: define("read", readInput, (args) => read(context, args)),
+    capture_viewport: define("capture_viewport", captureViewportInput, async () => {
+      browserOnly();
+      return captureViewport(context.session.tabId);
+    }),
+    read_image: define("read_image", readImageInput, async (args) => {
+      browserOnly();
+      return pageTool(context, "read_image", args, args.ref);
+    }),
+    list: define("list", listInput, async ({ type }) => {
+      if (type === "memory") return listMemories();
+      browserOnly();
+      return listTabs(context.session.tabId);
+    }),
+    patch: define("patch", patchInput, patchMemory),
+    rename: define("rename", renameInput, renameMemory),
+    new: define("new", newInput, newMemory),
+    delete: define("delete", deleteInput, removeMemory),
+    navigate: define("navigate", navigateInput, async (args) => {
+      browserOnly();
+      return navigate(context, args);
+    }),
+    interact: define("interact", interactInput, async (args) => {
+      browserOnly();
+      return pageTool(context, "interact", args, args.ref);
     })
-  ]));
+  };
 }
 
-export async function disposeTools(runtime: Pick<ToolRuntime, "session" | "requestId">): Promise<void> {
-  const message: TabMessage = { type: "dispose", requestId: runtime.requestId };
-  await Promise.all([...runtime.session.touched].map((key) => {
-    const [tabId, frameId] = key.split(":").map(Number);
-    return browser.tabs.sendMessage(tabId!, message, { frameId }).catch(() => undefined);
-  }));
-  runtime.session.touched.clear();
+async function grep(context: ToolContext, args: GrepInput) {
+  if (args.resource_type === "memory") return grepStored("memory", args);
+  if (context.scope === "memory" && !isMemoryRef(args.ref)) throw new Error(MEMORY_SCOPE_ERROR);
+  if (args.resource_type === "session") return grepStored("session", args);
+  if (args.resource_type === "tab") return grepTabs(context, args);
+  const ref = args.ref!;
+  return isStoredRef(ref) ? grepStoredRef(ref, args) : pageTool(context, "grep", args, ref);
 }
 
-async function executeTool(runtime: ToolRuntime, name: string, args: string, signal: AbortSignal): Promise<ToolSuccessOutput> {
-  const startedAt = performance.now();
-  debugEvent("tool_execution_started", { requestId: runtime.requestId, toolName: name, scope: runtime.scope });
-  try {
-    return await executeToolInner(runtime, name, args, signal);
-  } catch (error) {
-    debugEvent("tool_execution_failed", {
-      requestId: runtime.requestId,
-      toolName: name,
-      scope: runtime.scope,
-      durationMs: Math.round(performance.now() - startedAt),
-      ...errorData(error)
-    });
-    throw error;
-  } finally {
-    debugEvent("tool_execution_finished", {
-      requestId: runtime.requestId,
-      toolName: name,
-      scope: runtime.scope,
-      durationMs: Math.round(performance.now() - startedAt)
-    });
-  }
+async function read(context: ToolContext, args: ReadInput) {
+  if (context.scope === "memory" && !isMemoryRef(args.ref)) throw new Error(MEMORY_SCOPE_ERROR);
+  return isStoredRef(args.ref) ? readStoredRef(args.ref, args) : pageTool(context, "read", args, args.ref);
 }
 
-async function executeToolInner(runtime: ToolRuntime, name: string, args: string, signal: AbortSignal): Promise<ToolSuccessOutput> {
-  signal.throwIfAborted();
-  if (runtime.scope === "memory") return runMemoryScopedTool(name, args);
-  if (isMemoryWriteTool(name)) return runMemoryWrite(name, args);
-  switch (name) {
-    case "list":
-      return (JSON.parse(args) as { type?: unknown }).type === "tab" ? listTabs(runtime.session.tabId) : listMemories();
-    case "navigate":
-      return navigate(runtime, parseNavigateArgs(args));
-    case "capture_viewport":
-      return captureViewport(runtime.session.tabId);
-    case "grep":
-    case "read":
-      return textTool(runtime, name, args);
-    case "read_image":
-    case "interact":
-      return pageTool(runtime, name, args, (JSON.parse(args) as { ref?: unknown }).ref);
-    default:
-      throw new Error(i18n._({ id: "errors.unsupportedTool", message: "Unsupported tool: {name}", values: { name } }));
-  }
-}
-
-async function textTool(runtime: ToolRuntime, name: "grep" | "read", args: string): Promise<ToolSuccessOutput> {
-  const call = parseTextToolCall(name, args);
-  const resourceType = call.name === "grep" ? call.args.resourceType : undefined;
-  if (resourceType === "session") return grepStored(await sessionTexts(), call.args as GrepArgs);
-  if (resourceType === "memory") return grepStored(await memoryTexts(), call.args as GrepArgs);
-  if (resourceType === "tab") return grepTabs(runtime, call.args as GrepArgs);
-
-  const ref = call.args.ref;
-  if (!ref) throw new Error(i18n._({ id: "errors.refRequiredCurrentPage", message: "ref is required. Use the browser_context ref for the current page." }));
-  if (/^(?:session|memory)_\d+$/.test(ref)) {
-    const texts = ref.startsWith("session") ? await sessionTexts() : await memoryTexts();
-    const text = texts.find((candidate) => candidate.ref === ref);
-    if (!text) {
-      throw new Error(i18n._({ id: "errors.invalidStoredRef", message: "Invalid ref: {ref}. Use grep(resource_type=session) to refresh conversation refs or list(type=memory) to refresh memory refs.", values: { ref } }));
-    }
-    return runStoredTextTool(text, call);
-  }
-  return pageTool(runtime, name, args, ref);
-}
-
-async function grepTabs(runtime: ToolRuntime, args: GrepArgs): Promise<ToolSuccessOutput> {
+async function grepTabs(context: ToolContext, args: GrepInput) {
   const tabs = (await browser.tabs.query({})).flatMap((tab) => tab.id === undefined ? [] : [{
     ref: `tab_${tab.id}`,
     title: tab.title ?? "",
     url: tab.url ?? ""
   }]);
-  const result = await aggregateGrep({
-    resources: tabs,
-    args,
-    run: async (tab, offset) => {
-      const tabArgs = JSON.stringify({ pattern: args.pattern, context: args.context, offset, ref: tab.ref });
-      try {
-        return await pageTool(runtime, "grep", tabArgs, tab.ref);
-      } catch (error) {
-        return { type: "error", error: getErrorMessage(error) };
-      }
-    },
-    metadata: ({ ref, title, url }) => ({ ref, title, url }),
-    nonTextError: i18n._({ id: "errors.grepReturnedImage", message: "grep returned an image result." })
-  });
-  return { type: "text", content: JSON.stringify(result) };
+  return aggregateGrep(
+    tabs,
+    args.offset ?? 0,
+    (tab, offset) => pageTool(context, "grep", { pattern: args.pattern, context: args.context, offset }, tab.ref) as Promise<GrepResult>,
+    ({ ref, title, url }) => ({ ref, title, url })
+  );
 }
 
 /**
  * Sends a tool to the content script owning the ref. Refs look like tab_12, tab_12_iframe_1,
  * tab_12_style_3, or tab_12_iframe_1_img_2; anything else (a URL) targets the current tab.
+ * A tab or iframe ref is dropped from the args; a resource ref or URL is passed on.
  */
-async function pageTool(runtime: ToolRuntime, name: string, args: string, ref: unknown): Promise<ToolSuccessOutput> {
-  if (typeof ref !== "string" || !ref) throw new Error(i18n._({ id: "errors.refRequiredCurrentPage", message: "ref is required. Use the browser_context ref for the current page." }));
-  const match = /^(tab_(\d+))((?:_iframe_\d+)*)(?:_(.+))?$/.exec(ref);
-  const tabId = match ? await resolveTab(match[1]!) : runtime.session.tabId;
-  const framePath = match?.[3]?.slice(1) ?? "";
+async function pageTool(context: ToolContext, name: PageToolName, args: Record<string, unknown>, ref: string): Promise<unknown> {
+  const match = /^(tab_\d+)((?:_iframe_\d+)*)(_.+)?$/.exec(ref);
+  const tabId = match ? await resolveTab(match[1]!) : context.session.tabId;
+  const framePath = match?.[2]?.slice(1) ?? "";
   const frameId = framePath ? await resolveFrame(tabId, framePath) : 0;
-  if (frameId === null) throw new Error(i18n._({ id: "errors.connectIframe", message: "Could not connect to iframe: {ref}", values: { ref } }));
-  const refPrefix = match ? `${match[1]}${match[3]}_` : `tab_${tabId}_`;
-  const localArgs = { ...JSON.parse(args) as Record<string, unknown> };
-  if (match && match[4] === undefined) delete localArgs.ref;
-  else localArgs.ref = ref;
+  if (frameId === null) throw new Error(`Could not connect to iframe: ${ref}`);
 
-  const message: TabMessage = { type: "tool", requestId: runtime.requestId, refPrefix, name, args: JSON.stringify(localArgs) };
-  debugEvent("page_tool_dispatched", { requestId: runtime.requestId, toolName: name, tabId, frameId });
-  runtime.session.touched.add(`${tabId}:${frameId}`);
-  const send = async () => {
-    const output: unknown = await browser.tabs.sendMessage(tabId, message, { frameId });
-    if (!isToolOutput(output)) throw new Error(i18n._({ id: "errors.noToolResult", message: "Could not retrieve the tool result." }));
-    if (output.type === "error") throw new Error(output.error);
-    return output;
+  const message: TabMessage = {
+    type: "tool",
+    requestId: context.requestId,
+    refPrefix: match ? `${match[1]}${match[2]}_` : `tab_${tabId}_`,
+    name,
+    args: { ...args, ref: match && !match[3] ? undefined : ref }
   };
-  return isClickInteraction(name, args) ? keepNewTabsInBackground(tabId, send) : send();
+  const send = async () => {
+    const reply = await browser.tabs.sendMessage(tabId, message, { frameId }) as PageToolReply | undefined;
+    if (!reply) throw new Error("Could not retrieve the tool result.");
+    if ("error" in reply) throw new Error(reply.error);
+    return reply.output;
+  };
+  return name === "interact" && args.action === "click" ? keepNewTabsInBackground(tabId, send) : send();
 }
 
-async function listTabs(currentTabId: number): Promise<ToolSuccessOutput> {
+async function listTabs(currentTabId: number) {
   const tabs = await browser.tabs.query({});
   return {
-    type: "text",
-    content: JSON.stringify({
-      tabs: tabs.flatMap((tab) => tab.id === undefined ? [] : [{
-        ref: `tab_${tab.id}`,
-        title: tab.title ?? "",
-        url: tab.url ?? "",
-        current: tab.id === currentTabId
-      }])
-    })
+    tabs: tabs.flatMap((tab) => tab.id === undefined ? [] : [{
+      ref: `tab_${tab.id}`,
+      title: tab.title ?? "",
+      url: tab.url ?? "",
+      current: tab.id === currentTabId
+    }])
   };
 }
 
-async function captureViewport(tabId: number): Promise<ToolSuccessOutput> {
+async function captureViewport(tabId: number): Promise<ImageOutput> {
   const tab = await browser.tabs.get(tabId);
-  if (!tab.active || tab.windowId === undefined) {
-    throw new Error(i18n._({ id: "errors.tabNotVisible", message: "The target tab is not visible. Show the tab and try again." }));
-  }
+  if (!tab.active || tab.windowId === undefined) throw new Error("The target tab is not visible. Show the tab and try again.");
   const dataUrl = await browser.tabs.captureVisibleTab(tab.windowId, { format: "png" });
-  const base64 = dataUrl.slice(dataUrl.indexOf(",") + 1);
-  const padding = base64.endsWith("==") ? 2 : base64.endsWith("=") ? 1 : 0;
-  return { type: "image", dataUrl, mimeType: "image/png", byteLength: Math.floor(base64.length * 3 / 4) - padding };
+  const bytes = dataUrlToBytes(dataUrl);
+  return { type: "image", dataUrl, mimeType: "image/png", byteLength: bytes.byteLength };
 }
 
-async function toModelOutput(runtime: ToolRuntime, output: ToolSuccessOutput): Promise<ToolResultPart["output"]> {
-  if (output.type === "text") return { type: "text", value: output.content };
-  return uploadToolImage(runtime, output);
+async function toModelOutput(context: ToolContext, output: unknown): Promise<ToolResultPart["output"]> {
+  if (isImageOutput(output)) return uploadImage(context, output);
+  return { type: "text", value: typeof output === "string" ? output : JSON.stringify(output) };
 }
 
 /** Images go through the provider's Files API; the reference is what the conversation stores. */
-async function uploadToolImage(runtime: ToolRuntime, output: ImageToolOutput): Promise<ToolResultPart["output"]> {
+async function uploadImage(context: ToolContext, output: ImageOutput): Promise<ToolResultPart["output"]> {
   const { providerReference, filename } = await uploadFile({
-    api: runtime.model.files,
+    api: context.model.files,
     data: dataUrlToBytes(output.dataUrl),
     mediaType: output.mimeType,
-    filename: `image.${extensionFor(output.mimeType)}`,
-    abortSignal: runtime.signal,
-    providerOptions: runtime.model.fileOptions
+    filename: `image.${output.mimeType.split("/")[1]?.replace("jpeg", "jpg") ?? "png"}`,
+    abortSignal: context.signal,
+    providerOptions: context.model.fileOptions
   });
   return {
     type: "content",
@@ -232,23 +204,6 @@ async function uploadToolImage(runtime: ToolRuntime, output: ImageToolOutput): P
 
 function dataUrlToBytes(dataUrl: string): Uint8Array {
   const separator = dataUrl.indexOf(",");
-  const metadata = separator < 0 ? "" : dataUrl.slice(0, separator);
-  if (!metadata.startsWith("data:") || !metadata.endsWith(";base64")) throw new Error(i18n._({ id: "errors.invalidImageData", message: "Invalid image data format." }));
-  const binary = atob(dataUrl.slice(separator + 1));
-  return Uint8Array.from(binary, (character) => character.charCodeAt(0));
-}
-
-function extensionFor(mimeType: string): string {
-  switch (mimeType) {
-    case "image/jpeg": return "jpg";
-    case "image/gif": return "gif";
-    case "image/webp": return "webp";
-    default: return "png";
-  }
-}
-
-function getErrorMessage(error: unknown): string {
-  return error instanceof Error && error.message
-    ? error.message
-    : i18n._({ id: "errors.unknown", message: "An unknown error occurred." });
+  if (!dataUrl.startsWith("data:") || !dataUrl.slice(0, separator).endsWith(";base64")) throw new Error("Invalid image data format.");
+  return Uint8Array.from(atob(dataUrl.slice(separator + 1)), (character) => character.charCodeAt(0));
 }

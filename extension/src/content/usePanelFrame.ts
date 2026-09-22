@@ -2,7 +2,7 @@ import { useRef } from "react";
 import type { CSSProperties, PointerEvent, RefObject } from "react";
 import type { PanelFrame } from "../shared/protocol";
 
-export type Edge = "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw";
+type Edge = "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw";
 export const EDGES: Edge[] = ["n", "s", "e", "w", "ne", "nw", "se", "sw"];
 
 const MIN_WIDTH = 280;
