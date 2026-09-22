@@ -112,7 +112,9 @@ async function usage(request: Request, env: Env): Promise<Response> {
     const url = new URL(`https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/ai-gateway/gateways/${env.CLOUDFLARE_AI_GATEWAY_ID}/logs`);
     url.searchParams.set("start_date", start.toISOString());
     url.searchParams.set("end_date", end.toISOString());
-    url.searchParams.set("search", user.billingId);
+    url.searchParams.set("filters.key", "metadata.value");
+    url.searchParams.set("filters.operator", "eq");
+    url.searchParams.set("filters.value", user.billingId);
     url.searchParams.set("per_page", String(LOGS_PER_PAGE));
     url.searchParams.set("page", String(page));
 
