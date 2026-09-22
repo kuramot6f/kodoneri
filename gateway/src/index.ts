@@ -1,5 +1,6 @@
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { effectivePlan, ensureBilling, syncTransaction, verifyNotification, type BillingRow } from "./billing";
+import { deepSeekCostMicrousd, type DeepSeekUsage } from "./usage";
 
 const MODEL = "deepseek-flash";
 const APPLE_ISSUER = "https://appleid.apple.com";
@@ -109,7 +110,12 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, pathname
   }
 
   const [clientBody, meterBody] = response.body.tee();
-  ctx.waitUntil(drain(meterBody).catch(() => undefined).then(() => recordUsage(env, user.userId, user.billingId, billing.period_start!, logId)));
+  ctx.waitUntil(readProviderUsage(meterBody, response.headers.get("content-type"))
+    .catch((error) => {
+      console.error("DeepSeek usage response could not be read", logId, error);
+      return null;
+    })
+    .then((providerUsage) => recordUsage(env, user.userId, user.billingId, billing.period_start!, logId, providerUsage)));
   return new Response(clientBody, response);
 }
 
@@ -183,27 +189,95 @@ function usageLimitResponse(row: BillingRow): Response {
   return Response.json({ error: { message, type: "usage_limit_exceeded" } }, { status: 402 });
 }
 
-async function drain(body: ReadableStream<Uint8Array>): Promise<void> {
-  await body.pipeTo(new WritableStream());
-}
-
-async function recordUsage(env: Env, userId: string, billingId: string, periodStart: string, logId: string): Promise<void> {
+async function recordUsage(
+  env: Env,
+  userId: string,
+  billingId: string,
+  periodStart: string,
+  logId: string,
+  providerUsage: DeepSeekUsage | null = null
+): Promise<void> {
   const url = `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/ai-gateway/gateways/${env.CLOUDFLARE_AI_GATEWAY_ID}/logs/${encodeURIComponent(logId)}`;
+  let failure = "log was not ready";
   for (const delay of [0, 250, 750, 1_500, 3_000, 5_000]) {
     if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
     const response = await fetch(url, { headers: { authorization: `Bearer ${env.CLOUDFLARE_API_TOKEN}` } });
-    if (!response.ok) continue;
-    const payload = await response.json<CloudflareLogResponse>();
+    if (!response.ok) {
+      failure = `logs API returned ${response.status}`;
+      continue;
+    }
+    const payload = await response.json<CloudflareLogResponse>().catch(() => null);
+    if (!payload) {
+      failure = "logs API returned invalid JSON";
+      continue;
+    }
     const log = payload.result;
-    if (!payload.success || !log || log.cost == null || !belongsTo(log.metadata, billingId)) continue;
+    if (!payload.success || !log) {
+      failure = "log detail was empty";
+      continue;
+    }
+    if (!belongsTo(log.metadata, billingId)) {
+      failure = "log metadata did not match the user";
+      continue;
+    }
+    const inputTokens = Math.max(log.tokens_in ?? 0, providerUsage?.prompt_tokens ?? 0);
+    const outputTokens = Math.max(log.tokens_out ?? 0, providerUsage?.completion_tokens ?? 0);
+    if (inputTokens <= 0) {
+      failure = "token counts were not ready";
+      continue;
+    }
+    const loggedAt = new Date(log.created_at);
+    const costMicrousd = log.cost == null
+      ? deepSeekCostMicrousd(
+        { ...providerUsage, prompt_tokens: inputTokens, completion_tokens: outputTokens },
+        Number.isNaN(loggedAt.getTime()) ? new Date() : loggedAt
+      )
+      : Math.max(0, Math.round(log.cost * 1_000_000));
     await env.DB.prepare(`
       INSERT OR IGNORE INTO usage_events
         (log_id, user_id, period_start, cost_microusd, input_tokens, output_tokens)
       VALUES (?, ?, ?, ?, ?, ?)
-    `).bind(logId, userId, periodStart, Math.max(0, Math.round(log.cost * 1_000_000)), log.tokens_in ?? 0, log.tokens_out ?? 0).run();
+    `).bind(logId, userId, periodStart, costMicrousd, inputTokens, outputTokens).run();
     return;
   }
-  console.error("AI Gateway usage log was not ready", logId);
+  console.error("AI Gateway usage was not recorded", logId, failure);
+}
+
+async function readProviderUsage(body: ReadableStream<Uint8Array>, contentType: string | null): Promise<DeepSeekUsage | null> {
+  if (!contentType?.includes("text/event-stream")) {
+    const payload = await new Response(body).json() as { usage?: DeepSeekUsage };
+    return payload.usage ?? null;
+  }
+
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let usage: DeepSeekUsage | null = null;
+  const readLines = (text: string) => {
+    for (const line of text.split(/\r?\n/)) {
+      if (!line.startsWith("data:")) continue;
+      const data = line.slice(5).trim();
+      if (!data || data === "[DONE]") continue;
+      try {
+        const parsed = JSON.parse(data) as { usage?: DeepSeekUsage | null };
+        if (parsed.usage) usage = parsed.usage;
+      } catch {
+        // Ignore non-JSON SSE events while continuing to drain the metering branch.
+      }
+    }
+  };
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const boundary = buffer.lastIndexOf("\n");
+    if (boundary < 0) continue;
+    readLines(buffer.slice(0, boundary + 1));
+    buffer = buffer.slice(boundary + 1);
+  }
+  readLines(buffer + decoder.decode());
+  return usage;
 }
 
 function belongsTo(metadata: unknown, billingId: string): boolean {
@@ -223,6 +297,7 @@ async function sha256(value: string): Promise<string> {
 interface CloudflareLogResponse {
   success: boolean;
   result?: {
+    created_at: string;
     path: string;
     tokens_in: number | null;
     tokens_out: number | null;
