@@ -6,6 +6,7 @@ import { activateBrowserLocale, i18n } from "../shared/i18n.ts";
 import { App } from "./App";
 import { CHAT_HOST_ID } from "./pageSelection";
 import { disposePageTools, getPageTools } from "./pageTools";
+import { receivePanelMessage } from "./usePanel";
 import { debugEvent } from "./debug";
 import "./styles.css";
 
@@ -13,6 +14,10 @@ activateBrowserLocale();
 debugEvent("content_started", { topFrame: window === window.top });
 
 browser.runtime.onMessage.addListener((message: TabMessage) => {
+  if (message.type === "view" || message.type === "live") {
+    receivePanelMessage(message);
+    return;
+  }
   if (message.type === "ping") return Promise.resolve(true);
   if (message.type === "refresh_frame") return registerFrame();
   if (message.type === "dispose") {

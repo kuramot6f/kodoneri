@@ -8,13 +8,14 @@ import {
   taggedMessage
 } from "../shared/conversation";
 import type {
+  AskMessage,
   MemoryProgress,
-  PanelEvent,
-  PanelMessage,
   PanelState,
+  RuntimeMessage,
   StepView,
   TabMessage,
-  TabView
+  TabView,
+  ToolDetail
 } from "../shared/protocol";
 import { formatSelectionContext } from "../shared/selectionContext";
 import { loadConversation, loadSettings, saveConversation } from "../shared/store";
@@ -30,7 +31,6 @@ import { errorData } from "../shared/debugLog";
 
 export interface Session {
   tabId: number;
-  port: browser.runtime.Port | null;
   panel: PanelState;
   conversation: Conversation | null;
   run: { requestId: string; controller: AbortController; done: Promise<void> } | null;
@@ -40,6 +40,7 @@ export interface Session {
   cacheUsage: CacheUsage | null;
   /** tabId:frameId pairs that received tool messages for the running request. */
   touched: Set<string>;
+  liveTimer?: ReturnType<typeof setTimeout>;
 }
 
 interface StoredTabState {
@@ -47,11 +48,14 @@ interface StoredTabState {
   panel: PanelState;
 }
 
+export type PanelMessage = Extract<RuntimeMessage, { type: "sync" | "ask" | "cancel" | "open" | "panel" }>;
+
 const DEFAULT_PANEL: PanelState = { open: false, expanded: false, frame: null };
+const LIVE_INTERVAL_MS = 50;
 const sessions = new Map<number, Session>();
 const loading = new Map<number, Promise<Session>>();
 
-export function getSession(tabId: number): Promise<Session> {
+function getSession(tabId: number): Promise<Session> {
   const existing = sessions.get(tabId);
   if (existing) return Promise.resolve(existing);
   let pending = loading.get(tabId);
@@ -63,7 +67,6 @@ export function getSession(tabId: number): Promise<Session> {
 }
 
 async function restoreSession(tabId: number): Promise<Session> {
-  debugEvent("session_restore_started", { tabId });
   const key = `tab:${tabId}`;
   let stored: StoredTabState | undefined;
   let conversation: Conversation | null = null;
@@ -75,10 +78,15 @@ async function restoreSession(tabId: number): Promise<Session> {
     // Stored tab state that cannot be read would otherwise keep this tab without a panel for good.
     stored = undefined;
   }
-  const session: Session = {
+  const session = createSession(tabId, { ...DEFAULT_PANEL, ...stored?.panel }, conversation);
+  sessions.set(tabId, session);
+  return session;
+}
+
+function createSession(tabId: number, panel: PanelState, conversation: Conversation | null): Session {
+  return {
     tabId,
-    port: null,
-    panel: { ...DEFAULT_PANEL, ...stored?.panel },
+    panel,
     conversation,
     run: null,
     step: null,
@@ -87,13 +95,9 @@ async function restoreSession(tabId: number): Promise<Session> {
     cacheUsage: null,
     touched: new Set()
   };
-  sessions.set(tabId, session);
-  debugEvent("session_restored", { tabId, hasConversation: Boolean(conversation), panelOpen: session.panel.open });
-  return session;
 }
 
 export function removeSession(tabId: number): void {
-  debugEvent("session_removed", { tabId, wasRunning: Boolean(sessions.get(tabId)?.run) });
   sessions.get(tabId)?.run?.controller.abort();
   sessions.delete(tabId);
   void browser.storage.session.remove(`tab:${tabId}`);
@@ -103,79 +107,53 @@ export async function togglePanel(tabId: number): Promise<void> {
   const session = await getSession(tabId);
   session.panel = { ...session.panel, open: !session.panel.open };
   persist(session);
-  pushState(session);
+  pushView(session);
 }
 
-export async function attachPort(port: browser.runtime.Port): Promise<void> {
-  const tabId = port.sender?.tab?.id;
-  if (tabId === undefined || port.sender?.frameId !== 0) return;
+/** Handles a panel message from a tab's top frame and answers with the tab's view. */
+export async function handlePanelMessage(tabId: number, message: PanelMessage): Promise<TabView> {
   const session = await getSession(tabId);
-  debugEvent("panel_port_attached", { tabId });
-  session.port = port;
-  pushState(session);
-  port.onMessage.addListener((message: object) => {
-    void handle(session, message as PanelMessage).catch((error) => {
-      debugEvent("panel_message_failed", { tabId: session.tabId, ...errorData(error) });
-    });
-  });
-  port.onDisconnect.addListener(() => {
-    if (session.port === port) {
-      debugEvent("panel_port_detached", { tabId: session.tabId });
-      session.port = null;
-    }
-  });
-}
-
-/** switch_tab carries the conversation to the tab the user now sees; the old tab is left empty. */
-export async function moveSession(session: Session, targetTabId: number): Promise<void> {
-  if (sessions.get(targetTabId)?.run) throw new Error(i18n._({ id: "errors.targetTabBusy", message: "The conversation cannot be moved because the target tab is processing another response." }));
-  try {
-    await browser.tabs.sendMessage(targetTabId, { type: "ping" } satisfies TabMessage, { frameId: 0 });
-  } catch {
-    throw new Error(i18n._({ id: "errors.targetTabUnavailable", message: "The tab was switched, but the conversation remains in the original tab because it cannot be displayed here." }));
-  }
-
-  const sourceTabId = session.tabId;
-  const sourcePort = session.port;
-  session.port = sessions.get(targetTabId)?.port ?? null;
-  session.tabId = targetTabId;
-  session.panel = { ...session.panel, open: true };
-  sessions.set(targetTabId, session);
-  persist(session);
-  pushState(session);
-
-  sessions.delete(sourceTabId);
-  await browser.storage.session.set({
-    [`tab:${sourceTabId}`]: { conversationId: null, panel: { ...session.panel, open: false } } satisfies StoredTabState
-  });
-  const empty = await getSession(sourceTabId);
-  empty.port = sourcePort;
-  pushState(empty);
-}
-
-async function handle(session: Session, message: PanelMessage): Promise<void> {
-  // Replied before any await so a slow ask or open never looks like a dead port.
-  if (message.type === "ping") return pushState(session);
-  if (message.type === "ask") return ask(session, message);
-  if (message.type === "cancel") {
-    debugEvent("request_cancelled_by_user", { tabId: session.tabId, hasRun: Boolean(session.run) });
-    return session.run?.controller.abort();
-  }
-  if (message.type === "open") {
-    debugEvent("conversation_opened", { tabId: session.tabId, hasConversationId: Boolean(message.conversationId) });
+  if (message.type === "ask") {
+    void ask(session, message).catch((error) => debugEvent("request_failed", { tabId, ...errorData(error) }));
+  } else if (message.type === "cancel") {
+    session.run?.controller.abort();
+  } else if (message.type === "open") {
     session.run?.controller.abort();
     session.conversation = message.conversationId ? await loadConversation(message.conversationId) : null;
     session.step = null;
     session.memory = null;
     session.cacheUsage = null;
-  } else {
+    persist(session);
+  } else if (message.type === "panel") {
     session.panel = { ...session.panel, ...message.panel };
+    persist(session);
   }
-  persist(session);
-  pushState(session);
+  return view(session);
 }
 
-async function ask(session: Session, message: Extract<PanelMessage, { type: "ask" }>): Promise<void> {
+/** switch_tab carries the conversation to the tab the user now sees; the old tab is left empty. */
+async function moveSession(session: Session, targetTabId: number): Promise<void> {
+  if (sessions.get(targetTabId)?.run) throw new Error("The conversation cannot be moved because the target tab is processing another response.");
+  try {
+    await browser.tabs.sendMessage(targetTabId, { type: "ping" } satisfies TabMessage, { frameId: 0 });
+  } catch {
+    throw new Error("The tab was switched, but the conversation remains in the original tab because it cannot be displayed there.");
+  }
+
+  const sourceTabId = session.tabId;
+  session.tabId = targetTabId;
+  session.panel = { ...session.panel, open: true };
+  sessions.set(targetTabId, session);
+  persist(session);
+  pushView(session);
+
+  const empty = createSession(sourceTabId, { ...session.panel, open: false }, null);
+  sessions.set(sourceTabId, empty);
+  persist(empty);
+  pushView(empty);
+}
+
+async function ask(session: Session, message: AskMessage): Promise<void> {
   // The run is registered before any await so a second question cannot start a parallel answer.
   const previous = session.run;
   const controller = new AbortController();
@@ -183,19 +161,11 @@ async function ask(session: Session, message: Extract<PanelMessage, { type: "ask
   const done = new Promise<void>((resolve) => { finish = resolve; });
   session.run = { requestId: message.requestId, controller, done };
   const startedAt = performance.now();
-  debugEvent("request_started", {
-    tabId: session.tabId,
-    requestId: message.requestId,
-    questionLength: message.text.length,
-    selectionIncluded: Boolean(message.selection),
-    interruptedPrevious: Boolean(previous)
-  });
+  debugEvent("request_started", { tabId: session.tabId, requestId: message.requestId, interruptedPrevious: Boolean(previous) });
   try {
     if (previous) {
-      debugEvent("previous_request_interrupting", { tabId: session.tabId, requestId: previous.requestId });
       previous.controller.abort();
       await previous.done;
-      debugEvent("previous_request_finished", { tabId: session.tabId, requestId: previous.requestId });
     }
     session.memory = null;
     session.cacheUsage = null;
@@ -223,18 +193,17 @@ async function ask(session: Session, message: Extract<PanelMessage, { type: "ask
     session.conversation = conversation;
     session.step = { reasoning: "", text: "", tools: [] };
     persist(session);
-    pushState(session);
-    await saveConversationWithDebug(conversation, "question");
+    pushView(session);
+    await save(conversation);
 
     let models: Models;
     try {
       models = await resolveModels();
     } catch (error) {
-      debugEvent("model_resolution_failed", { tabId: session.tabId, requestId: message.requestId, ...errorData(error) });
       append(conversation, [taggedMessage("runtime_error", getErrorMessage(error))]);
       session.step = null;
-      await saveConversationWithDebug(conversation, "model_error");
-      pushState(session);
+      await save(conversation);
+      pushView(session);
       return;
     }
     await answer(session, conversation, models, message.requestId, controller.signal, firstTurn ? message.text : null);
@@ -270,12 +239,6 @@ async function answer(
   signal: AbortSignal,
   titleQuestion: string | null
 ): Promise<void> {
-  debugEvent("answer_stream_started", {
-    tabId: session.tabId,
-    requestId,
-    model: models.main.info.key,
-    messageCount: conversation.messages.length
-  });
   const runtime = {
     session,
     requestId,
@@ -288,46 +251,31 @@ async function answer(
   session.touched.add(`${session.tabId}:0`);
   const live = () => session.conversation === conversation;
   const instructions = `${conversation.systemPrompt}\n\n${createRuntimeContext(browser.i18n.getUILanguage())}`;
-  let firstTextDelta = true;
-  let firstReasoningDelta = true;
   const result = await streamAnswer(models.main, conversation.messages, createTools(runtime), signal, {
     onDelta: (channel, text) => {
-      if (channel === "text" ? firstTextDelta : firstReasoningDelta) {
-        debugEvent("answer_first_delta", { tabId: session.tabId, requestId, channel });
-        if (channel === "text") firstTextDelta = false;
-        else firstReasoningDelta = false;
-      }
       if (!live() || !session.step) return;
       session.step[channel] += text;
-      post(session, { type: "delta", phase: "answer", channel, text });
+      scheduleLive(session);
     },
     onTool: (detail) => {
-      debugEvent(detail.output ? "tool_completed" : "tool_started", {
-        tabId: session.tabId,
-        requestId,
-        toolCallId: detail.id,
-        toolName: detail.name,
-        ...(detail.output ? { outputType: detail.output.type } : {})
-      });
+      if (detail.output?.type === "error") debugEvent("tool_failed", { requestId, toolName: detail.name, errorMessage: detail.output.error });
       if (!live() || !session.step) return;
       session.step.tools = upsert(session.step.tools, detail);
-      pushState(session);
+      scheduleLive(session);
     },
     onStep: (messages) => {
-      debugEvent("answer_step_completed", { tabId: session.tabId, requestId, messageCount: messages.length });
       append(conversation, messages);
-      void saveConversationWithDebug(conversation, "step").catch(() => undefined);
+      void save(conversation).catch(() => undefined);
       if (!live()) return;
       session.step = { reasoning: "", text: "", tools: [] };
-      pushState(session);
+      pushView(session);
     }
   }, instructions);
   await disposeTools(runtime);
-  debugEvent("answer_stream_finished", {
+  debugEvent("answer_finished", {
     tabId: session.tabId,
     requestId,
     cancelled: Boolean(result.cancelled),
-    hasError: Boolean(result.error),
     errorMessage: result.error ?? null,
     contextTokens: result.contextTokens
   });
@@ -343,7 +291,7 @@ async function answer(
     ]);
   }
   if (!live()) {
-    await saveConversationWithDebug(conversation, "inactive_answer");
+    await save(conversation);
     return;
   }
   session.step = null;
@@ -351,39 +299,36 @@ async function answer(
 
   const plan = result.error ? null : planCompaction(conversation.messages, result.contextTokens, models.main.info.contextWindow);
   if (plan) {
-    debugEvent("compaction_started", { tabId: session.tabId, requestId, prefixMessageCount: plan.prefixMessageCount });
     session.compacting = true;
-    pushState(session);
+    pushView(session);
     try {
       const content = await compact(models.low, plan.prefix, signal);
       conversation.messages = applyCompaction(conversation.messages, { prefixMessageCount: plan.prefixMessageCount, content });
-      debugEvent("compaction_completed", { tabId: session.tabId, requestId });
     } catch (error) {
       debugEvent("compaction_failed", { tabId: session.tabId, requestId, ...errorData(error) });
       append(conversation, [taggedMessage("runtime_error", i18n._({ id: "errors.compactionFailed", message: "Conversation compaction failed. {error}", values: { error: getErrorMessage(error) } }))]);
     }
     session.compacting = false;
   }
-  await saveConversationWithDebug(conversation, "answer");
-  pushState(session);
+  await save(conversation);
+  pushView(session);
   if (result.error) return;
 
   // Title and memory maintenance continue after the answer; the session is already free for the next question.
   if (titleQuestion) {
     void generateTitle(models.low, titleQuestion, lastAnswer(conversation)).then(async (title) => {
       conversation.title = title;
-      await saveConversationWithDebug(conversation, "title");
-      if (live()) pushState(session);
+      await save(conversation);
+      if (live()) pushView(session);
     }).catch(() => undefined);
   }
   void maintainMemory(session, conversation, models.low, instructions);
 }
 
 async function maintainMemory(session: Session, conversation: Conversation, model: ModelRuntime, instructions: string): Promise<void> {
-  debugEvent("memory_update_started", { tabId: session.tabId, conversationId: conversation.id, model: model.info.key });
   const progress: MemoryProgress = { reasoning: "", text: "", tools: [], done: false, cacheUsage: null };
   session.memory = progress;
-  pushState(session);
+  pushView(session);
   const live = () => session.memory === progress;
   const runtime = {
     session,
@@ -391,7 +336,7 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
     signal: new AbortController().signal,
     model,
     scope: "memory" as const,
-    moveSession: () => Promise.reject(new Error(i18n._({ id: "errors.switchDuringMemoryUpdate", message: "Tabs cannot be switched while memory is being updated." })))
+    moveSession: () => Promise.reject(new Error("Tabs cannot be switched while memory is being updated."))
   };
   const result = await streamAnswer(
     model,
@@ -401,11 +346,11 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
     {
       onDelta: (channel, text) => {
         progress[channel] += text;
-        if (live()) post(session, { type: "delta", phase: "memory", channel, text });
+        if (live()) scheduleLive(session);
       },
       onTool: (detail) => {
         progress.tools = upsert(progress.tools, detail);
-        if (live()) pushState(session);
+        if (live()) scheduleLive(session);
       },
       onStep: () => undefined
     },
@@ -416,13 +361,11 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
   if (result.error) progress.error = result.error;
   debugEvent("memory_update_finished", {
     tabId: session.tabId,
-    conversationId: conversation.id,
     cancelled: Boolean(result.cancelled),
-    hasError: Boolean(result.error),
     errorMessage: result.error ?? null,
     contextTokens: result.contextTokens
   });
-  if (live()) pushState(session);
+  if (live()) pushView(session);
 }
 
 function append(conversation: Conversation, messages: ModelMessage[]): void {
@@ -431,23 +374,11 @@ function append(conversation: Conversation, messages: ModelMessage[]): void {
   conversation.updatedAt = now;
 }
 
-async function saveConversationWithDebug(conversation: Conversation, phase: string): Promise<void> {
-  const startedAt = performance.now();
+async function save(conversation: Conversation): Promise<void> {
   try {
     await saveConversation(conversation);
-    debugEvent("conversation_saved", {
-      conversationId: conversation.id,
-      phase,
-      messageCount: conversation.messages.length,
-      durationMs: Math.round(performance.now() - startedAt)
-    });
   } catch (error) {
-    debugEvent("conversation_save_failed", {
-      conversationId: conversation.id,
-      phase,
-      durationMs: Math.round(performance.now() - startedAt),
-      ...errorData(error)
-    });
+    debugEvent("conversation_save_failed", { messageCount: conversation.messages.length, ...errorData(error) });
     throw error;
   }
 }
@@ -457,21 +388,29 @@ function lastAnswer(conversation: Conversation): string {
   return message ? getMessageText(message) : "";
 }
 
-function upsert(tools: ToolDetailList, detail: ToolDetailList[number]): ToolDetailList {
+function upsert(tools: ToolDetail[], detail: ToolDetail): ToolDetail[] {
   return tools.some((tool) => tool.id === detail.id)
     ? tools.map((tool) => tool.id === detail.id ? detail : tool)
     : [...tools, detail];
 }
-
-type ToolDetailList = StepView["tools"];
 
 function persist(session: Session): void {
   const state: StoredTabState = { conversationId: session.conversation?.id ?? null, panel: session.panel };
   void browser.storage.session.set({ [`tab:${session.tabId}`]: state });
 }
 
-function pushState(session: Session): void {
-  const state: TabView = {
+let lastVersion = 0;
+
+/** Wall-clock based so views from a restarted worker still count as newer. */
+function nextVersion(): number {
+  lastVersion = Math.max(Date.now(), lastVersion + 1);
+  return lastVersion;
+}
+
+function view(session: Session): TabView {
+  return {
+    version: nextVersion(),
+    tabId: session.tabId,
     panel: session.panel,
     conversation: session.conversation,
     step: session.step,
@@ -479,15 +418,25 @@ function pushState(session: Session): void {
     memory: session.memory,
     cacheUsage: session.cacheUsage
   };
-  post(session, { type: "state", state });
 }
 
-function post(session: Session, event: PanelEvent): void {
-  try {
-    session.port?.postMessage(event);
-  } catch {
-    session.port = null;
-  }
+function pushView(session: Session): void {
+  clearTimeout(session.liveTimer);
+  session.liveTimer = undefined;
+  sendToPanel(session.tabId, { type: "view", view: view(session) });
+}
+
+/** Streaming updates are coalesced; each one carries the whole step, so a lost message is repaired by the next. */
+function scheduleLive(session: Session): void {
+  session.liveTimer ??= setTimeout(() => {
+    session.liveTimer = undefined;
+    sendToPanel(session.tabId, { type: "live", version: nextVersion(), step: session.step, memory: session.memory });
+  }, LIVE_INTERVAL_MS);
+}
+
+/** A tab without a content script simply misses the update; the panel syncs when it loads or becomes visible. */
+function sendToPanel(tabId: number, message: TabMessage): void {
+  void browser.tabs.sendMessage(tabId, message, { frameId: 0 }).catch(() => undefined);
 }
 
 function getErrorMessage(error: unknown): string {

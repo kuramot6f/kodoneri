@@ -2,8 +2,7 @@ import type {
   RuntimeMessage,
   SelectionContext,
   TextResourceOutput,
-  ToolOutput,
-  WhoAmI
+  ToolOutput
 } from "../shared/protocol";
 import { i18n } from "../shared/i18n.ts";
 import { createImageReader } from "./imageTools";
@@ -23,13 +22,6 @@ export interface PageTools {
 
 /** One page-tool session per request; refs and caches stay stable for the request's lifetime. */
 const sessions = new Map<string, PageTools>();
-
-export const whoami: Promise<WhoAmI> = browser.runtime.sendMessage({ type: "whoami" } satisfies RuntimeMessage)
-  .then((response: unknown) => {
-    const me = response as Partial<WhoAmI> | undefined;
-    if (typeof me?.tabId !== "number" || typeof me.frameId !== "number") throw new Error(i18n._({ id: "errors.identifyTab", message: "Could not identify the tab." }));
-    return me as WhoAmI;
-  });
 
 export function getPageTools(requestId: string, refPrefix: string, selection: PageSelection | null = null): PageTools {
   let tools = sessions.get(requestId);

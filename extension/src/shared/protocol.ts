@@ -78,6 +78,9 @@ export interface MemoryProgress extends StepView {
 }
 
 export interface TabView {
+  /** Increases with every view the background sends, so a late message never overwrites a newer one. */
+  version: number;
+  tabId: number;
   panel: PanelState;
   conversation: Conversation | null;
   step: StepView | null;
@@ -86,31 +89,23 @@ export interface TabView {
   cacheUsage: CacheUsage | null;
 }
 
-/** Content → Background over the "panel" port. */
-export type PanelMessage =
-  | {
-      type: "ask";
-      requestId: string;
-      text: string;
-      title: string;
-      url: string;
-      htmlLength: number;
-      selection: SelectionContext | null;
-    }
+export interface AskMessage {
+  type: "ask";
+  requestId: string;
+  text: string;
+  title: string;
+  url: string;
+  htmlLength: number;
+  selection: SelectionContext | null;
+}
+
+/** Content → Background via runtime.sendMessage. Panel messages come from the top frame and are answered with the tab's view. */
+export type RuntimeMessage =
+  | { type: "sync" }
+  | AskMessage
   | { type: "cancel" }
   | { type: "open"; conversationId: string | null }
   | { type: "panel"; panel: Partial<PanelState> }
-  /** Answered with the current state at once, so the panel can tell a live port from a dead one. */
-  | { type: "ping" };
-
-/** Background → Content over the "panel" port. */
-export type PanelEvent =
-  | { type: "state"; state: TabView }
-  | { type: "delta"; phase: "answer" | "memory"; channel: "text" | "reasoning"; text: string };
-
-/** Content → Background via runtime.sendMessage. */
-export type RuntimeMessage =
-  | { type: "whoami" }
   | { type: "frame"; ref: string }
   | { type: "fetch"; url: string }
   | { type: "models" }
@@ -125,13 +120,11 @@ export interface ModelsView {
   settings: ModelSettings | null;
 }
 
-export interface WhoAmI {
-  tabId: number;
-  frameId: number;
-}
-
 /** Background → a content frame via tabs.sendMessage. */
 export type TabMessage =
+  | { type: "view"; view: TabView }
+  /** The streaming parts of the view, sent at most every few dozen milliseconds while a response streams. */
+  | { type: "live"; version: number; step: StepView | null; memory: MemoryProgress | null }
   | { type: "tool"; requestId: string; refPrefix: string; name: string; args: string }
   | { type: "dispose"; requestId: string }
   | { type: "refresh_frame" }
