@@ -1,11 +1,9 @@
-import type { ToolSuccessOutput } from "../shared/protocol";
-import { i18n } from "../shared/i18n.ts";
-import type { NavigateArgs } from "./navigationTools";
-import type { ToolRuntime } from "./tools";
+import type { NavigateInput } from "./toolDefinitions.ts";
+import type { ToolContext } from "./tools.ts";
 
 const LOAD_TIMEOUT_MS = 30_000;
 
-export async function navigate({ session, signal, moveSession }: ToolRuntime, args: NavigateArgs): Promise<ToolSuccessOutput> {
+export async function navigate({ session, signal, moveSession }: ToolContext, args: NavigateInput) {
   if (args.action === "open_tab") {
     const tab = await browser.tabs.create({ url: args.url!, active: false });
     return output(args.action, tab, session.tabId);
@@ -13,9 +11,9 @@ export async function navigate({ session, signal, moveSession }: ToolRuntime, ar
 
   const tabId = await resolveTab(args.ref!);
   if (args.action === "close_tab") {
-    if (tabId === session.tabId) throw new Error(i18n._({ id: "errors.closeConversationTab", message: "The tab running this conversation cannot be closed." }));
+    if (tabId === session.tabId) throw new Error("The tab running this conversation cannot be closed.");
     await browser.tabs.remove(tabId);
-    return { type: "text", content: JSON.stringify({ action: args.action, ref: args.ref, success: true }) };
+    return { action: args.action, ref: args.ref, success: true };
   }
 
   // The listener is attached before the action so a fast load cannot slip past it.
@@ -44,7 +42,7 @@ export async function resolveTab(ref: string): Promise<number> {
     if (Number.isNaN(tabId)) throw new Error();
     await browser.tabs.get(tabId);
   } catch {
-    throw new Error(i18n._({ id: "errors.invalidTabRef", message: "Invalid tab ref: {ref}. Use list(type=tab) to refresh tab refs.", values: { ref } }));
+    throw new Error(`Invalid tab ref: ${ref}. Use list(type=tab) to refresh tab refs.`);
   }
   return tabId;
 }
@@ -61,20 +59,14 @@ function waitForLoad(tabId: number, signal: AbortSignal): Promise<void> {
     const onUpdated = (updatedTabId: number, change: browser.tabs._OnUpdatedChangeInfo) => {
       if (updatedTabId === tabId && change.status === "complete") finish();
     };
-    const onAbort = () => finish(new DOMException(i18n._({ id: "errors.responseCancelled", message: "Response generation was cancelled." }), "AbortError"));
-    const timeout = setTimeout(() => finish(new Error(i18n._({ id: "errors.navigationTimeout", message: "The page did not finish loading within 30 seconds after navigation." }))), LOAD_TIMEOUT_MS);
+    const onAbort = () => finish(new DOMException("Response generation was cancelled.", "AbortError"));
+    const timeout = setTimeout(() => finish(new Error("The page did not finish loading within 30 seconds after navigation.")), LOAD_TIMEOUT_MS);
     browser.tabs.onUpdated.addListener(onUpdated);
     signal.addEventListener("abort", onAbort, { once: true });
     if (signal.aborted) onAbort();
   });
 }
 
-function output(action: NavigateArgs["action"], tab: browser.tabs.Tab, currentTabId: number): ToolSuccessOutput {
-  return {
-    type: "text",
-    content: JSON.stringify({
-      action,
-      tab: { ref: `tab_${tab.id}`, title: tab.title ?? "", url: tab.url ?? "", current: tab.id === currentTabId }
-    })
-  };
+function output(action: NavigateInput["action"], tab: browser.tabs.Tab, currentTabId: number) {
+  return { action, tab: { ref: `tab_${tab.id}`, title: tab.title ?? "", url: tab.url ?? "", current: tab.id === currentTabId } };
 }

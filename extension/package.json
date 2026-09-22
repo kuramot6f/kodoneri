@@ -24,7 +24,8 @@
     "marked": "^18.0.13",
     "marked-highlight": "^2.2.4",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@lingui/cli": "6.7.0",

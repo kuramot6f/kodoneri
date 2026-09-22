@@ -1,128 +1,78 @@
-import type { ImageToolOutput, ToolOutput, ToolSuccessOutput } from "../shared/protocol";
-import { loadResource, resolveResourceUrl } from "../shared/resourceLoader";
-import { i18n } from "../shared/i18n.ts";
+import type { ImageOutput } from "../shared/protocol";
+import { fetchBytes, resolveUrl } from "../shared/fetch";
 import type { PageResourceEntry } from "./pageSnapshot";
 
 const MAX_IMAGE_BYTES = 32 * 1024 * 1024;
 const MAX_TOTAL_TOOL_CONTENT_LENGTH = 44 * 1024 * 1024;
-const IMAGE_RESOURCE_SCHEMES = new Set(["data:", "blob:", "http:", "https:"]);
+const IMAGE_SCHEMES = ["data:", "blob:", "http:", "https:"];
+
+/** An image, or the XML text of an SVG. */
+type ImageResult = ImageOutput | string;
 
 interface ReadTarget {
   cacheKey: string;
-  load: () => Promise<ToolSuccessOutput>;
+  load: () => Promise<ImageResult>;
 }
 
-export function createImageReader(
-  baseUrl: string,
-  getResources: () => ReadonlyMap<string, PageResourceEntry>
-): (argumentsJson: string) => Promise<ToolOutput> {
-  const cache = new Map<string, Promise<ToolSuccessOutput>>();
-  let returnedContentLength = 0;
+export function createImageReader(getResources: () => ReadonlyMap<string, PageResourceEntry>): (ref: string) => Promise<ImageResult> {
+  const cache = new Map<string, Promise<ImageResult>>();
+  let returnedLength = 0;
 
-  return async (argumentsJson) => {
-    try {
-      const ref = parseReadImageArgs(argumentsJson);
-      const target = resolveReadTarget(ref, baseUrl, getResources());
-      const outputPromise = cache.get(target.cacheKey) ?? target.load();
-      cache.set(target.cacheKey, outputPromise);
-
-      const output = await outputPromise;
-      const contentLength = getToolContentLength(output);
-      if (returnedContentLength + contentLength > MAX_TOTAL_TOOL_CONTENT_LENGTH) {
-        throw new Error(i18n._({ id: "errors.totalImageSize", message: "The total image and SVG size allowed for this question has been exceeded." }));
-      }
-      returnedContentLength += contentLength;
-      return output;
-    } catch (error) {
-      return { type: "error", error: getErrorMessage(error) };
+  return async (ref) => {
+    const target = resolveReadTarget(ref, getResources());
+    const pending = cache.get(target.cacheKey) ?? target.load();
+    cache.set(target.cacheKey, pending);
+    const output = await pending;
+    const length = typeof output === "string" ? new TextEncoder().encode(output).byteLength : output.dataUrl.length;
+    if (returnedLength + length > MAX_TOTAL_TOOL_CONTENT_LENGTH) {
+      throw new Error("The total image and SVG size allowed for this question has been exceeded.");
     }
+    returnedLength += length;
+    return output;
   };
 }
 
-function parseReadImageArgs(argumentsJson: string): string {
-  const value: unknown = JSON.parse(argumentsJson);
-  if (!value || typeof value !== "object") throw new Error(i18n._({ id: "errors.invalidArguments", message: "Invalid arguments." }));
-
-  const { ref } = value as Record<string, unknown>;
-  if (typeof ref !== "string" || !ref.trim()) {
-    throw new Error(i18n._({ id: "errors.refRequired", message: "ref must be a non-empty string." }));
-  }
-  return ref;
-}
-
-function getToolContentLength(output: ToolSuccessOutput): number {
-  return output.type === "image"
-    ? output.dataUrl.length
-    : new TextEncoder().encode(output.content).byteLength;
-}
-
-function resolveReadTarget(
-  ref: string,
-  baseUrl: string,
-  resources: ReadonlyMap<string, PageResourceEntry>
-): ReadTarget {
+function resolveReadTarget(ref: string, resources: ReadonlyMap<string, PageResourceEntry>): ReadTarget {
   const entry = resources.get(ref);
-  if (entry) return targetFromEntry(ref, entry);
-
-  const source = resolveImageSource(ref, baseUrl);
-  return { cacheKey: `source:${source}`, load: () => loadSource(source) };
+  if (!entry) {
+    const source = resolveUrl(ref, document.baseURI, IMAGE_SCHEMES);
+    return { cacheKey: `source:${source}`, load: () => loadSource(source) };
+  }
+  switch (entry.type) {
+    case "inline-text": throw new Error("This ref identifies a script or style. Use read or grep.");
+    case "source": return { cacheKey: `source:${entry.source}`, load: () => loadSource(entry.source) };
+    case "svg": return { cacheKey: `ref:${ref}`, load: async () => entry.content };
+    case "canvas": return { cacheKey: `ref:${ref}`, load: () => captureCanvas(entry.element) };
+    case "video": return { cacheKey: `ref:${ref}`, load: () => captureVideoFrame(entry.element) };
+  }
 }
 
-function targetFromEntry(ref: string, entry: PageResourceEntry): ReadTarget {
-  if (entry.type === "inline-text") {
-    throw new Error(i18n._({ id: "errors.textRefAsImage", message: "This ref identifies a script or style. Use read or grep." }));
-  }
-  if (entry.type === "source") {
-    return { cacheKey: `source:${entry.source}`, load: () => loadSource(entry.source) };
-  }
-  if (entry.type === "svg") {
-    return {
-      cacheKey: `ref:${ref}`,
-      load: async () => ({ type: "text", content: entry.content })
-    };
-  }
-  if (entry.type === "canvas") {
-    return { cacheKey: `ref:${ref}`, load: () => captureCanvas(entry.element) };
-  }
-  return { cacheKey: `ref:${ref}`, load: () => captureVideoFrame(entry.element) };
-}
-
-function resolveImageSource(ref: string, baseUrl: string): string {
-  return resolveResourceUrl(ref, baseUrl, IMAGE_RESOURCE_SCHEMES, i18n._({ id: "resources.image", message: "image" }));
-}
-
-async function loadSource(source: string): Promise<ToolSuccessOutput> {
-  const { buffer } = await loadResource(source, {
-    label: i18n._({ id: "resources.imageOrSvg", message: "image or SVG" }),
-    maxBytes: MAX_IMAGE_BYTES
-  });
-
-  const bytes = new Uint8Array(buffer);
-  const mimeType = detectImageMimeType(bytes);
+async function loadSource(source: string): Promise<ImageResult> {
+  const { buffer } = await fetchBytes(source, MAX_IMAGE_BYTES);
+  const mimeType = detectImageMimeType(new Uint8Array(buffer));
   if (mimeType) return imageOutputFromBuffer(buffer, mimeType);
-
   const svg = parseSvgText(buffer);
-  if (svg !== null) return { type: "text", content: svg };
-  throw new Error(i18n._({ id: "errors.unsupportedImageFormat", message: "Only JPEG, PNG, GIF, WebP, and SVG formats are supported." }));
+  if (svg !== null) return svg;
+  throw new Error("Only JPEG, PNG, GIF, WebP, and SVG formats are supported.");
 }
 
-async function captureCanvas(canvas: HTMLCanvasElement): Promise<ImageToolOutput> {
-  if (!canvas.width || !canvas.height) throw new Error(i18n._({ id: "errors.emptyCanvas", message: "The canvas has zero size." }));
+async function captureCanvas(canvas: HTMLCanvasElement): Promise<ImageOutput> {
+  if (!canvas.width || !canvas.height) throw new Error("The canvas has zero size.");
   const blob = await canvasToBlob(canvas);
   return imageOutputFromBuffer(await blob.arrayBuffer(), "image/png");
 }
 
-async function captureVideoFrame(video: HTMLVideoElement): Promise<ImageToolOutput> {
+async function captureVideoFrame(video: HTMLVideoElement): Promise<ImageOutput> {
   if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
-    throw new Error(i18n._({ id: "errors.videoFrameUnavailable", message: "The current video frame is not available yet." }));
+    throw new Error("The current video frame is not available yet.");
   }
-  if (!video.videoWidth || !video.videoHeight) throw new Error(i18n._({ id: "errors.emptyVideo", message: "The video has zero size." }));
+  if (!video.videoWidth || !video.videoHeight) throw new Error("The video has zero size.");
 
   const canvas = document.createElement("canvas");
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
   const context = canvas.getContext("2d");
-  if (!context) throw new Error(i18n._({ id: "errors.videoCanvasContext", message: "Could not create a drawing context for the video frame." }));
+  if (!context) throw new Error("Could not create a drawing context for the video frame.");
 
   context.drawImage(video, 0, 0);
   const blob = await canvasToBlob(canvas);
@@ -134,7 +84,7 @@ function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
     try {
       canvas.toBlob((blob) => {
         if (blob) resolve(blob);
-        else reject(new Error(i18n._({ id: "errors.canvasToPng", message: "Could not convert the canvas to PNG." })));
+        else reject(new Error("Could not convert the canvas to PNG."));
       }, "image/png");
     } catch (error) {
       reject(error);
@@ -142,8 +92,8 @@ function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   });
 }
 
-async function imageOutputFromBuffer(buffer: ArrayBuffer, mimeType: string): Promise<ImageToolOutput> {
-  if (buffer.byteLength > MAX_IMAGE_BYTES) throw new Error(i18n._({ id: "errors.imageTooLarge", message: "The image exceeds 32 MiB." }));
+async function imageOutputFromBuffer(buffer: ArrayBuffer, mimeType: string): Promise<ImageOutput> {
+  if (buffer.byteLength > MAX_IMAGE_BYTES) throw new Error("The image exceeds 32 MiB.");
   return {
     type: "image",
     dataUrl: await toDataUrl(buffer, mimeType),
@@ -182,17 +132,11 @@ function toDataUrl(buffer: ArrayBuffer, mimeType: string): Promise<string> {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       if (typeof reader.result === "string") resolve(reader.result);
-      else reject(new Error(i18n._({ id: "errors.imageToDataUrl", message: "Could not convert the image to a data URL." })));
+      else reject(new Error("Could not convert the image to a data URL."));
     }, { once: true });
     reader.addEventListener("error", () => {
-      reject(reader.error ?? new Error(i18n._({ id: "errors.imageToDataUrl", message: "Could not convert the image to a data URL." })));
+      reject(reader.error ?? new Error("Could not convert the image to a data URL."));
     }, { once: true });
     reader.readAsDataURL(new Blob([buffer], { type: mimeType }));
   });
-}
-
-function getErrorMessage(error: unknown): string {
-  return error instanceof Error && error.message
-    ? error.message
-    : i18n._({ id: "errors.imageToolFailed", message: "Image tool execution failed." });
 }

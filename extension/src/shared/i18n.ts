@@ -2,7 +2,7 @@ import { i18n } from "@lingui/core";
 import { messages as enMessages } from "../locales/en/messages.ts";
 import { messages as jaMessages } from "../locales/ja/messages.ts";
 
-export type AppLocale = "en" | "ja";
+type AppLocale = "en" | "ja";
 
 // Source modules can translate errors during tests before the extension entry point runs.
 if (!i18n.locale) {

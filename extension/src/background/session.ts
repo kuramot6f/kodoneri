@@ -1,5 +1,6 @@
 import type { CacheUsage, Conversation, ModelMessage } from "../shared/conversation";
 import { i18n } from "../shared/i18n.ts";
+import { errorMessage } from "../shared/errors.ts";
 import {
   createConversation,
   expireToolHistory,
@@ -17,19 +18,18 @@ import type {
   TabView,
   ToolDetail
 } from "../shared/protocol";
-import { formatSelectionContext } from "../shared/selectionContext";
 import { loadConversation, loadSettings, saveConversation } from "../shared/store";
 import { compact, generateTitle, MEMORY_UPDATE_PROMPT, streamAnswer } from "./agent";
 import { applyCompaction, planCompaction } from "./compaction";
 import { createRuntime, refreshApiKeys, resolveSettings } from "./provider";
 import type { ModelRuntime } from "./provider";
-import { createTools, disposeTools } from "./tools";
-import { createConversationSystemPrompt, createRuntimeContext } from "./prompt";
-import { listMemories } from "./storedText";
+import { createTools } from "./tools";
+import { createConversationSystemPrompt, createRuntimeContext, formatSelectionContext } from "./prompt";
+import { listMemories } from "./stored";
 import { debugEvent } from "./debug";
 import { errorData } from "../shared/debugLog";
 
-export interface Session {
+interface Session {
   tabId: number;
   panel: PanelState;
   conversation: Conversation | null;
@@ -38,8 +38,6 @@ export interface Session {
   compacting: boolean;
   memory: MemoryProgress | null;
   cacheUsage: CacheUsage | null;
-  /** tabId:frameId pairs that received tool messages for the running request. */
-  touched: Set<string>;
   liveTimer?: ReturnType<typeof setTimeout>;
 }
 
@@ -48,7 +46,7 @@ interface StoredTabState {
   panel: PanelState;
 }
 
-export type PanelMessage = Extract<RuntimeMessage, { type: "sync" | "ask" | "cancel" | "open" | "panel" }>;
+type PanelMessage = Extract<RuntimeMessage, { type: "sync" | "ask" | "cancel" | "open" | "panel" }>;
 
 const DEFAULT_PANEL: PanelState = { open: false, expanded: false, frame: null };
 const LIVE_INTERVAL_MS = 50;
@@ -92,8 +90,7 @@ function createSession(tabId: number, panel: PanelState, conversation: Conversat
     step: null,
     compacting: false,
     memory: null,
-    cacheUsage: null,
-    touched: new Set()
+    cacheUsage: null
   };
 }
 
@@ -175,9 +172,8 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
     const firstTurn = conversation.messages.length === 0;
     // Keys live in memory and are re-read from the Keychain only when a conversation starts.
     if (firstTurn) await refreshApiKeys().catch(() => undefined);
-    // Refresh instructions for resumed conversations too; runtime metadata is never persisted here.
-    const memoryList = await listMemories();
-    conversation.systemPrompt = createConversationSystemPrompt(memoryList.content);
+    // Instructions are rebuilt for every question from the current memories and are never persisted.
+    const systemPrompt = createConversationSystemPrompt(JSON.stringify(await listMemories()));
     conversation.messages = [
       ...conversation.messages,
       stamp(taggedMessage("browser_context", JSON.stringify({
@@ -186,7 +182,7 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
         url: message.url,
         htmlLength: message.htmlLength
       })), now),
-      ...(message.selection ? [stamp(taggedMessage("selection_context", formatSelectionContext(message.selection)), now)] : []),
+      ...(message.selection ? [stamp(taggedMessage("selection_context", formatSelectionContext(message.selection), { selection: message.selection }), now)] : []),
       stamp({ role: "user", content: message.text }, now)
     ];
     conversation.updatedAt = now;
@@ -200,13 +196,13 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
     try {
       models = await resolveModels();
     } catch (error) {
-      append(conversation, [taggedMessage("runtime_error", getErrorMessage(error))]);
+      append(conversation, [taggedMessage("runtime_error", errorMessage(error))]);
       session.step = null;
       await save(conversation);
       pushView(session);
       return;
     }
-    await answer(session, conversation, models, message.requestId, controller.signal, firstTurn ? message.text : null);
+    await answer(session, conversation, models, systemPrompt, message.requestId, controller.signal, firstTurn ? message.text : null);
   } finally {
     debugEvent("request_finished", {
       tabId: session.tabId,
@@ -235,6 +231,7 @@ async function answer(
   session: Session,
   conversation: Conversation,
   models: Models,
+  systemPrompt: string,
   requestId: string,
   signal: AbortSignal,
   titleQuestion: string | null
@@ -247,10 +244,8 @@ async function answer(
     scope: "browser" as const,
     moveSession: (tabId: number) => moveSession(session, tabId)
   };
-  // The asking tab prepared page tools for this request even if no tool ever reaches it.
-  session.touched.add(`${session.tabId}:0`);
   const live = () => session.conversation === conversation;
-  const instructions = `${conversation.systemPrompt}\n\n${createRuntimeContext(browser.i18n.getUILanguage())}`;
+  const instructions = `${systemPrompt}\n\n${createRuntimeContext(browser.i18n.getUILanguage())}`;
   const result = await streamAnswer(models.main, conversation.messages, createTools(runtime), signal, {
     onDelta: (channel, text) => {
       if (!live() || !session.step) return;
@@ -258,7 +253,7 @@ async function answer(
       scheduleLive(session);
     },
     onTool: (detail) => {
-      if (detail.output?.type === "error") debugEvent("tool_failed", { requestId, toolName: detail.name, errorMessage: detail.output.error });
+      if (detail.error) debugEvent("tool_failed", { requestId, toolName: detail.name, errorMessage: detail.result });
       if (!live() || !session.step) return;
       session.step.tools = upsert(session.step.tools, detail);
       scheduleLive(session);
@@ -271,7 +266,6 @@ async function answer(
       pushView(session);
     }
   }, instructions);
-  await disposeTools(runtime);
   debugEvent("answer_finished", {
     tabId: session.tabId,
     requestId,
@@ -306,7 +300,7 @@ async function answer(
       conversation.messages = applyCompaction(conversation.messages, { prefixMessageCount: plan.prefixMessageCount, content });
     } catch (error) {
       debugEvent("compaction_failed", { tabId: session.tabId, requestId, ...errorData(error) });
-      append(conversation, [taggedMessage("runtime_error", i18n._({ id: "errors.compactionFailed", message: "Conversation compaction failed. {error}", values: { error: getErrorMessage(error) } }))]);
+      append(conversation, [taggedMessage("runtime_error", i18n._({ id: "errors.compactionFailed", message: "Conversation compaction failed. {error}", values: { error: errorMessage(error) } }))]);
     }
     session.compacting = false;
   }
@@ -437,10 +431,4 @@ function scheduleLive(session: Session): void {
 /** A tab without a content script simply misses the update; the panel syncs when it loads or becomes visible. */
 function sendToPanel(tabId: number, message: TabMessage): void {
   void browser.tabs.sendMessage(tabId, message, { frameId: 0 }).catch(() => undefined);
-}
-
-function getErrorMessage(error: unknown): string {
-  return error instanceof Error && error.message
-    ? error.message
-    : i18n._({ id: "errors.unknown", message: "An unknown error occurred." });
 }

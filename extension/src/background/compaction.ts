@@ -1,14 +1,14 @@
 import type { ModelMessage } from "../shared/conversation";
 import { getMeta, taggedMessage } from "../shared/conversation.ts";
 
-export interface ConversationCompaction {
+interface ConversationCompaction {
   /** Number of messages replaced by the compaction checkpoint. */
   prefixMessageCount: number;
   content: string;
 }
 
 export const COMPACTION_THRESHOLD_RATIO = 0.8;
-export const RECENT_TURNS_TO_KEEP = 5;
+const RECENT_TURNS_TO_KEEP = 5;
 
 const TAIL_CONTEXT_NAMES = new Set(["browser_context", "selection_context"]);
 

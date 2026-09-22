@@ -11,7 +11,7 @@ export interface PageSnapshot {
   resourceRefs: ReadonlyMap<Element, string>;
 }
 
-export interface PageSnapshotState {
+interface PageSnapshotState {
   elementRefs: WeakMap<Element, string>;
   usedRefs: Set<string>;
   sequences: Map<string, number>;

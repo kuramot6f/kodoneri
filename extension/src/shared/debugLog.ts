@@ -1,10 +1,10 @@
 export const DEBUG_LOG_KEY = "chatext:debug-events";
 export const DEBUG_LOG_LIMIT = 500;
 
-export type DebugValue = string | number | boolean | null;
+type DebugValue = string | number | boolean | null;
 export type DebugData = Record<string, DebugValue>;
 
-export interface DebugEvent {
+interface DebugEvent {
   timestamp: string;
   contextId: string;
   scope: "background" | "content";

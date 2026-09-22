@@ -58,18 +58,6 @@ export function createSelectionContext(
     : null;
 }
 
-// 送信直後にチャットへ出す表示用。メディアのrefは質問開始時のsnapshotで確定するので暫定値
-export function createPendingSelectionContext(selection: PageSelection | null): SelectionContext | null {
-  if (!selection) return null;
-  return {
-    text: selection.text,
-    media: selection.media.map((element) => ({
-      type: element instanceof HTMLImageElement ? "img" : element instanceof HTMLCanvasElement ? "canvas" : "video",
-      ref: getImageSource(element) ?? ""
-    }))
-  };
-}
-
 function intersects(range: Range, element: Element): boolean {
   try {
     return range.intersectsNode(element);
