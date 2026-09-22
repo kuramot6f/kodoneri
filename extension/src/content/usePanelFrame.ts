@@ -12,6 +12,7 @@ const MARGIN = 16;
 interface Gesture {
   edge: Edge | null;
   start: PanelFrame;
+  current: PanelFrame;
   x: number;
   y: number;
 }
@@ -26,8 +27,6 @@ export function usePanelFrame(
   onCommit: (frame: PanelFrame) => void
 ) {
   const gestureRef = useRef<Gesture | null>(null);
-  const frameRef = useRef(frame);
-  frameRef.current = frame;
 
   const handlersFor = (edge: Edge | null) => enabled ? ({
     onPointerDown: (event: PointerEvent<HTMLElement>) => {
@@ -38,6 +37,7 @@ export function usePanelFrame(
       gestureRef.current = {
         edge,
         start: { left: rect.left, top: rect.top, width: rect.width, height: rect.height },
+        current: { left: rect.left, top: rect.top, width: rect.width, height: rect.height },
         x: event.clientX,
         y: event.clientY
       };
@@ -49,12 +49,15 @@ export function usePanelFrame(
       if (!gesture) return;
       const dx = event.clientX - gesture.x;
       const dy = event.clientY - gesture.y;
-      onChange(gesture.edge ? resize(gesture.start, gesture.edge, dx, dy) : move(gesture.start, dx, dy));
+      const next = gesture.edge ? resize(gesture.start, gesture.edge, dx, dy) : move(gesture.start, dx, dy);
+      gesture.current = next;
+      onChange(next);
     },
     onPointerUp: () => {
-      if (!gestureRef.current) return;
+      const gesture = gestureRef.current;
+      if (!gesture) return;
       gestureRef.current = null;
-      if (frameRef.current) onCommit(frameRef.current);
+      onCommit(gesture.current);
     },
     onPointerCancel: () => {
       gestureRef.current = null;
