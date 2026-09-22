@@ -1,32 +1,34 @@
 import { generateText, isLoopFinished, streamText } from "ai";
-import type { LanguageModelUsage, ModelMessage, ToolSet } from "ai";
+import type { AssistantModelMessage, LanguageModelUsage, ModelMessage, ToolResultPart, ToolSet } from "ai";
 import type { CacheUsage } from "../shared/conversation";
 import { i18n } from "../shared/i18n.ts";
 import { taggedMessage } from "../shared/conversation.ts";
 import { MEMORY_CONTENT_MAX_LENGTH, MEMORY_MAX_COUNT } from "../shared/memory.ts";
 import { errorMessage } from "../shared/errors.ts";
-import { isImageOutput, type ToolDetail } from "../shared/protocol.ts";
+import { isImageOutput } from "../shared/protocol.ts";
 import { SYSTEM_PROMPT } from "./prompt.ts";
 import type { ModelRuntime } from "./provider.ts";
 
 const TITLE_MAX_LENGTH = 30;
 
 interface StreamCallbacks {
-  onDelta: (channel: "text" | "reasoning", text: string) => void;
-  /** Called when a tool starts (output null) and again when it finishes. */
-  onTool: (detail: ToolDetail) => void;
+  /** Called on every change to the streaming step, shaped as the messages it is saved as. */
+  onUpdate: (step: ModelMessage[]) => void;
   /** Called after every step with that step's new messages. */
   onStep: (messages: ModelMessage[]) => void;
+  onToolError?: (toolName: string, message: string) => void;
 }
 
 interface StreamResult {
   error?: string;
   cancelled?: boolean;
-  /** Text of the step that was cut off, so it can still be shown and saved. */
-  partial: { text: string; reasoning: string };
+  /** Text and reasoning of the step that was cut off, so it can still be shown and saved. */
+  partial: AssistantModelMessage | null;
   cacheUsage: CacheUsage | null;
   contextTokens: number | null;
 }
+
+type AssistantPart = Exclude<AssistantModelMessage["content"], string>[number];
 
 /** Runs the model with tools until it answers, is cancelled, or fails. There is no step limit. */
 export async function streamAnswer(
@@ -37,11 +39,24 @@ export async function streamAnswer(
   callbacks: StreamCallbacks,
   instructions: string
 ): Promise<StreamResult> {
-  let text = "";
-  let reasoning = "";
+  let parts: AssistantPart[] = [];
+  let results: ToolResultPart[] = [];
   let cacheUsage: CacheUsage | null = null;
   let contextTokens: number | null = null;
-  const calls = new Map<string, ToolDetail>();
+  const step = (): ModelMessage[] => parts.length === 0 ? [] : [
+    { role: "assistant", content: parts },
+    ...(results.length > 0 ? [{ role: "tool" as const, content: results }] : [])
+  ];
+  const appendText = (type: "text" | "reasoning", text: string) => {
+    const last = parts.at(-1);
+    if (last?.type === type) parts = [...parts.slice(0, -1), { ...last, text: last.text + text }];
+    else parts = [...parts, { type, text }];
+    callbacks.onUpdate(step());
+  };
+  const appendResult = (part: { toolCallId: string; toolName: string }, output: ToolResultPart["output"]) => {
+    results = [...results, { type: "tool-result", toolCallId: part.toolCallId, toolName: part.toolName, output }];
+    callbacks.onUpdate(step());
+  };
 
   try {
     const result = streamText({
@@ -53,32 +68,29 @@ export async function streamAnswer(
       stopWhen: isLoopFinished(),
       abortSignal: signal,
       providerOptions: runtime.providerOptions,
-      onStepEnd: (step) => {
-        cacheUsage = sumCacheUsage(cacheUsage, readCacheUsage(step.usage));
-        contextTokens = step.usage.totalTokens ?? null;
-        text = "";
-        reasoning = "";
-        callbacks.onStep(step.response.messages);
+      onStepEnd: (finished) => {
+        cacheUsage = sumCacheUsage(cacheUsage, readCacheUsage(finished.usage));
+        contextTokens = finished.usage.totalTokens ?? null;
+        parts = [];
+        results = [];
+        callbacks.onStep(finished.response.messages);
       }
     });
 
     for await (const part of result.stream) {
       if (part.type === "text-delta") {
-        text += part.text;
-        callbacks.onDelta("text", part.text);
+        appendText("text", part.text);
       } else if (part.type === "reasoning-delta") {
-        reasoning += part.text;
-        callbacks.onDelta("reasoning", part.text);
+        appendText("reasoning", part.text);
       } else if (part.type === "tool-call") {
-        const detail = { id: part.toolCallId, name: part.toolName, args: JSON.stringify(part.input), result: null };
-        calls.set(part.toolCallId, detail);
-        callbacks.onTool(detail);
+        parts = [...parts, { type: "tool-call", toolCallId: part.toolCallId, toolName: part.toolName, input: part.input }];
+        callbacks.onUpdate(step());
       } else if (part.type === "tool-result") {
-        const call = calls.get(part.toolCallId);
-        if (call) callbacks.onTool({ ...call, result: formatToolResult(part.output) });
+        appendResult(part, { type: "text", value: formatToolResult(part.output) });
       } else if (part.type === "tool-error") {
-        const call = calls.get(part.toolCallId);
-        if (call) callbacks.onTool({ ...call, result: errorMessage(part.error), error: true });
+        callbacks.onToolError?.(part.toolName, errorMessage(part.error));
+        // The same text the SDK saves for a failed tool.
+        appendResult(part, { type: "error-text", value: String(part.error) });
       } else if (part.type === "error") {
         throw part.error;
       } else if (part.type === "abort") {
@@ -88,13 +100,15 @@ export async function streamAnswer(
 
     const steps = await result.steps;
     if (!steps.at(-1)?.text) throw new Error(i18n._({ id: "errors.noResponse", message: "No response was received." }));
-    return { partial: { text: "", reasoning: "" }, cacheUsage, contextTokens };
+    return { partial: null, cacheUsage, contextTokens };
   } catch (error) {
     const cancelled = isAbortError(error);
+    // Tool calls of the cut-off step have no results, so only its text is kept.
+    const content = parts.filter((part) => part.type === "text" || part.type === "reasoning");
     return {
       error: cancelled ? i18n._({ id: "errors.responseCancelled", message: "Response generation was cancelled." }) : errorMessage(error),
       cancelled,
-      partial: { text, reasoning },
+      partial: content.some((part) => part.type === "text") ? { role: "assistant", content } : null,
       cacheUsage,
       contextTokens
     };
@@ -169,5 +183,5 @@ function isAbortError(error: unknown): boolean {
 /** Display text for the panel; image data stays out of the view. */
 function formatToolResult(output: unknown): string {
   if (isImageOutput(output)) return `${output.mimeType} (${(output.byteLength / 1024).toFixed(1)} KiB)`;
-  return typeof output === "string" ? output : JSON.stringify(output, null, 2);
+  return typeof output === "string" ? output : JSON.stringify(output);
 }

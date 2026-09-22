@@ -1,4 +1,4 @@
-import type { CacheUsage, Conversation } from "./conversation";
+import type { CacheUsage, Conversation, ModelMessage } from "./conversation";
 import type { DebugData } from "./debugLog";
 import type { ModelInfo, ModelSettings } from "./models";
 
@@ -48,24 +48,9 @@ export interface SelectionContext {
   media: SelectionMediaContext[];
 }
 
-export interface ToolDetail {
-  id: string;
-  name: string;
-  args: string;
-  /** Display text of the result or error; null while the tool is still running. */
-  result: string | null;
-  error?: boolean;
-}
-
-/** One model step as it streams; finished steps live in the conversation messages. */
-export interface StepView {
-  reasoning: string;
-  text: string;
-  tools: ToolDetail[];
-}
-
 /** The memory-maintenance branch after an answer. Displayed only, never saved. */
-export interface MemoryProgress extends StepView {
+export interface MemoryProgress {
+  messages: ModelMessage[];
   done: boolean;
   error?: string;
   cacheUsage: CacheUsage | null;
@@ -77,7 +62,8 @@ export interface TabView {
   tabId: number;
   panel: PanelState;
   conversation: Conversation | null;
-  step: StepView | null;
+  /** The step streaming now, shaped as the messages it is saved as; finished steps are in the conversation. */
+  step: ModelMessage[] | null;
   compacting: boolean;
   memory: MemoryProgress | null;
   cacheUsage: CacheUsage | null;
@@ -120,7 +106,7 @@ export type PageToolName = "grep" | "read" | "read_image" | "interact";
 export type TabMessage =
   | { type: "view"; view: TabView }
   /** The streaming parts of the view, sent at most every few dozen milliseconds while a response streams. */
-  | { type: "live"; version: number; step: StepView | null; memory: MemoryProgress | null }
+  | { type: "live"; version: number; step: ModelMessage[] | null; memory: MemoryProgress | null }
   | { type: "tool"; requestId: string; refPrefix: string; name: PageToolName; args: Record<string, unknown> }
   | { type: "refresh_frame" }
   | { type: "ping" };

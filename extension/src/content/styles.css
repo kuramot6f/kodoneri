@@ -475,4 +475,4 @@ textarea::placeholder { color: var(--text-secondary); }
 /* 回答後に走るメモリ保守。思考・tool_callは通常と同じ部品で、見出しと結びの一文だけ控えめにする */
 .memory-update { margin-top: 4px; }
 .memory-update-label { margin-bottom: 6px; color: var(--text-secondary); font-size: 12px; font-weight: 600; }
-.memory-update-note { color: var(--text-secondary); }
+.memory-update .markdown { color: var(--text-secondary); }
