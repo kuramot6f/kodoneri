@@ -133,7 +133,7 @@ private struct GatewaySection: View {
                         Text(usage.plan.capitalized)
                     }
                     LabeledContent("This period") {
-                        Text("\(usage.estimatedCostUsd.formatted(.currency(code: usage.currency))) / \(usage.allowanceUsd.formatted(.currency(code: usage.currency)))")
+                        Text("\(usage.estimatedCostUsd.formatted(.currency(code: usage.currency).precision(.fractionLength(2...6)))) / \(usage.allowanceUsd.formatted(.currency(code: usage.currency)))")
                     }
                     LabeledContent("Usage") {
                         Text("\(usage.requests.formatted()) requests · \((usage.inputTokens + usage.outputTokens).formatted()) tokens")

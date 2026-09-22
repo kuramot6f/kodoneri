@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
+    "test": "node --experimental-strip-types --test test/*.test.ts",
     "typecheck": "wrangler types && tsc --noEmit",
     "db:init": "wrangler d1 execute chatext-gateway --remote --file schema.sql",
     "db:init:local": "wrangler d1 execute chatext-gateway --local --file schema.sql"
