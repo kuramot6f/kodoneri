@@ -102,8 +102,8 @@ private struct ApiKeysSection: View {
 private struct GatewaySection: View {
 
     private static let subscriptionProductIDs = [
-        "kuramot6f.chatext.plus.monthly",
-        "kuramot6f.chatext.pro.monthly"
+        "plus",
+        "pro"
     ]
 
     @State private var isSignedIn = false

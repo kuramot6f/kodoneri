@@ -1,8 +1,8 @@
 import type { JWSTransactionDecodedPayload, SignedDataVerifier } from "@apple/app-store-server-library";
 
 const PRODUCTS = {
-  "kuramot6f.chatext.plus.monthly": { plan: "plus", allowanceMicrousd: 2_500_000 },
-  "kuramot6f.chatext.pro.monthly": { plan: "pro", allowanceMicrousd: 10_000_000 }
+  plus: { plan: "plus", allowanceMicrousd: 2_500_000 },
+  pro: { plan: "pro", allowanceMicrousd: 10_000_000 }
 } as const;
 
 const APPLE_ROOTS = [

@@ -10,7 +10,6 @@ const appleKeys = createRemoteJWKSet(new URL(`${APPLE_ISSUER}/auth/keys`));
 // Secrets are not in wrangler.jsonc, so `wrangler types` does not know them.
 declare global {
   interface Env {
-    APPLE_APP_ID?: string;
     CLOUDFLARE_API_TOKEN: string;
     DEEPSEEK_API_KEY: string;
   }
