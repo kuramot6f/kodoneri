@@ -3,7 +3,7 @@ import { getMessageText, getMeta, type Conversation } from "../shared/conversati
 import { runTextTool, type GrepArgs, type ParsedTextToolCall } from "../shared/htmlTools";
 import { formatMemoryList, loadMemories, memoryRef } from "../shared/memory";
 import { i18n } from "../shared/i18n.ts";
-import type { ToolSuccessOutput } from "../shared/protocol";
+import type { TextToolOutput, ToolSuccessOutput } from "../shared/protocol";
 import { loadConversations } from "../shared/store";
 
 /** A stored text the model reads by ref: a saved conversation or a memory. */
@@ -13,7 +13,7 @@ export interface StoredText {
   content: string;
 }
 
-export async function listMemories(): Promise<ToolSuccessOutput> {
+export async function listMemories(): Promise<TextToolOutput> {
   return { type: "text", content: JSON.stringify(formatMemoryList(await loadMemories())) };
 }
 

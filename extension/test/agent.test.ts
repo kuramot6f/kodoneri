@@ -3,6 +3,7 @@ import test from "node:test";
 import { jsonSchema, tool } from "ai";
 import { MockLanguageModelV3, simulateReadableStream } from "ai/test";
 import { streamAnswer } from "../src/background/agent.ts";
+import { createConversationSystemPrompt, SYSTEM_PROMPT } from "../src/background/prompt.ts";
 import type { ToolDetail } from "../src/shared/protocol.ts";
 
 const usage = {
@@ -53,11 +54,12 @@ test("streamAnswer runs tool steps, reports tools, and hands each step's message
   const tools: ToolDetail[] = [];
   const steps: number[] = [];
   let text = "";
+  const instructions = "conversation-specific system prompt";
   const result = await streamAnswer({ model, providerOptions: {} }, [{ role: "user", content: "q" }], { echo }, new AbortController().signal, {
     onDelta: (channel, delta) => { if (channel === "text") text += delta; },
     onTool: (detail) => tools.push(detail),
     onStep: (messages) => steps.push(messages.length)
-  });
+  }, instructions);
 
   assert.equal(result.error, undefined);
   assert.equal(text, "done");
@@ -69,6 +71,7 @@ test("streamAnswer runs tool steps, reports tools, and hands each step's message
     ["call-2", { type: "error", error: "failed" }]
   ]);
   const prompt = model.doStreamCalls.at(-1)!.prompt;
+  assert.equal(prompt.find((message) => message.role === "system")?.content, instructions);
   const outputs = prompt.flatMap((message) => message.role === "tool"
     ? message.content.map((part) => part.type === "tool-result" ? part.output : null)
     : []);
@@ -102,4 +105,14 @@ test("streamAnswer reports cancellation and keeps the partial text", async () =>
   });
   assert.equal(result.cancelled, true);
   assert.equal(result.partial.text, "par");
+});
+
+test("a conversation system prompt embeds the initial memory list as reference data", () => {
+  const memoryList = JSON.stringify({ memories: [{ ref: "memory_1", title: "Preferences" }] });
+  const prompt = createConversationSystemPrompt(memoryList);
+
+  assert.ok(prompt.startsWith(SYSTEM_PROMPT));
+  assert.ok(prompt.includes(memoryList));
+  assert.match(prompt, /list\(type=memory\)/);
+  assert.doesNotMatch(prompt, /list\(type=tab\)/);
 });
