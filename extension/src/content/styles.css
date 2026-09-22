@@ -429,6 +429,16 @@ textarea::placeholder { color: var(--text-secondary); }
 .model-menu-row input[type="range"] { flex: 1; min-width: 0; margin: 0; accent-color: #007aff; }
 .model-menu-row output { flex: none; width: 48px; text-align: right; font-size: 12px; font-variant-numeric: tabular-nums; }
 .model-menu-empty { margin: 0; color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
+.diagnostic-actions { display: flex; gap: 8px; padding-top: 2px; border-top: 1px solid #00000012; }
+.diagnostic-actions button {
+  flex: 1;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: #0000000d;
+}
+.diagnostic-actions button:hover { background: #00000016; }
+.diagnostic-status { margin: -4px 0 0; color: var(--text-secondary); font-size: 11px; text-align: center; }
 
 /* メモリ編集。自動保存なので枠なしのタイトルと本文だけを置く */
 #memory-editor {

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { PanelEvent, PanelMessage, PanelState, TabView } from "../shared/protocol";
 import type { PageSelection } from "./pageSelection";
 import { getPageTools, whoami } from "./pageTools";
+import { debugEvent } from "./debug";
 
 const RECONNECT_DELAY_MS = 1000;
 const REPLY_TIMEOUT_MS = 3000;
@@ -78,7 +79,10 @@ function createLink(onEvent: (event: PanelEvent) => void): Link {
 
   const expectReply = () => {
     clearTimeout(watchdog);
-    watchdog = setTimeout(connect, REPLY_TIMEOUT_MS);
+    watchdog = setTimeout(() => {
+      debugEvent("panel_reply_timeout", { timeoutMs: REPLY_TIMEOUT_MS });
+      connect();
+    }, REPLY_TIMEOUT_MS);
   };
 
   const connect = () => {
@@ -87,9 +91,11 @@ function createLink(onEvent: (event: PanelEvent) => void): Link {
     if (disposed) return;
     const current = browser.runtime.connect({ name: "panel" });
     port = current;
+    debugEvent("panel_connect");
     current.onMessage.addListener((raw: object) => {
       if (port !== current) return;
       clearTimeout(watchdog);
+      if ("type" in raw && raw.type === "state") debugEvent("panel_state_received");
       onEvent(raw as PanelEvent);
       const lost = pending;
       pending = null;
@@ -97,6 +103,7 @@ function createLink(onEvent: (event: PanelEvent) => void): Link {
     });
     current.onDisconnect.addListener(() => {
       if (port !== current) return;
+      debugEvent("panel_disconnect", { runtimeError: browser.runtime.lastError?.message ?? null });
       port = null;
       retry = setTimeout(connect, RECONNECT_DELAY_MS);
     });
@@ -118,6 +125,7 @@ function createLink(onEvent: (event: PanelEvent) => void): Link {
   };
 
   const send = (message: PanelMessage) => {
+    debugEvent("panel_send", { messageType: message.type });
     pending = { message, port };
     post(message);
     probe();

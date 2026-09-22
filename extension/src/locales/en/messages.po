@@ -42,7 +42,7 @@ msgstr "{action} requires value."
 msgid "errors.resourceTooLarge"
 msgstr "{label} exceeds {size} MiB."
 
-#: src/content/ChatView.tsx:211
+#: src/content/ChatView.tsx:225
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "{mediaCount, plural, one {# media item} other {# media items}}"
 
@@ -65,13 +65,13 @@ msgid "errors.cannotReturnImage"
 msgstr "An image result cannot be returned here."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:172
-#: src/background/session.ts:382
-#: src/background/tools.ts:226
+#: src/background/agent.ts:173
+#: src/background/session.ts:472
+#: src/background/tools.ts:253
 msgid "errors.unknown"
 msgstr "An unknown error occurred."
 
-#: src/content/ChatView.tsx:128
+#: src/content/ChatView.tsx:142
 msgid "Ask about this page"
 msgstr "Ask about this page"
 
@@ -93,7 +93,7 @@ msgstr "Bulk {resourceType} searches run in the background."
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:294
+#: src/content/ChatView.tsx:308
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Cache hit rate: {0}% ({1} / {2} tokens)"
 
@@ -110,6 +110,10 @@ msgstr "Chats"
 msgid "errors.notCheckable"
 msgstr "check can only be used with checkbox or radio elements."
 
+#: src/content/ModelMenu.tsx:122
+msgid "Clear"
+msgstr "Clear"
+
 #: src/content/App.tsx:167
 #: src/content/App.tsx:167
 msgid "Close panel"
@@ -119,7 +123,7 @@ msgstr "Close panel"
 msgid "Close search"
 msgstr "Close search"
 
-#: src/content/ChatView.tsx:97
+#: src/content/ChatView.tsx:111
 msgid "Compacting conversation…"
 msgstr "Compacting conversation…"
 
@@ -144,12 +148,20 @@ msgid "errors.invalidContext"
 msgstr "context must be an integer between 0 and 1000."
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:280
+#: src/background/session.ts:362
 msgid "errors.compactionFailed"
 msgstr "Conversation compaction failed. {error}"
 
+#: src/content/ModelMenu.tsx:121
+msgid "Copy diagnostics"
+msgstr "Copy diagnostics"
+
+#: src/content/ModelMenu.tsx:75
+msgid "Could not clear diagnostics"
+msgstr "Could not clear diagnostics"
+
 #. js-lingui-explicit-id
-#: src/background/tools.ts:134
+#: src/background/tools.ts:160
 msgid "errors.connectIframe"
 msgstr "Could not connect to iframe: {ref}"
 
@@ -164,6 +176,10 @@ msgstr "Could not convert the canvas to PNG."
 msgid "errors.imageToDataUrl"
 msgstr "Could not convert the image to a data URL."
 
+#: src/content/ModelMenu.tsx:66
+msgid "Could not copy diagnostics"
+msgstr "Could not copy diagnostics"
+
 #. js-lingui-explicit-id
 #: src/content/imageTools.ts:125
 msgid "errors.videoCanvasContext"
@@ -175,7 +191,7 @@ msgid "errors.fetchResource"
 msgstr "Could not fetch {label}.{cause}"
 
 #. js-lingui-explicit-id
-#: src/background/main.ts:47
+#: src/background/main.ts:66
 #: src/content/pageTools.ts:79
 msgid "errors.fetchTextResource"
 msgstr "Could not fetch the text resource."
@@ -201,7 +217,7 @@ msgid "errors.resolveResourceUrl"
 msgstr "Could not resolve ref as a {label} URL."
 
 #. js-lingui-explicit-id
-#: src/background/tools.ts:144
+#: src/background/tools.ts:171
 msgid "errors.noToolResult"
 msgstr "Could not retrieve the tool result."
 
@@ -219,6 +235,14 @@ msgstr "Delete this conversation"
 #: src/content/MemoryListView.tsx:67
 msgid "Delete this memory"
 msgstr "Delete this memory"
+
+#: src/content/ModelMenu.tsx:73
+msgid "Diagnostics cleared"
+msgstr "Diagnostics cleared"
+
+#: src/content/ModelMenu.tsx:64
+msgid "Diagnostics copied"
+msgstr "Diagnostics copied"
 
 #: src/content/App.tsx:162
 msgid "Done"
@@ -248,22 +272,22 @@ msgid "Enlarge"
 msgstr "Enlarge"
 
 #. placeholder {0}: output.error
-#: src/content/ChatView.tsx:309
+#: src/content/ChatView.tsx:323
 msgid "Error:\n"
 "{0}"
 msgstr "Error:\n"
 "{0}"
 
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:236
+#: src/content/ChatView.tsx:250
 msgid "Error: {0}"
 msgstr "Error: {0}"
 
-#: src/content/ChatView.tsx:165
+#: src/content/ChatView.tsx:179
 msgid "Error: {content}"
 msgstr "Error: {content}"
 
-#: src/content/ChatView.tsx:304
+#: src/content/ChatView.tsx:318
 msgid "Execution was denied."
 msgstr "Execution was denied."
 
@@ -276,13 +300,13 @@ msgstr "Failed to fetch {label} (HTTP {status})."
 msgid "Finish editing and return to the list"
 msgstr "Finish editing and return to the list"
 
-#: src/content/ChatView.tsx:96
+#: src/content/ChatView.tsx:110
 msgid "Generating response…"
 msgstr "Generating response…"
 
 #. js-lingui-explicit-id
 #: src/background/storedText.ts:45
-#: src/background/tools.ts:119
+#: src/background/tools.ts:145
 msgid "errors.grepReturnedImage"
 msgstr "grep returned an image result."
 
@@ -291,7 +315,7 @@ msgstr "grep returned an image result."
 msgid "resources.image"
 msgstr "image"
 
-#: src/content/ChatView.tsx:305
+#: src/content/ChatView.tsx:319
 msgid "Image or file"
 msgstr "Image or file"
 
@@ -307,11 +331,11 @@ msgstr "Image tool execution failed."
 
 #. placeholder {0}: output.mimeType
 #. placeholder {1}: formatBytes(output.byteLength)
-#: src/content/ChatView.tsx:311
+#: src/content/ChatView.tsx:325
 msgid "Image: {0} ({1})"
 msgstr "Image: {0} ({1})"
 
-#: src/content/ChatView.tsx:109
+#: src/content/ChatView.tsx:123
 msgid "Include {selectionSummary}"
 msgstr "Include {selectionSummary}"
 
@@ -335,12 +359,12 @@ msgid "errors.invalidArguments"
 msgstr "Invalid arguments."
 
 #. js-lingui-explicit-id
-#: src/background/tools.ts:209
+#: src/background/tools.ts:236
 msgid "errors.invalidImageData"
 msgstr "Invalid image data format."
 
 #. js-lingui-explicit-id
-#: src/background/tools.ts:94
+#: src/background/tools.ts:120
 msgid "errors.invalidStoredRef"
 msgstr "Invalid ref: {ref}. Use grep(resource_type=session) to refresh conversation refs or list(type=memory) to refresh memory refs."
 
@@ -372,7 +396,7 @@ msgstr "memory"
 msgid "Memory"
 msgstr "Memory"
 
-#: src/content/ChatView.tsx:232
+#: src/content/ChatView.tsx:246
 msgid "Memory updated"
 msgstr "Memory updated"
 
@@ -380,13 +404,13 @@ msgstr "Memory updated"
 msgid "Menu (chat history and memory)"
 msgstr "Menu (chat history and memory)"
 
-#: src/content/ModelMenu.tsx:66
+#: src/content/ModelMenu.tsx:86
 msgid "Model"
 msgstr "Model"
 
-#: src/content/ChatView.tsx:117
-#: src/content/ChatView.tsx:118
-#: src/content/ModelMenu.tsx:60
+#: src/content/ChatView.tsx:131
+#: src/content/ChatView.tsx:132
+#: src/content/ModelMenu.tsx:80
 msgid "Model and reasoning effort"
 msgstr "Model and reasoning effort"
 
@@ -426,18 +450,18 @@ msgstr "New chat"
 msgid "New memory"
 msgstr "New memory"
 
-#: src/content/ModelMenu.tsx:62
+#: src/content/ModelMenu.tsx:82
 msgid "No API key is configured. Configure one in the chatext app."
 msgstr "No API key is configured. Configure one in the chatext app."
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:49
-#: src/background/session.ts:211
+#: src/background/provider.ts:52
+#: src/background/session.ts:262
 msgid "errors.apiKeyMissing"
 msgstr "No API key is configured. Configure one in the chatext app."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:126
+#: src/background/agent.ts:127
 msgid "errors.noCompaction"
 msgstr "No conversation compaction result was received."
 
@@ -460,7 +484,7 @@ msgid "errors.optionNotFound"
 msgstr "No option matches value: {value}"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:90
+#: src/background/agent.ts:91
 msgid "errors.noResponse"
 msgstr "No response was received."
 
@@ -473,7 +497,7 @@ msgid "No saved memories."
 msgstr "No saved memories."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:112
+#: src/background/agent.ts:113
 msgid "errors.noTitle"
 msgstr "No title was received."
 
@@ -516,11 +540,11 @@ msgstr "pattern must be between 1 and 200 characters."
 msgid "errors.invalidQuery"
 msgstr "query must be a CSS selector between 1 and 10000 characters."
 
-#: src/content/ChatView.tsx:245
+#: src/content/ChatView.tsx:259
 msgid "Reasoning"
 msgstr "Reasoning"
 
-#: src/content/ModelMenu.tsx:86
+#: src/content/ModelMenu.tsx:106
 msgid "Reasoning effort"
 msgstr "Reasoning effort"
 
@@ -535,8 +559,8 @@ msgid "errors.refWithCollection"
 msgstr "ref cannot be specified with resource_type={resourceType}."
 
 #. js-lingui-explicit-id
-#: src/background/tools.ts:89
-#: src/background/tools.ts:129
+#: src/background/tools.ts:115
+#: src/background/tools.ts:155
 msgid "errors.refRequiredCurrentPage"
 msgstr "ref is required. Use the browser_context ref for the current page."
 
@@ -566,8 +590,8 @@ msgid "errors.invalidResourceType"
 msgstr "resource_type must be one of session, tab, memory, script, style, or svg."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:85
-#: src/background/agent.ts:95
+#: src/background/agent.ts:86
+#: src/background/agent.ts:96
 #: src/background/navigate.ts:64
 msgid "errors.responseCancelled"
 msgstr "Response generation was cancelled."
@@ -576,8 +600,8 @@ msgstr "Response generation was cancelled."
 msgid "Restore size"
 msgstr "Restore size"
 
-#: src/content/ChatView.tsx:263
-#: src/content/ChatView.tsx:272
+#: src/content/ChatView.tsx:277
+#: src/content/ChatView.tsx:286
 msgid "Running…"
 msgstr "Running…"
 
@@ -598,11 +622,11 @@ msgstr "Search memories"
 msgid "errors.notSelectable"
 msgstr "select can only be used with select elements."
 
-#: src/content/ChatView.tsx:76
+#: src/content/ChatView.tsx:78
 msgid "Send"
 msgstr "Send"
 
-#: src/content/ChatView.tsx:76
+#: src/content/ChatView.tsx:78
 msgid "Send and interrupt"
 msgstr "Send and interrupt"
 
@@ -610,7 +634,7 @@ msgstr "Send and interrupt"
 msgid "Show in sidebar"
 msgstr "Show in sidebar"
 
-#: src/content/ChatView.tsx:76
+#: src/content/ChatView.tsx:78
 msgid "Stop response"
 msgstr "Stop response"
 
@@ -619,7 +643,7 @@ msgid "Switch to floating panel"
 msgstr "Switch to floating panel"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:310
+#: src/background/session.ts:393
 msgid "errors.switchDuringMemoryUpdate"
 msgstr "Tabs cannot be switched while memory is being updated."
 
@@ -645,7 +669,7 @@ msgid "errors.emptyMemoryContent"
 msgstr "The content would become empty. Use delete to remove the entire topic."
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:107
+#: src/background/session.ts:131
 msgid "errors.targetTabBusy"
 msgstr "The conversation cannot be moved because the target tab is processing another response."
 
@@ -670,12 +694,12 @@ msgid "errors.closeConversationTab"
 msgstr "The tab running this conversation cannot be closed."
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:111
+#: src/background/session.ts:135
 msgid "errors.targetTabUnavailable"
 msgstr "The tab was switched, but the conversation remains in the original tab because it cannot be displayed here."
 
 #. js-lingui-explicit-id
-#: src/background/tools.ts:169
+#: src/background/tools.ts:196
 msgid "errors.tabNotVisible"
 msgstr "The target tab is not visible. Show the tab and try again."
 
@@ -738,7 +762,7 @@ msgid "Today"
 msgstr "Today"
 
 #. js-lingui-explicit-id
-#: src/content/main.tsx:26
+#: src/content/main.tsx:38
 #: src/shared/htmlTools.ts:52
 msgid "errors.toolExecutionFailed"
 msgstr "Tool execution failed."
@@ -765,7 +789,7 @@ msgstr "Unsupported character encoding: {charset}"
 
 #. js-lingui-explicit-id
 #: src/background/memoryTools.ts:19
-#: src/background/tools.ts:77
+#: src/background/tools.ts:103
 #: src/shared/htmlTools.ts:32
 msgid "errors.unsupportedTool"
 msgstr "Unsupported tool: {name}"
@@ -779,7 +803,7 @@ msgstr "Unsupported URL scheme: {scheme}"
 msgid "Untitled"
 msgstr "Untitled"
 
-#: src/content/ChatView.tsx:232
+#: src/content/ChatView.tsx:246
 msgid "Updating memory…"
 msgstr "Updating memory…"
 

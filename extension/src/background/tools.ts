@@ -14,6 +14,8 @@ import { parseNavigateArgs } from "./navigationTools";
 import { BROWSER_TOOLS } from "./prompt";
 import type { ModelRuntime } from "./provider";
 import { grepStored, listMemories, memoryTexts, runStoredTextTool, sessionTexts } from "./storedText";
+import { debugEvent } from "./debug";
+import { errorData } from "../shared/debugLog";
 
 export interface ToolRuntime {
   session: { tabId: number; touched: Set<string> };
@@ -57,6 +59,30 @@ export async function disposeTools(runtime: Pick<ToolRuntime, "session" | "reque
 }
 
 async function executeTool(runtime: ToolRuntime, name: string, args: string, signal: AbortSignal): Promise<ToolSuccessOutput> {
+  const startedAt = performance.now();
+  debugEvent("tool_execution_started", { requestId: runtime.requestId, toolName: name, scope: runtime.scope });
+  try {
+    return await executeToolInner(runtime, name, args, signal);
+  } catch (error) {
+    debugEvent("tool_execution_failed", {
+      requestId: runtime.requestId,
+      toolName: name,
+      scope: runtime.scope,
+      durationMs: Math.round(performance.now() - startedAt),
+      ...errorData(error)
+    });
+    throw error;
+  } finally {
+    debugEvent("tool_execution_finished", {
+      requestId: runtime.requestId,
+      toolName: name,
+      scope: runtime.scope,
+      durationMs: Math.round(performance.now() - startedAt)
+    });
+  }
+}
+
+async function executeToolInner(runtime: ToolRuntime, name: string, args: string, signal: AbortSignal): Promise<ToolSuccessOutput> {
   signal.throwIfAborted();
   if (runtime.scope === "memory") return runMemoryScopedTool(name, args);
   if (isMemoryWriteTool(name)) return runMemoryWrite(name, args);
@@ -138,6 +164,7 @@ async function pageTool(runtime: ToolRuntime, name: string, args: string, ref: u
   else localArgs.ref = ref;
 
   const message: TabMessage = { type: "tool", requestId: runtime.requestId, refPrefix, name, args: JSON.stringify(localArgs) };
+  debugEvent("page_tool_dispatched", { requestId: runtime.requestId, toolName: name, tabId, frameId });
   runtime.session.touched.add(`${tabId}:${frameId}`);
   const send = async () => {
     const output: unknown = await browser.tabs.sendMessage(tabId, message, { frameId });
