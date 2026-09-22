@@ -110,6 +110,8 @@ private struct GatewaySection: View {
     @State private var nonce: String?
     @State private var usage: GatewayUsage?
     @State private var products: [Product] = []
+    @State private var productLoadError: String?
+    @State private var showsSubscriptions = false
     @State private var isLoading = false
     @State private var purchasingProductID: String?
     @State private var error: String?
@@ -138,24 +140,10 @@ private struct GatewaySection: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-                ForEach(products, id: \.id) { product in
-                    Button {
-                        Task { await purchase(product) }
-                    } label: {
-                        HStack {
-                            Text(product.displayName)
-                            Spacer()
-                            if purchasingProductID == product.id {
-                                ProgressView()
-                                    .controlSize(.small)
-                            } else {
-                                Text(product.displayPrice)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                    }
-                    .disabled(isLoading || purchasingProductID != nil || usage?.productID == product.id)
+                Button(usage?.plan == "free" ? "Subscribe" : "Change Subscription") {
+                    showsSubscriptions = true
                 }
+                .disabled(isLoading || purchasingProductID != nil)
                 Button("Restore Purchases") {
                     Task { await restorePurchases() }
                 }
@@ -198,6 +186,61 @@ private struct GatewaySection: View {
                 await handle(verification)
             }
         }
+        .sheet(isPresented: $showsSubscriptions) {
+            subscriptionSheet
+        }
+    }
+
+    private var subscriptionSheet: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    if products.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            if productLoadError == nil {
+                                ProgressView()
+                            }
+                            Text(productLoadError ?? "Loading subscriptions…")
+                                .foregroundStyle(.secondary)
+                        }
+                        .task { await loadProducts() }
+                    } else {
+                        ForEach(products, id: \.id) { product in
+                            Button {
+                                Task { await purchase(product) }
+                            } label: {
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text(product.displayName)
+                                        Text(product.description)
+                                            .font(.footnote)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    Spacer()
+                                    if purchasingProductID == product.id {
+                                        ProgressView()
+                                            .controlSize(.small)
+                                    } else {
+                                        Text(product.displayPrice)
+                                    }
+                                }
+                            }
+                            .disabled(purchasingProductID != nil || usage?.productID == product.id)
+                        }
+                    }
+                } footer: {
+                    if products.isEmpty, productLoadError != nil {
+                        Text("Check that the Plus and Pro subscriptions are available in App Store Connect for this app.")
+                    }
+                }
+            }
+            .formStyle(.grouped)
+            .navigationTitle("Subscribe")
+            .toolbar {
+                Button("Done") { showsSubscriptions = false }
+            }
+        }
+        .frame(minWidth: 360, minHeight: 280)
     }
 
     private func signIn(_ result: Result<ASAuthorization, Error>) async {
@@ -275,8 +318,9 @@ private struct GatewaySection: View {
         do {
             products = try await Product.products(for: Self.subscriptionProductIDs)
                 .sorted { Self.subscriptionProductIDs.firstIndex(of: $0.id)! < Self.subscriptionProductIDs.firstIndex(of: $1.id)! }
+            productLoadError = products.isEmpty ? "Subscriptions are currently unavailable." : nil
         } catch {
-            self.error = error.localizedDescription
+            productLoadError = error.localizedDescription
         }
     }
 
@@ -288,6 +332,7 @@ private struct GatewaySection: View {
             switch try await product.purchase(options: [.appAccountToken(accountToken)]) {
             case .success(let verification):
                 await handle(verification)
+                showsSubscriptions = false
             case .pending, .userCancelled:
                 break
             @unknown default:
