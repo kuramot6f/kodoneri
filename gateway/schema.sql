@@ -11,3 +11,10 @@ CREATE TABLE IF NOT EXISTS tokens (
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   last_used_at TEXT
 );
+
+-- Sign in with Apple のリプレイを防ぐ、短命かつ一度限りの nonce。
+CREATE TABLE IF NOT EXISTS oauth_nonces (
+  nonce_hash TEXT PRIMARY KEY,
+  expires_at TEXT NOT NULL,
+  used_at TEXT
+);
