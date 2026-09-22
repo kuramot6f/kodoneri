@@ -35,8 +35,8 @@ export function App() {
   const [includeSelection, setIncludeSelection] = useState(true);
   const [selectionSummary, setSelectionSummary] = useState<string | null>(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  // Dragging updates the frame locally; the committed frame comes back from the background.
-  const [frame, setFrame] = useState<PanelFrame | null>(null);
+  // The frame follows the pointer locally while dragging and is committed on release.
+  const [dragFrame, setDragFrame] = useState<PanelFrame | null>(null);
   const questionRef = useRef<HTMLTextAreaElement>(null);
   const pageSelectionRef = useRef<PageSelection | null>(null);
   const panelRef = useRef<HTMLElement>(null);
@@ -49,9 +49,10 @@ export function App() {
   const busy = Boolean(state?.step);
   const layout: Layout = phone ? (expanded ? "phone-expanded" : "phone") : (expanded ? "sidebar" : "floating");
   const floating = layout === "floating";
-  const savedFrame = JSON.stringify(state?.panel.frame ?? null);
-  useEffect(() => setFrame(JSON.parse(savedFrame) as PanelFrame | null), [savedFrame]);
-  const panelFrame = usePanelFrame(panelRef, frame, floating, setFrame, (committed) => panel.setPanel({ frame: committed }));
+  const panelFrame = usePanelFrame(panelRef, dragFrame ?? state?.panel.frame ?? null, floating, setDragFrame, (committed) => {
+    panel.setPanel({ frame: committed });
+    setDragFrame(null);
+  });
 
   useEffect(() => {
     if (isTouchDevice()) return;
@@ -101,7 +102,7 @@ export function App() {
     const text = question.trim();
     if (!state || !text) return;
     setQuestion("");
-    void panel.ask(text, includeSelection ? pageSelectionRef.current : null);
+    panel.ask(text, includeSelection ? pageSelectionRef.current : null);
   };
 
   const startNewChat = () => {
