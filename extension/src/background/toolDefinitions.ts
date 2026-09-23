@@ -1,7 +1,11 @@
 import { z } from "zod";
 import { MEMORY_CONTENT_MAX_LENGTH, MEMORY_TITLE_MAX_LENGTH } from "../shared/memory.ts";
 
-/** Model-facing tool contracts: descriptions, input schemas and the cross-field rules a JSON schema cannot express. */
+/**
+ * Model-facing tool contracts: descriptions, input schemas and the cross-field rules a JSON schema cannot express.
+ * Models tend to fill every field they see, so a field that does not apply is ignored rather than rejected;
+ * a field whose presence would change the meaning belongs in a separate tool. Missing fields still fail.
+ */
 
 const COLLECTION_TYPES = new Set(["session", "tab", "memory"]);
 const memoryRef = z.string().regex(/^memory_[0-9]+$/);
@@ -14,13 +18,18 @@ export const grepInput = z.object({
   offset: z.number().int().min(0).max(1_000_000).optional()
     .describe("Number of matching results to skip. Use nextOffset from a previous result to continue. Defaults to 0."),
   ref: z.string().min(1).max(10000).optional()
-    .describe("Target to search: the current page's tab ref from browser_context, observed tab refs, request-scoped iframe or text data-refs (e.g. tab_1043, tab_1043_iframe_1, tab_1043_style_1), saved session refs returned by session search, memory refs from list (e.g. memory_1726800000000), or a URL. Relative URLs are resolved against the owning page URL. Required unless resource_type is session, tab, or memory. Call grep several times in parallel to search several targets."),
+    .describe("Target to search: the current page's tab ref from browser_context, observed tab refs, request-scoped iframe or text data-refs (e.g. tab_1043, tab_1043_iframe_1, tab_1043_style_1), saved session refs returned by session search, memory refs from list (e.g. memory_1726800000000), or a URL. Relative URLs are resolved against the owning page URL. Required unless resource_type is session, tab, or memory, which ignore it. Call grep several times in parallel to search several targets."),
   resource_type: z.enum(["session", "tab", "memory", "script", "style", "svg"]).optional()
-    .describe("Search every resource of this type. session searches saved conversations, tab searches open tabs, and memory searches saved memories; none of these takes a ref. script/style include inline and external resources and svg searches inline SVG, all within the tab or iframe given by a single ref.")
+    .describe("Search every resource of this type. session searches all saved conversations, tab searches all open tabs, and memory searches all saved memories, ignoring ref. script/style include inline and external resources and svg searches inline SVG, all within the tab or iframe given by a single ref.")
 }).refine(
-  (args) => COLLECTION_TYPES.has(args.resource_type ?? "") ? args.ref === undefined : args.ref !== undefined,
-  "ref is required, except with resource_type=session, tab, or memory, which take no ref."
+  (args) => isCollectionGrep(args) || args.ref !== undefined,
+  "ref is required, except with resource_type=session, tab, or memory."
 );
+
+/** session/tab/memory search every saved conversation, open tab, or memory, so any ref is ignored. */
+export function isCollectionGrep(args: { resource_type?: string }): boolean {
+  return COLLECTION_TYPES.has(args.resource_type ?? "");
+}
 
 export const readInput = z.object({
   offset: z.number().int().min(0)
@@ -31,7 +40,7 @@ export const readInput = z.object({
     .describe("Target to read: the current page's tab ref from browser_context, an observed tab ref, or a request-scoped iframe or text data-ref (e.g. tab_1043, tab_1043_iframe_1, tab_1043_style_1), a saved session ref returned by session search, a memory ref from list (e.g. memory_1726800000000), or a URL. Script/style/SVG data-refs identify text resources. Relative URLs resolve against the owning page URL.")
 });
 
-export const captureViewportInput = z.object({}).strict();
+export const captureViewportInput = z.object({});
 
 export const readImageInput = z.object({
   ref: z.string().min(1)
@@ -65,19 +74,16 @@ export const deleteInput = z.object({
   ref: memoryRef.describe("Memory ref from list (type=memory).")
 });
 
-export const navigateInput = z.object({
-  action: z.enum(["back", "forward", "reload", "open", "close_tab", "switch_tab"]),
+export const openInput = z.object({
+  url: z.string().min(1).max(10000),
   ref: z.string().regex(/^tab_[0-9]+$/).optional()
-    .describe("Tab ref from list (type=tab) or browser_context, such as tab_1043. Required for every action except open, where omitting it opens url in a new background tab."),
-  url: z.string().min(1).max(10000).optional()
-    .describe("Required for open; not allowed for other actions.")
-}).strict().superRefine((args, context) => {
-  if (args.action !== "open" && args.ref === undefined) {
-    context.addIssue({ code: "custom", message: `${args.action} requires ref. Use the browser_context ref for the current tab.` });
-  }
-  if ((args.action === "open") !== (args.url !== undefined)) {
-    context.addIssue({ code: "custom", message: args.action === "open" ? "open requires url." : `url cannot be specified for ${args.action}.` });
-  }
+    .describe("Tab ref from list (type=tab) or browser_context, such as tab_1043, to load url in. Omit to open url in a new background tab.")
+});
+
+export const navigateInput = z.object({
+  action: z.enum(["back", "forward", "reload", "close_tab", "switch_tab"]),
+  ref: z.string().regex(/^tab_[0-9]+$/)
+    .describe("Tab ref from list (type=tab) or browser_context, such as tab_1043. Use the browser_context ref for the current tab.")
 });
 
 const VALUE_ACTIONS = new Set(["type", "press", "select"]);
@@ -87,17 +93,18 @@ export const interactInput = z.object({
     .describe("Tab or request-scoped iframe reference, such as tab_1043, tab_1043_iframe_1, or tab_1043_iframe_1_iframe_1. The current page's tab ref is given in browser_context."),
   action: z.enum(["click", "type", "press", "select", "check"]),
   value: z.string().optional()
-    .describe("Required for type, press, and select. Omit for click and check."),
+    .describe("Required for type, press, and select; ignored by click and check."),
   query: z.string().min(1).max(10000)
     .describe("CSS selector for the target element. The first matching element is used.")
 }).superRefine((args, context) => {
-  if (VALUE_ACTIONS.has(args.action) !== (args.value !== undefined)) {
-    context.addIssue({ code: "custom", message: VALUE_ACTIONS.has(args.action) ? `${args.action} requires value.` : `value cannot be specified for ${args.action}.` });
+  if (VALUE_ACTIONS.has(args.action) && args.value === undefined) {
+    context.addIssue({ code: "custom", message: `${args.action} requires value.` });
   }
 });
 
 export type GrepInput = z.infer<typeof grepInput>;
 export type ReadInput = z.infer<typeof readInput>;
+export type OpenInput = z.infer<typeof openInput>;
 export type NavigateInput = z.infer<typeof navigateInput>;
 
 export const TOOL_DESCRIPTIONS = {
@@ -110,6 +117,7 @@ export const TOOL_DESCRIPTIONS = {
   rename: "State-changing rename of one memory topic. Fails for favorites (is_editable=false).",
   new: "State-changing creation of a new memory topic. A topic is a persistent semantic area (a project, preference, background, plan, or constraint) that future conversations can reuse; prefer patch on an existing topic when the information belongs there. Fails when 10 topics already exist or content exceeds 1000 characters. Returns the created ref.",
   delete: "State-changing deletion of a whole memory topic. Use when the user asked to forget it, or all its content is invalid, superseded, stale with no future utility, or duplicated elsewhere; remove a single statement with patch instead. Fails for favorites (is_editable=false).",
-  navigate: "State-changing browser navigation and tab management. Every action except open requires a tab ref from list (type=tab) or browser_context; the current page's ref is given in browser_context. open loads url in the ref tab, or in a new background tab when ref is omitted; use switch_tab when a tab must become active. switch_tab also moves this conversation into that tab: it becomes the current tab for capture_viewport and browser_context, and the previous tab keeps its own ref. The tab running this conversation cannot be closed. open requires url. Returns after the browser accepts the operation, not after the destination finishes loading. Observe the resulting page or tabs before dependent actions.",
+  open: "State-changing load of a URL. With ref, loads url in that tab; without ref, opens url in a new background tab. Use navigate(switch_tab) when the tab must become active. Returns the tab and its ref after the browser accepts the operation, not after the destination finishes loading. Observe the resulting page before dependent actions.",
+  navigate: "State-changing history navigation and tab management of the tab given by ref, from list (type=tab) or browser_context; the current page's ref is given in browser_context. To load a URL, use open. switch_tab makes the tab active and moves this conversation into it: it becomes the current tab for capture_viewport and browser_context, and the previous tab keeps its own ref. The tab running this conversation cannot be closed. Returns after the browser accepts the operation, not after the destination finishes loading. Observe the resulting page or tabs before dependent actions.",
   interact: "State-changing operation on the first live DOM element matching query in the referenced tab or iframe. Works in background tabs. Tabs opened by click remain in the background; use list (type=tab) and switch_tab when one must become active. Returns action, query, element, and success after dispatch, not confirmation of navigation, submission, or task completion. type replaces an input/textarea/contenteditable value; press dispatches synthetic keydown/keyup events and does not guarantee native key behavior; select chooses an option by value; check sets a checkbox/radio to checked. Invalid selectors, absent or incompatible elements, and unavailable refs fail. Choose selectors from observed HTML. Observe the result before planning dependent actions; do not blindly retry an operation whose outcome is unknown."
 } as const;

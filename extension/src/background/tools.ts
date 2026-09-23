@@ -5,7 +5,7 @@ import { isImageOutput, type ImageOutput, type PageToolName, type PageToolReply,
 import { aggregateGrep, type GrepResult } from "../shared/text.ts";
 import { keepNewTabsInBackground } from "./backgroundTabPolicy.ts";
 import { resolveFrame } from "./frames.ts";
-import { navigate, resolveTab } from "./navigate.ts";
+import { navigate, open, resolveTab } from "./navigate.ts";
 import type { ModelRuntime } from "./provider.ts";
 import {
   grepStored,
@@ -24,9 +24,11 @@ import {
   deleteInput,
   grepInput,
   interactInput,
+  isCollectionGrep,
   listInput,
   navigateInput,
   newInput,
+  openInput,
   patchInput,
   readImageInput,
   readInput,
@@ -46,7 +48,7 @@ export interface ToolContext {
   moveSession: (tabId: number) => Promise<void>;
 }
 
-const MUTATING_TOOLS = new Set(["interact", "navigate", "patch", "rename", "new", "delete"]);
+const MUTATING_TOOLS = new Set(["interact", "open", "navigate", "patch", "rename", "new", "delete"]);
 const MEMORY_SCOPE_ERROR = "During a memory update only memories are available: list(type=memory), grep with resource_type=memory, read/grep with memory_<id>, and patch/rename/new/delete.";
 
 export function createTools(context: ToolContext): ToolSet {
@@ -86,6 +88,10 @@ export function createTools(context: ToolContext): ToolSet {
     rename: define("rename", renameInput, renameMemory),
     new: define("new", newInput, newMemory),
     delete: define("delete", deleteInput, removeMemory),
+    open: define("open", openInput, async (args) => {
+      browserOnly();
+      return open(context, args);
+    }),
     navigate: define("navigate", navigateInput, async (args) => {
       browserOnly();
       return navigate(context, args);
@@ -99,7 +105,7 @@ export function createTools(context: ToolContext): ToolSet {
 
 async function grep(context: ToolContext, args: GrepInput) {
   if (args.resource_type === "memory") return grepStored("memory", args);
-  if (context.scope === "memory" && !isMemoryRef(args.ref)) throw new Error(MEMORY_SCOPE_ERROR);
+  if (context.scope === "memory" && (isCollectionGrep(args) || !isMemoryRef(args.ref))) throw new Error(MEMORY_SCOPE_ERROR);
   if (args.resource_type === "session") return grepStored("session", args);
   if (args.resource_type === "tab") return grepTabs(context, args);
   const ref = args.ref!;
