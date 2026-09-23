@@ -1,8 +1,9 @@
-import type { Conversation } from "./conversation";
-import { DEFAULT_SETTINGS } from "./models";
-import type { ModelSettings } from "./models";
+import type { Conversation } from "./conversation.ts";
+import { DEFAULT_SETTINGS } from "./models.ts";
+import type { ModelSettings } from "./models.ts";
 
 const PREFIX = "conversation:";
+export const CONVERSATION_MAX_COUNT = 100;
 
 export async function loadConversations(): Promise<Conversation[]> {
   const stored = await browser.storage.local.get(null);
@@ -20,6 +21,8 @@ export async function loadConversation(id: string): Promise<Conversation | null>
 
 export async function saveConversation(conversation: Conversation): Promise<void> {
   await browser.storage.local.set({ [PREFIX + conversation.id]: conversation });
+  const overflow = (await loadConversations()).slice(CONVERSATION_MAX_COUNT);
+  if (overflow.length) await browser.storage.local.remove(overflow.map(({ id }) => PREFIX + id));
 }
 
 export async function deleteConversation(id: string): Promise<void> {
