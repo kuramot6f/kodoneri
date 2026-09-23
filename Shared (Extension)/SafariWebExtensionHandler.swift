@@ -21,6 +21,8 @@ class SafariWebExtensionHandler: NSObject, NSExtensionRequestHandling {
         case "apiKeys":
             // The background script keeps the keys in memory; this is its only way to read the Keychain.
             payload = ApiKeyStore.all()
+        case "settings":
+            payload = ["chatButton": AppSettings.chatButton]
         case "openSettings":
             // iOS extensions cannot launch the app, so the content script opens the chatext:// scheme there instead.
             #if os(macOS)

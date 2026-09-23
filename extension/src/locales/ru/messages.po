@@ -38,8 +38,8 @@ msgstr "Добавить в избранное (ИИ больше не смож�
 msgid "Ask about this page"
 msgstr "Спросите об этой странице"
 
-#: src/content/App.tsx:159
-#: src/content/App.tsx:159
+#: src/content/App.tsx:168
+#: src/content/App.tsx:168
 msgid "Back to list"
 msgstr "Назад к списку"
 
@@ -50,11 +50,11 @@ msgstr "Назад к списку"
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Попадания в кэш: {0}% ({1} / {2} токенов)"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Chat history"
 msgstr "История чатов"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Chats"
 msgstr "Чаты"
 
@@ -62,8 +62,8 @@ msgstr "Чаты"
 msgid "Clear"
 msgstr "Очистить"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:177
+#: src/content/App.tsx:177
 msgid "Close panel"
 msgstr "Закрыть панель"
 
@@ -115,12 +115,12 @@ msgstr "Диагностика очищена"
 msgid "Diagnostics copied"
 msgstr "Диагностика скопирована"
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Done"
 msgstr "Готово"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "Edit {0}"
 msgstr "Изменить: {0}"
 
@@ -128,7 +128,7 @@ msgstr "Изменить: {0}"
 msgid "Edit this memory"
 msgstr "Изменить это воспоминание"
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Enlarge"
 msgstr "Увеличить"
 
@@ -145,7 +145,7 @@ msgstr "Ошибка: {content}"
 msgid "Execution was denied."
 msgstr "Не выполнено."
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Finish editing and return to the list"
 msgstr "Завершить редактирование и вернуться к списку"
 
@@ -165,11 +165,11 @@ msgstr "Изображение или файл"
 msgid "Include {selectionSummary}"
 msgstr "Включить: {selectionSummary}"
 
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "memory"
 msgstr "воспоминание"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "Memory"
 msgstr "Память"
 
@@ -181,7 +181,7 @@ msgstr "Не удалось обновить память"
 msgid "Memory updated"
 msgstr "Память обновлена"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Menu (chat history and memory)"
 msgstr "Меню (история чатов и память)"
 
@@ -195,8 +195,8 @@ msgstr "Модель"
 msgid "Model and reasoning effort"
 msgstr "Модель и уровень рассуждений"
 
-#: src/content/App.tsx:195
-#: src/content/App.tsx:195
+#: src/content/App.tsx:204
+#: src/content/App.tsx:204
 msgid "New chat"
 msgstr "Новый чат"
 
@@ -251,6 +251,11 @@ msgstr "Нет сохранённых воспоминаний."
 msgid "errors.noTitle"
 msgstr "Заголовок не получен."
 
+#: src/content/App.tsx:155
+#: src/content/App.tsx:155
+msgid "Open chat"
+msgstr "Открыть чат"
+
 #: src/content/ChatView.tsx:182
 msgid "Open Settings"
 msgstr "Открыть настройки"
@@ -278,7 +283,7 @@ msgstr "Удалить из избранного"
 msgid "errors.responseCancelled"
 msgstr "Создание ответа отменено."
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Restore size"
 msgstr "Исходный размер"
 
@@ -286,7 +291,7 @@ msgstr "Исходный размер"
 msgid "Running…"
 msgstr "Выполняется…"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Saved conversations"
 msgstr "Сохранённые беседы"
 
@@ -311,7 +316,7 @@ msgstr "Прервать и отправить"
 msgid "Settings"
 msgstr "Настройки"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Show in sidebar"
 msgstr "Показать в боковой панели"
 
@@ -323,7 +328,7 @@ msgstr "Войдите с Apple, чтобы пользоваться беспл�
 msgid "Stop response"
 msgstr "Остановить ответ"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Switch to floating panel"
 msgstr "Переключить на плавающую панель"
 
@@ -348,7 +353,7 @@ msgstr "Без названия"
 msgid "Updating memory…"
 msgstr "Обновление памяти…"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "What the AI remembers"
 msgstr "Что помнит ИИ"
 

@@ -10,6 +10,7 @@ const PATHS = {
 
 const PNGS = {
   add: "plus.png",
+  chat: "message.png",
   close: "xmark.png",
   closeFullscreen: "arrow.down.right.and.arrow.up.left.png",
   delete: "trash.png",

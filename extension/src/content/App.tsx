@@ -8,6 +8,7 @@ import { Icon } from "./Icon";
 import { MemoryEditor } from "./MemoryEditor";
 import { MemoryListView } from "./MemoryListView";
 import { SegmentedTabs } from "./SegmentedTabs";
+import { useChatButton } from "./useChatButton";
 import { useMemories } from "./useMemories";
 import { usePanel } from "./usePanel";
 import { EDGES, usePanelFrame } from "./usePanelFrame";
@@ -42,6 +43,7 @@ export function App() {
   const panelRef = useRef<HTMLElement>(null);
   const panel = usePanel();
   const memories = useMemories();
+  const chatButton = useChatButton();
   const phone = useMediaQuery(PHONE_QUERY);
   const state = panel.state;
   const open = state?.panel.open ?? false;
@@ -147,7 +149,14 @@ export function App() {
     : (expanded ? t`Switch to floating panel` : t`Show in sidebar`);
   const historyLabel = phone ? t`Menu (chat history and memory)` : t`Chat history`;
 
-  if (!state || !open) return null;
+  if (!state) return null;
+  if (!open) {
+    return chatButton ? (
+      <button id="chat-button" className="round" type="button" aria-label={t`Open chat`} title={t`Open chat`} onClick={() => panel.setPanel({ open: true })}>
+        <Icon name="chat" />
+      </button>
+    ) : null;
+  }
 
   return (
     <section id="panel" ref={panelRef} data-layout={layout} style={panelFrame.style} onMouseDown={keepPageSelection}>

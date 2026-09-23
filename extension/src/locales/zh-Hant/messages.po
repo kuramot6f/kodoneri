@@ -38,8 +38,8 @@ msgstr "加入收藏（AI 將無法再編輯）"
 msgid "Ask about this page"
 msgstr "就此頁面提問"
 
-#: src/content/App.tsx:159
-#: src/content/App.tsx:159
+#: src/content/App.tsx:168
+#: src/content/App.tsx:168
 msgid "Back to list"
 msgstr "返回列表"
 
@@ -50,11 +50,11 @@ msgstr "返回列表"
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "快取命中率：{0}%（{1} / {2} tokens）"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Chat history"
 msgstr "聊天記錄"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Chats"
 msgstr "聊天"
 
@@ -62,8 +62,8 @@ msgstr "聊天"
 msgid "Clear"
 msgstr "清除"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:177
+#: src/content/App.tsx:177
 msgid "Close panel"
 msgstr "關閉面板"
 
@@ -115,12 +115,12 @@ msgstr "已清除診斷資訊"
 msgid "Diagnostics copied"
 msgstr "已拷貝診斷資訊"
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Done"
 msgstr "完成"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "Edit {0}"
 msgstr "編輯{0}"
 
@@ -128,7 +128,7 @@ msgstr "編輯{0}"
 msgid "Edit this memory"
 msgstr "編輯此記憶"
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Enlarge"
 msgstr "放大"
 
@@ -145,7 +145,7 @@ msgstr "錯誤：{content}"
 msgid "Execution was denied."
 msgstr "未執行。"
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Finish editing and return to the list"
 msgstr "完成編輯並返回列表"
 
@@ -165,11 +165,11 @@ msgstr "圖片或檔案"
 msgid "Include {selectionSummary}"
 msgstr "包含{selectionSummary}"
 
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "memory"
 msgstr "記憶"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "Memory"
 msgstr "記憶"
 
@@ -181,7 +181,7 @@ msgstr "記憶更新失敗"
 msgid "Memory updated"
 msgstr "記憶已更新"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Menu (chat history and memory)"
 msgstr "選單（聊天記錄和記憶）"
 
@@ -195,8 +195,8 @@ msgstr "模型"
 msgid "Model and reasoning effort"
 msgstr "模型和推理強度"
 
-#: src/content/App.tsx:195
-#: src/content/App.tsx:195
+#: src/content/App.tsx:204
+#: src/content/App.tsx:204
 msgid "New chat"
 msgstr "新聊天"
 
@@ -251,6 +251,11 @@ msgstr "沒有已儲存的記憶。"
 msgid "errors.noTitle"
 msgstr "未收到標題。"
 
+#: src/content/App.tsx:155
+#: src/content/App.tsx:155
+msgid "Open chat"
+msgstr "打開聊天"
+
 #: src/content/ChatView.tsx:182
 msgid "Open Settings"
 msgstr "打開設定"
@@ -278,7 +283,7 @@ msgstr "從收藏中移除"
 msgid "errors.responseCancelled"
 msgstr "已停止產生回答。"
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Restore size"
 msgstr "恢復大小"
 
@@ -286,7 +291,7 @@ msgstr "恢復大小"
 msgid "Running…"
 msgstr "正在執行…"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Saved conversations"
 msgstr "已儲存的對話"
 
@@ -311,7 +316,7 @@ msgstr "中斷並傳送"
 msgid "Settings"
 msgstr "設定"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Show in sidebar"
 msgstr "在側邊欄中顯示"
 
@@ -323,7 +328,7 @@ msgstr "使用 Apple 登入以使用 chatext 免費方案，或加入你自己�
 msgid "Stop response"
 msgstr "停止回答"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Switch to floating panel"
 msgstr "切換為浮動面板"
 
@@ -348,7 +353,7 @@ msgstr "未命名"
 msgid "Updating memory…"
 msgstr "正在更新記憶…"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "What the AI remembers"
 msgstr "AI 記住的內容"
 

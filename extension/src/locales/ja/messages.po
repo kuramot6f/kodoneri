@@ -38,8 +38,8 @@ msgstr "お気に入りに追加（AIは編集できなくなる）"
 msgid "Ask about this page"
 msgstr "このページについて質問"
 
-#: src/content/App.tsx:159
-#: src/content/App.tsx:159
+#: src/content/App.tsx:168
+#: src/content/App.tsx:168
 msgid "Back to list"
 msgstr "一覧に戻る"
 
@@ -50,11 +50,11 @@ msgstr "一覧に戻る"
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "キャッシュ率: {0}%（{1} / {2} tokens）"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Chat history"
 msgstr "チャット履歴"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Chats"
 msgstr "チャット"
 
@@ -62,8 +62,8 @@ msgstr "チャット"
 msgid "Clear"
 msgstr "消去"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:177
+#: src/content/App.tsx:177
 msgid "Close panel"
 msgstr "パネルを閉じる"
 
@@ -115,12 +115,12 @@ msgstr "診断情報を消去しました"
 msgid "Diagnostics copied"
 msgstr "診断情報をコピーしました"
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Done"
 msgstr "完了"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "Edit {0}"
 msgstr "{0}を編集"
 
@@ -128,7 +128,7 @@ msgstr "{0}を編集"
 msgid "Edit this memory"
 msgstr "このメモリを編集"
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Enlarge"
 msgstr "大きく表示"
 
@@ -145,7 +145,7 @@ msgstr "エラー: {content}"
 msgid "Execution was denied."
 msgstr "実行されませんでした。"
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Finish editing and return to the list"
 msgstr "編集を終えて一覧に戻る"
 
@@ -165,11 +165,11 @@ msgstr "画像またはファイル"
 msgid "Include {selectionSummary}"
 msgstr "{selectionSummary}を含める"
 
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "memory"
 msgstr "メモリ"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "Memory"
 msgstr "メモリ"
 
@@ -181,7 +181,7 @@ msgstr "メモリ更新に失敗"
 msgid "Memory updated"
 msgstr "メモリ更新あり"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Menu (chat history and memory)"
 msgstr "メニュー（チャット履歴・メモリ）"
 
@@ -195,8 +195,8 @@ msgstr "モデル"
 msgid "Model and reasoning effort"
 msgstr "モデルと思考量"
 
-#: src/content/App.tsx:195
-#: src/content/App.tsx:195
+#: src/content/App.tsx:204
+#: src/content/App.tsx:204
 msgid "New chat"
 msgstr "新規チャット"
 
@@ -251,6 +251,11 @@ msgstr "保存されたメモリはありません。"
 msgid "errors.noTitle"
 msgstr "タイトルを取得できませんでした。"
 
+#: src/content/App.tsx:155
+#: src/content/App.tsx:155
+msgid "Open chat"
+msgstr "チャットを開く"
+
 #: src/content/ChatView.tsx:182
 msgid "Open Settings"
 msgstr "設定を開く"
@@ -278,7 +283,7 @@ msgstr "お気に入りを解除"
 msgid "errors.responseCancelled"
 msgstr "回答の生成を中止しました。"
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Restore size"
 msgstr "元の大きさに戻す"
 
@@ -286,7 +291,7 @@ msgstr "元の大きさに戻す"
 msgid "Running…"
 msgstr "実行中…"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Saved conversations"
 msgstr "保存した会話の一覧"
 
@@ -311,7 +316,7 @@ msgstr "割り込み送信"
 msgid "Settings"
 msgstr "設定"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Show in sidebar"
 msgstr "サイドバーに表示"
 
@@ -323,7 +328,7 @@ msgstr "Appleでサインインしてchatextの無料プランを使うか、お
 msgid "Stop response"
 msgstr "回答を停止"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Switch to floating panel"
 msgstr "フローティングに戻す"
 
@@ -348,7 +353,7 @@ msgstr "無題"
 msgid "Updating memory…"
 msgstr "メモリ更新中…"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "What the AI remembers"
 msgstr "AIが覚えている内容の一覧"
 

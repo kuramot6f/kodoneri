@@ -38,8 +38,8 @@ msgstr "Zu Favoriten hinzufügen (die KI kann sie dann nicht mehr bearbeiten)"
 msgid "Ask about this page"
 msgstr "Frag etwas zu dieser Seite"
 
-#: src/content/App.tsx:159
-#: src/content/App.tsx:159
+#: src/content/App.tsx:168
+#: src/content/App.tsx:168
 msgid "Back to list"
 msgstr "Zurück zur Liste"
 
@@ -50,11 +50,11 @@ msgstr "Zurück zur Liste"
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Cache-Trefferquote: {0} % ({1} / {2} Tokens)"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Chat history"
 msgstr "Chatverlauf"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Chats"
 msgstr "Chats"
 
@@ -62,8 +62,8 @@ msgstr "Chats"
 msgid "Clear"
 msgstr "Löschen"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:177
+#: src/content/App.tsx:177
 msgid "Close panel"
 msgstr "Bereich schließen"
 
@@ -115,12 +115,12 @@ msgstr "Diagnosedaten gelöscht"
 msgid "Diagnostics copied"
 msgstr "Diagnosedaten kopiert"
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Done"
 msgstr "Fertig"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "Edit {0}"
 msgstr "{0} bearbeiten"
 
@@ -128,7 +128,7 @@ msgstr "{0} bearbeiten"
 msgid "Edit this memory"
 msgstr "Diese Erinnerung bearbeiten"
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Enlarge"
 msgstr "Vergrößern"
 
@@ -145,7 +145,7 @@ msgstr "Fehler: {content}"
 msgid "Execution was denied."
 msgstr "Nicht ausgeführt."
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Finish editing and return to the list"
 msgstr "Bearbeitung beenden und zur Liste zurückkehren"
 
@@ -165,11 +165,11 @@ msgstr "Bild oder Datei"
 msgid "Include {selectionSummary}"
 msgstr "{selectionSummary} einbeziehen"
 
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "memory"
 msgstr "Erinnerung"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "Memory"
 msgstr "Erinnerungen"
 
@@ -181,7 +181,7 @@ msgstr "Erinnerungen konnten nicht aktualisiert werden"
 msgid "Memory updated"
 msgstr "Erinnerungen aktualisiert"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Menu (chat history and memory)"
 msgstr "Menü (Chatverlauf und Erinnerungen)"
 
@@ -195,8 +195,8 @@ msgstr "Modell"
 msgid "Model and reasoning effort"
 msgstr "Modell und Denkaufwand"
 
-#: src/content/App.tsx:195
-#: src/content/App.tsx:195
+#: src/content/App.tsx:204
+#: src/content/App.tsx:204
 msgid "New chat"
 msgstr "Neuer Chat"
 
@@ -251,6 +251,11 @@ msgstr "Keine gespeicherten Erinnerungen."
 msgid "errors.noTitle"
 msgstr "Kein Titel erhalten."
 
+#: src/content/App.tsx:155
+#: src/content/App.tsx:155
+msgid "Open chat"
+msgstr "Chat öffnen"
+
 #: src/content/ChatView.tsx:182
 msgid "Open Settings"
 msgstr "Einstellungen öffnen"
@@ -278,7 +283,7 @@ msgstr "Aus Favoriten entfernen"
 msgid "errors.responseCancelled"
 msgstr "Antworterstellung abgebrochen."
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Restore size"
 msgstr "Originalgröße"
 
@@ -286,7 +291,7 @@ msgstr "Originalgröße"
 msgid "Running…"
 msgstr "Wird ausgeführt…"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Saved conversations"
 msgstr "Gespeicherte Unterhaltungen"
 
@@ -311,7 +316,7 @@ msgstr "Unterbrechen und senden"
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Show in sidebar"
 msgstr "In der Seitenleiste anzeigen"
 
@@ -323,7 +328,7 @@ msgstr "Melde dich mit Apple an, um den kostenlosen Plan von chatext zu nutzen, 
 msgid "Stop response"
 msgstr "Antwort stoppen"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Switch to floating panel"
 msgstr "Zu schwebendem Bereich wechseln"
 
@@ -348,7 +353,7 @@ msgstr "Ohne Titel"
 msgid "Updating memory…"
 msgstr "Erinnerungen werden aktualisiert…"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "What the AI remembers"
 msgstr "Was sich die KI merkt"
 

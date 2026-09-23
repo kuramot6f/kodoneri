@@ -405,9 +405,11 @@ private struct ExtensionSection: View {
     @Environment(\.scenePhase) private var scenePhase
     /// `nil` until Safari reports the extension's state, or if it can't be found.
     @State private var isEnabled: Bool?
+    @AppStorage(AppSettings.chatButtonKey, store: AppSettings.defaults) private var chatButton = AppSettings.chatButtonDefault
 
     var body: some View {
         Section {
+            Toggle("Chat Button on Web Pages", isOn: $chatButton)
             if Self.canManage {
                 LabeledContent("Status") {
                     switch isEnabled {
@@ -427,6 +429,8 @@ private struct ExtensionSection: View {
             }
         } header: {
             Text("Safari Extension")
+        } footer: {
+            Text("Shows a button at the bottom right of web pages that opens the chat.")
         }
         // The toggle lives in Safari's settings, so check again whenever the user comes back.
         .task(id: scenePhase) {

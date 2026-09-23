@@ -38,8 +38,8 @@ msgstr "Ajouter aux favoris (l’IA ne pourra plus la modifier)"
 msgid "Ask about this page"
 msgstr "Posez une question sur cette page"
 
-#: src/content/App.tsx:159
-#: src/content/App.tsx:159
+#: src/content/App.tsx:168
+#: src/content/App.tsx:168
 msgid "Back to list"
 msgstr "Retour à la liste"
 
@@ -50,11 +50,11 @@ msgstr "Retour à la liste"
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Taux de succès du cache : {0} % ({1} / {2} tokens)"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Chat history"
 msgstr "Historique des discussions"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Chats"
 msgstr "Discussions"
 
@@ -62,8 +62,8 @@ msgstr "Discussions"
 msgid "Clear"
 msgstr "Effacer"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:177
+#: src/content/App.tsx:177
 msgid "Close panel"
 msgstr "Fermer le panneau"
 
@@ -115,12 +115,12 @@ msgstr "Diagnostics effacés"
 msgid "Diagnostics copied"
 msgstr "Diagnostics copiés"
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Done"
 msgstr "OK"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "Edit {0}"
 msgstr "Modifier {0}"
 
@@ -128,7 +128,7 @@ msgstr "Modifier {0}"
 msgid "Edit this memory"
 msgstr "Modifier cette mémoire"
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Enlarge"
 msgstr "Agrandir"
 
@@ -145,7 +145,7 @@ msgstr "Erreur : {content}"
 msgid "Execution was denied."
 msgstr "Non exécuté."
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Finish editing and return to the list"
 msgstr "Terminer la modification et revenir à la liste"
 
@@ -165,11 +165,11 @@ msgstr "Image ou fichier"
 msgid "Include {selectionSummary}"
 msgstr "Inclure {selectionSummary}"
 
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "memory"
 msgstr "mémoire"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "Memory"
 msgstr "Mémoire"
 
@@ -181,7 +181,7 @@ msgstr "Échec de la mise à jour de la mémoire"
 msgid "Memory updated"
 msgstr "Mémoire mise à jour"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Menu (chat history and memory)"
 msgstr "Menu (historique des discussions et mémoire)"
 
@@ -195,8 +195,8 @@ msgstr "Modèle"
 msgid "Model and reasoning effort"
 msgstr "Modèle et niveau de réflexion"
 
-#: src/content/App.tsx:195
-#: src/content/App.tsx:195
+#: src/content/App.tsx:204
+#: src/content/App.tsx:204
 msgid "New chat"
 msgstr "Nouvelle discussion"
 
@@ -251,6 +251,11 @@ msgstr "Aucune mémoire enregistrée."
 msgid "errors.noTitle"
 msgstr "Aucun titre n’a été reçu."
 
+#: src/content/App.tsx:155
+#: src/content/App.tsx:155
+msgid "Open chat"
+msgstr "Ouvrir le chat"
+
 #: src/content/ChatView.tsx:182
 msgid "Open Settings"
 msgstr "Ouvrir les réglages"
@@ -278,7 +283,7 @@ msgstr "Retirer des favoris"
 msgid "errors.responseCancelled"
 msgstr "Génération de la réponse annulée."
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Restore size"
 msgstr "Rétablir la taille"
 
@@ -286,7 +291,7 @@ msgstr "Rétablir la taille"
 msgid "Running…"
 msgstr "Exécution…"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Saved conversations"
 msgstr "Conversations enregistrées"
 
@@ -311,7 +316,7 @@ msgstr "Interrompre et envoyer"
 msgid "Settings"
 msgstr "Réglages"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Show in sidebar"
 msgstr "Afficher dans la barre latérale"
 
@@ -323,7 +328,7 @@ msgstr "Connectez-vous avec Apple pour utiliser l’offre gratuite de chatext, o
 msgid "Stop response"
 msgstr "Arrêter la réponse"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Switch to floating panel"
 msgstr "Passer en panneau flottant"
 
@@ -348,7 +353,7 @@ msgstr "Sans titre"
 msgid "Updating memory…"
 msgstr "Mise à jour de la mémoire…"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "What the AI remembers"
 msgstr "Ce dont l’IA se souvient"
 

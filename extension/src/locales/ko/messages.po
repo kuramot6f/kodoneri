@@ -38,8 +38,8 @@ msgstr "즐겨찾기에 추가 (AI가 더 이상 편집할 수 없음)"
 msgid "Ask about this page"
 msgstr "이 페이지에 대해 질문하기"
 
-#: src/content/App.tsx:159
-#: src/content/App.tsx:159
+#: src/content/App.tsx:168
+#: src/content/App.tsx:168
 msgid "Back to list"
 msgstr "목록으로 돌아가기"
 
@@ -50,11 +50,11 @@ msgstr "목록으로 돌아가기"
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "캐시 적중률: {0}% ({1} / {2} 토큰)"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Chat history"
 msgstr "채팅 기록"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Chats"
 msgstr "채팅"
 
@@ -62,8 +62,8 @@ msgstr "채팅"
 msgid "Clear"
 msgstr "지우기"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:177
+#: src/content/App.tsx:177
 msgid "Close panel"
 msgstr "패널 닫기"
 
@@ -115,12 +115,12 @@ msgstr "진단 정보를 지웠습니다"
 msgid "Diagnostics copied"
 msgstr "진단 정보를 복사했습니다"
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Done"
 msgstr "완료"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "Edit {0}"
 msgstr "{0} 편집"
 
@@ -128,7 +128,7 @@ msgstr "{0} 편집"
 msgid "Edit this memory"
 msgstr "이 메모리 편집"
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Enlarge"
 msgstr "크게 보기"
 
@@ -145,7 +145,7 @@ msgstr "오류: {content}"
 msgid "Execution was denied."
 msgstr "실행되지 않았습니다."
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Finish editing and return to the list"
 msgstr "편집을 마치고 목록으로 돌아가기"
 
@@ -165,11 +165,11 @@ msgstr "이미지 또는 파일"
 msgid "Include {selectionSummary}"
 msgstr "{selectionSummary} 포함"
 
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "memory"
 msgstr "메모리"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "Memory"
 msgstr "메모리"
 
@@ -181,7 +181,7 @@ msgstr "메모리 업데이트 실패"
 msgid "Memory updated"
 msgstr "메모리 업데이트됨"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Menu (chat history and memory)"
 msgstr "메뉴 (채팅 기록 및 메모리)"
 
@@ -195,8 +195,8 @@ msgstr "모델"
 msgid "Model and reasoning effort"
 msgstr "모델 및 추론 수준"
 
-#: src/content/App.tsx:195
-#: src/content/App.tsx:195
+#: src/content/App.tsx:204
+#: src/content/App.tsx:204
 msgid "New chat"
 msgstr "새 채팅"
 
@@ -251,6 +251,11 @@ msgstr "저장된 메모리가 없습니다."
 msgid "errors.noTitle"
 msgstr "제목을 받지 못했습니다."
 
+#: src/content/App.tsx:155
+#: src/content/App.tsx:155
+msgid "Open chat"
+msgstr "채팅 열기"
+
 #: src/content/ChatView.tsx:182
 msgid "Open Settings"
 msgstr "설정 열기"
@@ -278,7 +283,7 @@ msgstr "즐겨찾기에서 제거"
 msgid "errors.responseCancelled"
 msgstr "응답 생성을 중단했습니다."
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Restore size"
 msgstr "원래 크기로"
 
@@ -286,7 +291,7 @@ msgstr "원래 크기로"
 msgid "Running…"
 msgstr "실행 중…"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Saved conversations"
 msgstr "저장된 대화"
 
@@ -311,7 +316,7 @@ msgstr "중단하고 보내기"
 msgid "Settings"
 msgstr "설정"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Show in sidebar"
 msgstr "사이드바에 표시"
 
@@ -323,7 +328,7 @@ msgstr "Apple로 로그인하여 chatext 무료 플랜을 사용하거나, 보�
 msgid "Stop response"
 msgstr "응답 중지"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Switch to floating panel"
 msgstr "플로팅 패널로 전환"
 
@@ -348,7 +353,7 @@ msgstr "제목 없음"
 msgid "Updating memory…"
 msgstr "메모리 업데이트 중…"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "What the AI remembers"
 msgstr "AI가 기억하는 내용"
 

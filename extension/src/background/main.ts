@@ -5,11 +5,19 @@ import { fetchText } from "../shared/fetch";
 import { clearFrames, registerFrame } from "./frames";
 import { clearDebugLog, debugEvent, exportDebugLog } from "./debug";
 import { hasCredentials, refreshApiKeys } from "./provider";
+import { loadChatButton, saveChatButton } from "../shared/store";
 import { handlePanelMessage, modelsView, removeSession, selectModel, togglePanel } from "./session";
 
 activateBrowserLocale();
 debugEvent("worker_started");
 void refreshApiKeys().catch(() => undefined);
+void refreshAppSettings().catch(() => undefined);
+
+/** Mirrors the app's settings into storage, where every page reads them without a native round trip. */
+async function refreshAppSettings(): Promise<void> {
+  const { chatButton } = await browser.runtime.sendNativeMessage("application.id", { type: "settings" }) as { chatButton?: unknown };
+  if (typeof chatButton === "boolean" && chatButton !== await loadChatButton()) await saveChatButton(chatButton);
+}
 
 browser.action.onClicked.addListener((tab) => {
   if (tab.id !== undefined) void togglePanel(tab.id);
@@ -33,6 +41,7 @@ browser.runtime.onMessage.addListener((message: RuntimeMessage, sender) => {
   if (message.type === "debug_export") return exportDebugLog();
   if (message.type === "debug_clear") return clearDebugLog();
   if (message.type === "credentials") return refreshApiKeys().catch(() => undefined).then(hasCredentials);
+  if (message.type === "app_settings") return refreshAppSettings().catch(() => undefined);
   if (message.type === "open_settings") return browser.runtime.sendNativeMessage("application.id", { type: "openSettings" });
   if (message.type === "sync" || message.type === "ask" || message.type === "cancel" || message.type === "open" || message.type === "panel") {
     if (sender.tab?.id === undefined || sender.frameId !== 0) return;
