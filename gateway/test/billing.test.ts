@@ -16,8 +16,8 @@ const row: BillingRow = {
   requests: 0
 };
 
-test("free allowance is $0.50", () => {
-  assert.equal(FREE_ALLOWANCE_MICROUSD, 500_000);
+test("free allowance is $0.20", () => {
+  assert.equal(FREE_ALLOWANCE_MICROUSD, 200_000);
 });
 
 test("free period follows UTC calendar months", () => {
