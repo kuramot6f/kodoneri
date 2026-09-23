@@ -1,19 +1,44 @@
 {
   "providers": {
-    "openai": "OpenAI",
-    "anthropic": "Anthropic",
-    "deepseek": "DeepSeek",
-    "chatext": "chatext"
+    "openai": { "label": "OpenAI" },
+    "anthropic": { "label": "Anthropic" },
+    "deepseek": { "label": "DeepSeek" }
   },
   "models": [
-    { "id": "gpt-6-astra", "provider": "openai", "label": "Astra", "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 400000 },
-    { "id": "gpt-5.6-sol", "provider": "openai", "label": "Sol", "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 400000 },
-    { "id": "gpt-5.6-terra", "provider": "openai", "label": "Terra", "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 400000 },
-    { "id": "gpt-5.6-luna", "provider": "openai", "label": "Luna", "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 400000 },
-    { "id": "claude-opus-5", "provider": "anthropic", "label": "Opus", "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000 },
-    { "id": "claude-sonnet-5", "provider": "anthropic", "label": "Sonnet", "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000 },
-    { "id": "claude-haiku-4-5", "provider": "anthropic", "label": "Haiku", "efforts": [], "contextWindow": 200000 },
-    { "id": "deepseek-flash", "provider": "deepseek", "label": "Flash", "efforts": ["none", "low", "high", "max"], "contextWindow": 1000000 },
-    { "id": "deepseek-flash", "provider": "chatext", "label": "Flash", "efforts": ["none", "low", "high", "max"], "contextWindow": 1000000 }
-  ]
+    {
+      "id": "gpt-6-astra", "provider": "openai", "label": "GPT-6 Astra",
+      "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 922000,
+      "pricing": { "input": 10, "cacheRead": 1, "output": 50, "longContext": { "above": 272000, "input": 20, "cacheRead": 2, "output": 75 } }
+    },
+    {
+      "id": "gpt-6-sol", "provider": "openai", "label": "GPT-6 Sol",
+      "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 922000,
+      "pricing": { "input": 2, "cacheRead": 0.2, "output": 10, "longContext": { "above": 272000, "input": 4, "cacheRead": 0.4, "output": 15 } }
+    },
+    {
+      "id": "gpt-6-luna", "provider": "openai", "label": "GPT-6 Luna",
+      "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 922000,
+      "pricing": { "input": 0.1, "cacheRead": 0.01, "output": 0.5, "longContext": { "above": 272000, "input": 0.2, "cacheRead": 0.02, "output": 0.75 } }
+    },
+    {
+      "id": "claude-opus-5-5", "provider": "anthropic", "label": "Claude Opus 5.5",
+      "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000,
+      "pricing": { "input": 4, "cacheRead": 0.2, "cacheWrite": 5, "output": 20 }
+    },
+    {
+      "id": "claude-sonnet-5", "provider": "anthropic", "label": "Claude Sonnet 5",
+      "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000,
+      "pricing": { "input": 2, "cacheRead": 0.2, "cacheWrite": 2.5, "output": 10 }
+    },
+    {
+      "id": "deepseek-flash", "provider": "deepseek", "label": "DeepSeek Flash",
+      "efforts": ["none", "low", "high", "max"], "contextWindow": 1000000,
+      "pricing": { "input": 0.15, "cacheRead": 0.003, "output": 0.6, "peak": { "weekdayHoursUtc": [[1, 4], [6, 10]], "multiplier": 2 } }
+    }
+  ],
+  "plans": {
+    "free": ["deepseek-flash", "gpt-6-luna"],
+    "plus": ["gpt-6-luna", "gpt-6-sol", "claude-sonnet-5"],
+    "pro": ["gpt-6-luna", "gpt-6-sol", "gpt-6-astra", "claude-sonnet-5", "claude-opus-5-5", "deepseek-flash"]
+  }
 }

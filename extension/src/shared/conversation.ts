@@ -6,6 +6,7 @@ import type {
   UserModelMessage
 } from "ai";
 
+import type { ModelSettings } from "./models";
 import type { SelectionContext } from "./protocol";
 
 export type { AssistantModelMessage, ModelMessage, ToolModelMessage, ToolResultPart, UserModelMessage } from "ai";
@@ -21,6 +22,8 @@ export interface Conversation {
   createdAt: number;
   updatedAt: number;
   messages: ModelMessage[];
+  /** The model and effort of the latest question; reopening the conversation selects them again. */
+  settings?: ModelSettings;
 }
 
 type MessageKind =

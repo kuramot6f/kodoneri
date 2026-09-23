@@ -38,6 +38,7 @@ function isConversation(value: unknown): value is Conversation {
 
 const SETTINGS_KEY = "settings";
 
+/** The last model and effort chosen anywhere; new conversations start with them. */
 export async function loadSettings(): Promise<ModelSettings> {
   const stored = (await browser.storage.local.get(SETTINGS_KEY))[SETTINGS_KEY] as Partial<ModelSettings> | undefined;
   return { ...DEFAULT_SETTINGS, ...stored };
