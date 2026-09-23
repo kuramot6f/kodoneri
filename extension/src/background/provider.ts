@@ -38,9 +38,21 @@ export type ApiKeys = Partial<Record<Provider | "chatext", string>>;
 
 let apiKeys: ApiKeys = {};
 let plan: Plan | null = null;
+/** The latest lookup; a restarted worker's first request waits for the one begun on worker start. */
+let lookup: Promise<void> = Promise.resolve();
 
 /** Asks the native app for the Keychain keys and the gateway for the plan. Called on worker start, when the model menu opens and when a new conversation begins. */
-export async function refreshApiKeys(): Promise<void> {
+export function refreshApiKeys(): Promise<void> {
+  lookup = readApiKeys();
+  return lookup;
+}
+
+/** Resolves once the lookup in flight, if any, has finished. */
+export function apiKeysLoaded(): Promise<void> {
+  return lookup;
+}
+
+async function readApiKeys(): Promise<void> {
   const response = await browser.runtime.sendNativeMessage("application.id", { type: "apiKeys" }) as ApiKeys;
   apiKeys = Object.fromEntries(Object.entries(response).filter(([, key]) => typeof key === "string" && key));
   // A failed lookup keeps the last known plan so a flaky network does not hide the subscription models.
