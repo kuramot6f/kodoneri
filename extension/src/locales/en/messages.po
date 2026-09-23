@@ -22,7 +22,7 @@ msgstr "“{preview}”"
 msgid "{0, plural, one {# media item} other {# media items}}"
 msgstr "{0, plural, one {# media item} other {# media items}}"
 
-#: src/content/ChatView.tsx:208
+#: src/content/ChatView.tsx:243
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "{mediaCount, plural, one {# media item} other {# media items}}"
 
@@ -34,7 +34,7 @@ msgstr "Add to favorites"
 msgid "Add to favorites (the AI will no longer be able to edit it)"
 msgstr "Add to favorites (the AI will no longer be able to edit it)"
 
-#: src/content/ChatView.tsx:128
+#: src/content/ChatView.tsx:132
 msgid "Ask about this page"
 msgstr "Ask about this page"
 
@@ -46,7 +46,7 @@ msgstr "Back to list"
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:296
+#: src/content/ChatView.tsx:331
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Cache hit rate: {0}% ({1} / {2} tokens)"
 
@@ -67,11 +67,11 @@ msgstr "Clear"
 msgid "Close panel"
 msgstr "Close panel"
 
-#: src/content/search.tsx:19
+#: src/content/search.tsx:18
 msgid "Close search"
 msgstr "Close search"
 
-#: src/content/ChatView.tsx:97
+#: src/content/ChatView.tsx:100
 msgid "Compacting conversation…"
 msgstr "Compacting conversation…"
 
@@ -133,15 +133,15 @@ msgid "Enlarge"
 msgstr "Enlarge"
 
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:238
+#: src/content/ChatView.tsx:273
 msgid "Error: {0}"
 msgstr "Error: {0}"
 
-#: src/content/ChatView.tsx:173
+#: src/content/ChatView.tsx:208
 msgid "Error: {content}"
 msgstr "Error: {content}"
 
-#: src/content/ChatView.tsx:306
+#: src/content/ChatView.tsx:341
 msgid "Execution was denied."
 msgstr "Execution was denied."
 
@@ -149,15 +149,19 @@ msgstr "Execution was denied."
 msgid "Finish editing and return to the list"
 msgstr "Finish editing and return to the list"
 
-#: src/content/ChatView.tsx:96
+#: src/content/ChatView.tsx:99
 msgid "Generating response…"
 msgstr "Generating response…"
 
-#: src/content/ChatView.tsx:307
+#: src/content/ChatView.tsx:180
+msgid "Get started for free"
+msgstr "Get started for free"
+
+#: src/content/ChatView.tsx:342
 msgid "Image or file"
 msgstr "Image or file"
 
-#: src/content/ChatView.tsx:109
+#: src/content/ChatView.tsx:112
 msgid "Include {selectionSummary}"
 msgstr "Include {selectionSummary}"
 
@@ -169,11 +173,11 @@ msgstr "memory"
 msgid "Memory"
 msgstr "Memory"
 
-#: src/content/ChatView.tsx:231
+#: src/content/ChatView.tsx:266
 msgid "Memory update failed"
 msgstr "Memory update failed"
 
-#: src/content/ChatView.tsx:232
+#: src/content/ChatView.tsx:267
 msgid "Memory updated"
 msgstr "Memory updated"
 
@@ -185,8 +189,8 @@ msgstr "Menu (chat history and memory)"
 msgid "Model"
 msgstr "Model"
 
-#: src/content/ChatView.tsx:117
-#: src/content/ChatView.tsx:118
+#: src/content/ChatView.tsx:120
+#: src/content/ChatView.tsx:121
 #: src/content/ModelMenu.tsx:80
 msgid "Model and reasoning effort"
 msgstr "Model and reasoning effort"
@@ -207,7 +211,7 @@ msgid "No API key is configured. Configure one in the chatext app."
 msgstr "No API key is configured. Configure one in the chatext app."
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:88
+#: src/background/provider.ts:93
 #: src/background/session.ts:252
 msgid "errors.apiKeyMissing"
 msgstr "No API key is configured. Configure one in the chatext app."
@@ -225,7 +229,7 @@ msgstr "No matching conversations."
 msgid "No matching memories."
 msgstr "No matching memories."
 
-#: src/content/ChatView.tsx:232
+#: src/content/ChatView.tsx:267
 msgid "No memory changes"
 msgstr "No memory changes"
 
@@ -247,11 +251,15 @@ msgstr "No saved memories."
 msgid "errors.noTitle"
 msgstr "No title was received."
 
+#: src/content/ChatView.tsx:182
+msgid "Open Settings"
+msgstr "Open Settings"
+
 #: src/content/HistoryView.tsx:43
 msgid "Open this conversation"
 msgstr "Open this conversation"
 
-#: src/content/ChatView.tsx:256
+#: src/content/ChatView.tsx:291
 msgid "Reasoning"
 msgstr "Reasoning"
 
@@ -274,7 +282,7 @@ msgstr "Response generation was cancelled."
 msgid "Restore size"
 msgstr "Restore size"
 
-#: src/content/ChatView.tsx:274
+#: src/content/ChatView.tsx:309
 msgid "Running…"
 msgstr "Running…"
 
@@ -290,16 +298,16 @@ msgstr "Search history"
 msgid "Search memories"
 msgstr "Search memories"
 
-#: src/content/ChatView.tsx:62
+#: src/content/ChatView.tsx:64
 msgid "Send"
 msgstr "Send"
 
-#: src/content/ChatView.tsx:62
+#: src/content/ChatView.tsx:64
 msgid "Send and interrupt"
 msgstr "Send and interrupt"
 
-#: src/content/search.tsx:43
-#: src/content/search.tsx:43
+#: src/content/search.tsx:42
+#: src/content/search.tsx:42
 msgid "Settings"
 msgstr "Settings"
 
@@ -307,7 +315,11 @@ msgstr "Settings"
 msgid "Show in sidebar"
 msgstr "Show in sidebar"
 
-#: src/content/ChatView.tsx:62
+#: src/content/ChatView.tsx:181
+msgid "Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
+msgstr "Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
+
+#: src/content/ChatView.tsx:64
 msgid "Stop response"
 msgstr "Stop response"
 
@@ -332,7 +344,7 @@ msgstr "Today"
 msgid "Untitled"
 msgstr "Untitled"
 
-#: src/content/ChatView.tsx:229
+#: src/content/ChatView.tsx:264
 msgid "Updating memory…"
 msgstr "Updating memory…"
 

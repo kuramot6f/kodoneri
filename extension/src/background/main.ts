@@ -4,7 +4,7 @@ import { errorMessage } from "../shared/errors";
 import { fetchText } from "../shared/fetch";
 import { clearFrames, registerFrame } from "./frames";
 import { clearDebugLog, debugEvent, exportDebugLog } from "./debug";
-import { refreshApiKeys } from "./provider";
+import { hasCredentials, refreshApiKeys } from "./provider";
 import { handlePanelMessage, modelsView, removeSession, selectModel, togglePanel } from "./session";
 
 activateBrowserLocale();
@@ -32,6 +32,7 @@ browser.runtime.onMessage.addListener((message: RuntimeMessage, sender) => {
   }
   if (message.type === "debug_export") return exportDebugLog();
   if (message.type === "debug_clear") return clearDebugLog();
+  if (message.type === "credentials") return refreshApiKeys().catch(() => undefined).then(hasCredentials);
   if (message.type === "open_settings") return browser.runtime.sendNativeMessage("application.id", { type: "openSettings" });
   if (message.type === "sync" || message.type === "ask" || message.type === "cancel" || message.type === "open" || message.type === "panel") {
     if (sender.tab?.id === undefined || sender.frameId !== 0) return;

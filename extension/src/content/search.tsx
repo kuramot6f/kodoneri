@@ -1,9 +1,8 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
-import { isTouchDevice } from "./device";
+import { isTouchDevice, openSettings } from "./device";
 import { Icon } from "./Icon";
-import type { RuntimeMessage } from "../shared/protocol";
 
 interface SearchBarProps {
   searchable: boolean;
@@ -46,13 +45,6 @@ export function SearchBar({ searchable, value, placeholder, onChange }: SearchBa
       </div>
     </div>
   );
-}
-
-// iOS の拡張はアプリを直接起動できないので、ページ自体を URL スキームへ遷移させて Safari の確認を出す。
-// macOS はネイティブメッセージでアプリを開く。
-function openSettings() {
-  if (isTouchDevice()) location.href = "chatext://settings";
-  else void browser.runtime.sendMessage({ type: "open_settings" } satisfies RuntimeMessage);
 }
 
 export function normalizeQuery(query: string): string {

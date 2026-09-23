@@ -47,6 +47,11 @@ export async function refreshApiKeys(): Promise<void> {
   plan = apiKeys.chatext ? await fetchPlan(apiKeys.chatext).catch(() => plan) : null;
 }
 
+/** Without any key or gateway token nothing can be sent, so a new chat points to the app instead. */
+export function hasCredentials(): boolean {
+  return Object.keys(apiKeys).length > 0;
+}
+
 async function fetchPlan(token: string): Promise<Plan | null> {
   const response = await fetch(`${GATEWAY_URL}/usage`, { headers: { authorization: `Bearer ${token}` } });
   if (response.status === 401) return null;
