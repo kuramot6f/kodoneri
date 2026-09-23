@@ -137,6 +137,8 @@ button:disabled { cursor: default; opacity: .4; }
   backdrop-filter: blur(4px) saturate(.84);
   -webkit-backdrop-filter: blur(4px) saturate(.84);
 }
+/* アイコンだけ glass 層より上に出す。isolate の内側なので一覧のアイコンがバーより上に出ることはない */
+.accent-action .ui-icon { z-index: 2; }
 .round:not(:disabled):hover { filter: brightness(1.08); }
 .pill { height: 40px; padding: 0 16px; font-weight: 600; }
 .pill:not(:disabled):hover { filter: brightness(1.08); }

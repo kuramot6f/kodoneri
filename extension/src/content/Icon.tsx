@@ -31,7 +31,6 @@ type IconTone = "default" | "inverse" | "secondary";
 
 const baseStyle = {
   position: "relative",
-  zIndex: 2,
   display: "inline-block",
   flex: "none",
   width: 20,
