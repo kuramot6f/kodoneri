@@ -1,46 +1,21 @@
-# chatext
+# Chatext
 
-Safari 拡張（Web Extension）本体と、それを配布する iOS / macOS アプリ。
+**AI, right in Safari.** A chat panel on any page, on iPhone, iPad, and Mac.
 
-## 構成
+<p align="center">
+  <img src="design/Frame%201.jpg" width="45%" alt="Ask questions, understand pages">
+  <img src="design/Frame%202.jpg" width="45%" alt="Let AI take action">
+</p>
 
-| パス | 役割 |
-|---|---|
-| `extension/` | 拡張本体のソース（TypeScript + React + Vite）。`extension/dist/` にビルドされる。`background/` が会話と実行状態を所有し、`content/` はパネル UI とページ操作 |
-| `Shared (App)` | 拡張を配布し、API キーを編集する SwiftUI アプリ（iOS / macOS 共通） |
-| `Shared (Extension)` | `SafariWebExtensionHandler.swift`（native messaging）と、アプリとも共有する `ApiKeyStore.swift`（Keychain） |
-| `chatext.xcodeproj` | iOS / macOS それぞれのアプリ＋拡張ターゲット |
-| `worklog/` `design/` | 作業ログと設計メモ |
+## What it does
 
-## 開発環境
+- **Understand pages.** Ask about the page you're reading. Chatext reads and searches it, including figures and other open tabs.
+- **Take action.** It clicks, fills in forms, and navigates for you.
+- **Remember.** Save memories such as your personal info to reuse later, and search past conversations.
+- **Choose your model.** Models from OpenAI, Anthropic, and DeepSeek, with your own API keys or a Chatext plan.
 
-```sh
-mise install
-cd extension && npm ci
-```
+Available in 14 languages.
 
-## ビルド
+## Development
 
-Xcode でビルドすれば、拡張ターゲットの **Build Web Extension** フェーズが
-`npm run build` を実行し、`extension/dist/` の生成物を appex へコピーします。
-拡張だけビルドしたいときは:
-
-```sh
-cd extension && npm run build
-```
-
-`extension/dist/` は生成物なので git 管理外です。Xcode の同期グループ
-（`Shared (Extension)`）には置きません — フォルダが一瞬でも存在しないと
-Xcode が pbxproj からメンバーシップを剥がしてしまうためです。
-
-## API キー
-
-OpenAI / Anthropic / DeepSeek のキーはアプリの画面から入力する（iCloud Keychain で同期）。
-拡張は起動時と新規会話の開始時に native messaging で Keychain から読み、`background.js` がメモリに保持する。
-モデルと思考量の一覧は `extension/src/shared/models.json`。
-
-## テスト
-
-```sh
-cd extension && npm test
-```
+See [CONTRIBUTION.md](CONTRIBUTION.md).
