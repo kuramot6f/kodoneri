@@ -46,7 +46,7 @@ msgstr "Back to list"
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:280
+#: src/content/ChatView.tsx:296
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Cache hit rate: {0}% ({1} / {2} tokens)"
 
@@ -58,7 +58,7 @@ msgstr "Chat history"
 msgid "Chats"
 msgstr "Chats"
 
-#: src/content/ModelMenu.tsx:122
+#: src/content/ModelMenu.tsx:119
 msgid "Clear"
 msgstr "Clear"
 
@@ -81,11 +81,11 @@ msgid "Content"
 msgstr "Content"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:292
+#: src/background/session.ts:322
 msgid "errors.compactionFailed"
 msgstr "Conversation compaction failed. {error}"
 
-#: src/content/ModelMenu.tsx:121
+#: src/content/ModelMenu.tsx:118
 msgid "Copy diagnostics"
 msgstr "Copy diagnostics"
 
@@ -133,7 +133,7 @@ msgid "Enlarge"
 msgstr "Enlarge"
 
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:231
+#: src/content/ChatView.tsx:238
 msgid "Error: {0}"
 msgstr "Error: {0}"
 
@@ -141,7 +141,7 @@ msgstr "Error: {0}"
 msgid "Error: {content}"
 msgstr "Error: {content}"
 
-#: src/content/ChatView.tsx:290
+#: src/content/ChatView.tsx:306
 msgid "Execution was denied."
 msgstr "Execution was denied."
 
@@ -153,7 +153,7 @@ msgstr "Finish editing and return to the list"
 msgid "Generating response…"
 msgstr "Generating response…"
 
-#: src/content/ChatView.tsx:291
+#: src/content/ChatView.tsx:307
 msgid "Image or file"
 msgstr "Image or file"
 
@@ -169,7 +169,11 @@ msgstr "memory"
 msgid "Memory"
 msgstr "Memory"
 
-#: src/content/ChatView.tsx:229
+#: src/content/ChatView.tsx:231
+msgid "Memory update failed"
+msgstr "Memory update failed"
+
+#: src/content/ChatView.tsx:232
 msgid "Memory updated"
 msgstr "Memory updated"
 
@@ -203,13 +207,13 @@ msgid "No API key is configured. Configure one in the chatext app."
 msgstr "No API key is configured. Configure one in the chatext app."
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:52
-#: src/background/session.ts:224
+#: src/background/provider.ts:88
+#: src/background/session.ts:252
 msgid "errors.apiKeyMissing"
 msgstr "No API key is configured. Configure one in the chatext app."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:140
+#: src/background/agent.ts:142
 msgid "errors.noCompaction"
 msgstr "No conversation compaction result was received."
 
@@ -221,8 +225,12 @@ msgstr "No matching conversations."
 msgid "No matching memories."
 msgstr "No matching memories."
 
+#: src/content/ChatView.tsx:232
+msgid "No memory changes"
+msgstr "No memory changes"
+
 #. js-lingui-explicit-id
-#: src/background/agent.ts:102
+#: src/background/agent.ts:104
 msgid "errors.noResponse"
 msgstr "No response was received."
 
@@ -235,7 +243,7 @@ msgid "No saved memories."
 msgstr "No saved memories."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:126
+#: src/background/agent.ts:128
 msgid "errors.noTitle"
 msgstr "No title was received."
 
@@ -243,11 +251,11 @@ msgstr "No title was received."
 msgid "Open this conversation"
 msgstr "Open this conversation"
 
-#: src/content/ChatView.tsx:240
+#: src/content/ChatView.tsx:256
 msgid "Reasoning"
 msgstr "Reasoning"
 
-#: src/content/ModelMenu.tsx:106
+#: src/content/ModelMenu.tsx:103
 msgid "Reasoning effort"
 msgstr "Reasoning effort"
 
@@ -257,8 +265,8 @@ msgid "Remove from favorites"
 msgstr "Remove from favorites"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:97
-#: src/background/agent.ts:109
+#: src/background/agent.ts:99
+#: src/background/agent.ts:111
 msgid "errors.responseCancelled"
 msgstr "Response generation was cancelled."
 
@@ -266,7 +274,7 @@ msgstr "Response generation was cancelled."
 msgid "Restore size"
 msgstr "Restore size"
 
-#: src/content/ChatView.tsx:258
+#: src/content/ChatView.tsx:274
 msgid "Running…"
 msgstr "Running…"
 
