@@ -1,10 +1,3 @@
-//
-//  ChatextApp.swift
-//  Shared (App)
-//
-//  Created by Daichi on 9/19/26.
-//
-
 import SwiftUI
 
 let extensionBundleIdentifier = "kuramot6f.chatext.Extension"

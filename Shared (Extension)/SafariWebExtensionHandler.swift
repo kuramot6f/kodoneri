@@ -1,10 +1,3 @@
-//
-//  SafariWebExtensionHandler.swift
-//  Shared (Extension)
-//
-//  Created by Daichi on 9/19/26.
-//
-
 import SafariServices
 #if os(macOS)
 import AppKit

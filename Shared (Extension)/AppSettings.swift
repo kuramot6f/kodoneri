@@ -1,12 +1,6 @@
-//
-//  AppSettings.swift
-//  Shared (Extension)
-//
-//  Settings the app writes and the extension reads, kept in the App Group's defaults.
-//
-
 import Foundation
 
+/// Settings the app writes and the extension reads, kept in the App Group's defaults.
 nonisolated enum AppSettings {
 
     static let defaults = UserDefaults(suiteName: "group.kuramot6f.chatext")!

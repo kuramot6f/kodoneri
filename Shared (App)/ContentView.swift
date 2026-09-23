@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Shared (App)
-//
-//  Created by Daichi on 9/19/26.
-//
-
 import AuthenticationServices
 import CryptoKit
 import SafariServices
@@ -92,19 +85,13 @@ private struct ApiKeysSection: View {
 /// Sign in with Apple is traded for a gateway token, which is kept in the Keychain like an API key.
 private struct GatewaySection: View {
 
-    private static let subscriptionProductIDs = [
-        "plus",
-        "pro"
-    ]
+    private static let productIDs = ["plus", "pro"]
 
     @Binding var keys: [String: String]
     @State private var nonce: String?
     @State private var usage: GatewayUsage?
-    @State private var products: [Product] = []
-    @State private var productLoadError: String?
     @State private var showsSubscriptions = false
     @State private var isLoading = false
-    @State private var purchasingProductID: String?
     @State private var error: String?
 
     private var token: String? { keys["chatext"] }
@@ -118,8 +105,6 @@ private struct GatewaySection: View {
                         ApiKeyStore.delete("chatext")
                         keys["chatext"] = nil
                         usage = nil
-                        products = []
-                        Task { await prepareNonce() }
                     }
                 }
                 if let usage {
@@ -137,13 +122,13 @@ private struct GatewaySection: View {
                 Button(usage?.plan == "free" ? "Subscribe" : "Change Subscription") {
                     showsSubscriptions = true
                 }
-                .disabled(isLoading || purchasingProductID != nil)
+                .disabled(isLoading || usage == nil)
                 Button("Restore Purchases") {
-                    Task { await restorePurchases() }
+                    Task { await perform { try await AppStore.sync(); try await loadAccount() } }
                 }
-                .disabled(isLoading || purchasingProductID != nil)
+                .disabled(isLoading)
                 Button("Refresh Usage") {
-                    Task { await loadAccount() }
+                    Task { await perform { usage = try await gateway("usage") } }
                 }
                 .disabled(isLoading)
             } else {
@@ -151,7 +136,7 @@ private struct GatewaySection: View {
                     request.requestedScopes = []
                     request.nonce = nonce.map(Self.sha256)
                 } onCompletion: { result in
-                    Task { await signIn(result) }
+                    Task { await perform { try await signIn(result) } }
                 }
                 .frame(height: 36)
                 .disabled(nonce == nil || isLoading)
@@ -166,218 +151,99 @@ private struct GatewaySection: View {
         } footer: {
             Text(isSignedIn ? "Usage is recorded after each response and may take a moment to appear." : "Kodoneri doesn’t receive your name or email address when you sign in with Apple.")
         }
-        .task {
-            if isSignedIn {
-                await loadAccount()
-            } else {
-                await prepareNonce()
-            }
-        }
+        // Runs again on sign-in and sign-out.
         .task(id: isSignedIn) {
-            guard isSignedIn else { return }
+            guard isSignedIn else { return await perform(prepareNonce) }
+            await perform(loadAccount)
             for await verification in Transaction.updates {
-                await handle(verification)
+                await perform { try await submit(verification) }
             }
         }
         .sheet(isPresented: $showsSubscriptions) {
-            subscriptionSheet
-        }
-    }
-
-    private var subscriptionSheet: some View {
-        NavigationStack {
-            Form {
-                Section {
-                    if products.isEmpty {
-                        VStack(alignment: .leading, spacing: 8) {
-                            if productLoadError == nil {
-                                ProgressView()
-                            }
-                            Text(productLoadError ?? String(localized: "Loading subscriptions…"))
-                                .foregroundStyle(.secondary)
-                        }
-                        .task { await loadProducts() }
-                    } else {
-                        ForEach(products, id: \.id) { product in
-                            Button {
-                                Task { await purchase(product) }
-                            } label: {
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text(product.displayName)
-                                        Text(product.description)
-                                            .font(.footnote)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                    Spacer()
-                                    if purchasingProductID == product.id {
-                                        ProgressView()
-                                            .controlSize(.small)
-                                    } else {
-                                        Text(product.displayPrice)
-                                    }
-                                }
-                            }
-                            .disabled(purchasingProductID != nil || usage?.productID == product.id)
-                        }
-                    }
-                } footer: {
-                    if products.isEmpty, productLoadError != nil {
-                        Text("Check that the Plus and Pro subscriptions are available in App Store Connect for this app.")
+            SubscriptionStoreView(productIDs: Self.productIDs)
+                .storeButton(.visible, for: .cancellation)
+                .inAppPurchaseOptions { _ in
+                    guard let usage else { return [] }
+                    return [.appAccountToken(usage.appAccountToken)]
+                }
+                .onInAppPurchaseCompletion { _, result in
+                    await perform {
+                        guard case .success(let verification) = try result.get() else { return }
+                        showsSubscriptions = false
+                        try await submit(verification)
                     }
                 }
-            }
-            .formStyle(.grouped)
-            .navigationTitle("Subscribe")
-            .toolbar {
-                Button("Done") { showsSubscriptions = false }
-            }
+                .frame(minWidth: 360, minHeight: 400)
         }
-        .frame(minWidth: 360, minHeight: 280)
     }
 
-    private func signIn(_ result: Result<ASAuthorization, Error>) async {
+    /// Tracks `isLoading` and shows any failure below the section.
+    private func perform(_ work: () async throws -> Void) async {
+        isLoading = true
+        defer { isLoading = false }
         do {
-            guard let nonce else { throw URLError(.userAuthenticationRequired) }
-            guard let credential = try result.get().credential as? ASAuthorizationAppleIDCredential,
-                  let identityToken = credential.identityToken.flatMap({ String(data: $0, encoding: .utf8) }) else { return }
-            var request = URLRequest(url: gatewayURL.appending(path: "auth/apple"))
-            request.httpMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = try JSONEncoder().encode(["identityToken": identityToken, "nonce": nonce])
-            let (data, response) = try await URLSession.shared.data(for: request)
-            guard (response as? HTTPURLResponse)?.statusCode == 200,
-                  let token = try JSONDecoder().decode([String: String].self, from: data)["token"] else {
-                throw URLError(.badServerResponse)
-            }
-            ApiKeyStore.write("chatext", token)
-            keys["chatext"] = token
-            self.nonce = nil
+            try await work()
             error = nil
-            await loadAccount()
         } catch ASAuthorizationError.canceled {
             // The user dismissed the sheet; nothing to report.
         } catch {
             self.error = error.localizedDescription
-            nonce = nil
-            await prepareNonce()
         }
     }
 
-    private func prepareNonce() async {
-        guard nonce == nil, !isLoading else { return }
-        isLoading = true
-        defer { isLoading = false }
-        do {
-            var request = URLRequest(url: gatewayURL.appending(path: "auth/apple/nonce"))
-            request.httpMethod = "POST"
-            let (data, response) = try await URLSession.shared.data(for: request)
-            guard (response as? HTTPURLResponse)?.statusCode == 200,
-                  let value = try JSONDecoder().decode([String: String].self, from: data)["nonce"] else {
-                throw URLError(.badServerResponse)
-            }
-            nonce = value
-            error = nil
-        } catch {
-            self.error = error.localizedDescription
-        }
-    }
-
-    private func loadUsage() async {
-        guard !isLoading, let token else { return }
-        isLoading = true
-        defer { isLoading = false }
-        do {
-            var request = URLRequest(url: gatewayURL.appending(path: "usage"))
+    /// A GET, or a JSON POST when there's a body, authorized with the gateway token once signed in.
+    private func gateway<Response: Decodable>(_ path: String, body: [String: String]? = nil) async throws -> Response {
+        var request = URLRequest(url: gatewayURL.appending(path: path))
+        if let token {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            let (data, response) = try await URLSession.shared.data(for: request)
-            guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw URLError(.badServerResponse) }
-            usage = try JSONDecoder().decode(GatewayUsage.self, from: data)
-            error = nil
-        } catch {
-            self.error = error.localizedDescription
         }
-    }
-
-    private func loadAccount() async {
-        await loadUsage()
-        await loadProducts()
-        await syncCurrentEntitlements()
-        await loadUsage()
-    }
-
-    private func loadProducts() async {
-        do {
-            products = try await Product.products(for: Self.subscriptionProductIDs)
-                .sorted { Self.subscriptionProductIDs.firstIndex(of: $0.id)! < Self.subscriptionProductIDs.firstIndex(of: $1.id)! }
-            productLoadError = products.isEmpty ? String(localized: "Subscriptions are currently unavailable.") : nil
-        } catch {
-            productLoadError = error.localizedDescription
+        if let body {
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = try JSONEncoder().encode(body)
         }
-    }
-
-    private func purchase(_ product: Product) async {
-        guard let accountToken = usage.flatMap({ UUID(uuidString: $0.appAccountToken) }) else { return }
-        purchasingProductID = product.id
-        defer { purchasingProductID = nil }
-        do {
-            switch try await product.purchase(options: [.appAccountToken(accountToken)]) {
-            case .success(let verification):
-                await handle(verification)
-                showsSubscriptions = false
-            case .pending, .userCancelled:
-                break
-            @unknown default:
-                break
-            }
-        } catch {
-            self.error = error.localizedDescription
-        }
-    }
-
-    private func restorePurchases() async {
-        guard !isLoading else { return }
-        isLoading = true
-        do {
-            try await AppStore.sync()
-            await syncCurrentEntitlements()
-            isLoading = false
-            await loadUsage()
-        } catch {
-            isLoading = false
-            self.error = error.localizedDescription
-        }
-    }
-
-    private func syncCurrentEntitlements() async {
-        for await verification in Transaction.currentEntitlements {
-            guard Self.subscriptionProductIDs.contains(verification.unsafePayloadValue.productID) else { continue }
-            await handle(verification)
-        }
-    }
-
-    private func handle(_ verification: VerificationResult<StoreKit.Transaction>) async {
-        guard case .verified(let transaction) = verification,
-              Self.subscriptionProductIDs.contains(transaction.productID) else { return }
-        do {
-            try await submit(verification.jwsRepresentation)
-            await transaction.finish()
-            await loadUsage()
-            error = nil
-        } catch {
-            self.error = error.localizedDescription
-        }
-    }
-
-    private func submit(_ signedTransaction: String) async throws {
-        guard let token else { throw URLError(.userAuthenticationRequired) }
-        var request = URLRequest(url: gatewayURL.appending(path: "billing/transaction"))
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(["signedTransaction": signedTransaction])
-        let (_, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.data(for: request)
         guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw URLError(.badServerResponse) }
+        return try JSONDecoder().decode(Response.self, from: data)
+    }
+
+    private func prepareNonce() async throws {
+        let response: [String: String] = try await gateway("auth/apple/nonce", body: [:])
+        guard let nonce = response["nonce"] else { throw URLError(.badServerResponse) }
+        self.nonce = nonce
+    }
+
+    private func signIn(_ result: Result<ASAuthorization, Error>) async throws {
+        guard let credential = try result.get().credential as? ASAuthorizationAppleIDCredential,
+              let identityToken = credential.identityToken.flatMap({ String(data: $0, encoding: .utf8) }),
+              let nonce else { throw URLError(.userAuthenticationRequired) }
+        // Each nonce works once, so a failed attempt needs a fresh one.
+        self.nonce = nil
+        do {
+            let response: [String: String] = try await gateway("auth/apple", body: ["identityToken": identityToken, "nonce": nonce])
+            guard let token = response["token"] else { throw URLError(.badServerResponse) }
+            ApiKeyStore.write("chatext", token)
+            keys["chatext"] = token
+        } catch {
+            try? await prepareNonce()
+            throw error
+        }
+    }
+
+    /// Loads usage, then hands the gateway any subscription it may have missed.
+    private func loadAccount() async throws {
+        usage = try await gateway("usage")
+        for await verification in Transaction.currentEntitlements {
+            try await submit(verification)
+        }
+    }
+
+    /// The gateway links the subscription to this account and answers with the updated usage.
+    private func submit(_ verification: VerificationResult<StoreKit.Transaction>) async throws {
+        guard case .verified(let transaction) = verification,
+              Self.productIDs.contains(transaction.productID) else { return }
+        usage = try await gateway("billing/transaction", body: ["signedTransaction": verification.jwsRepresentation])
+        await transaction.finish()
     }
 
     private nonisolated static func sha256(_ value: String) -> String {
@@ -388,15 +254,13 @@ private struct GatewaySection: View {
 
 private struct GatewayUsage: Decodable {
     let plan: String
-    let productID: String?
     let currency: String
     let allowanceUsd: Double
     let estimatedCostUsd: Double
-    let remainingUsd: Double
     let inputTokens: Int
     let outputTokens: Int
     let requests: Int
-    let appAccountToken: String
+    let appAccountToken: UUID
 }
 
 /// Safari reports the extension's state and opens its settings on macOS and iOS 26.2+; older iOS gets directions instead.

@@ -1,14 +1,8 @@
-//
-//  ApiKeyStore.swift
-//  Shared (Extension)
-//
-//  API keys shared by the app and the extension through the iCloud-synchronized Keychain.
-//  The chatext gateway token lives here too, under the "chatext" provider.
-//
-
 import Foundation
 import Security
 
+/// API keys shared by the app and the extension through the iCloud-synchronized Keychain.
+/// The chatext gateway token lives here too, under the "chatext" provider.
 nonisolated enum ApiKeyStore {
 
     static let providers = ["openai", "anthropic", "deepseek", "chatext"]
@@ -27,13 +21,11 @@ nonisolated enum ApiKeyStore {
 
     /// An empty key removes the entry.
     static func write(_ provider: String, _ key: String) {
+        delete(provider)
         let trimmed = key.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return delete(provider) }
-        let data = Data(trimmed.utf8)
-        let status = SecItemUpdate(baseQuery(provider) as CFDictionary, [kSecValueData as String: data] as CFDictionary)
-        guard status == errSecItemNotFound else { return }
+        guard !trimmed.isEmpty else { return }
         var attributes = baseQuery(provider)
-        attributes[kSecValueData as String] = data
+        attributes[kSecValueData as String] = Data(trimmed.utf8)
         attributes[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
         SecItemAdd(attributes as CFDictionary, nil)
     }
