@@ -32,6 +32,7 @@ browser.runtime.onMessage.addListener((message: RuntimeMessage, sender) => {
   }
   if (message.type === "debug_export") return exportDebugLog();
   if (message.type === "debug_clear") return clearDebugLog();
+  if (message.type === "open_settings") return browser.runtime.sendNativeMessage("application.id", { type: "openSettings" });
   if (message.type === "sync" || message.type === "ask" || message.type === "cancel" || message.type === "open" || message.type === "panel") {
     if (sender.tab?.id === undefined || sender.frameId !== 0) return;
     return handlePanelMessage(sender.tab.id, message);

@@ -71,7 +71,7 @@ export function MemoryListView({ memories, onCreate, onSelect, onToggleFavorite,
           );
         })}
       </div>
-      {memories.length > 0 && <SearchBar value={query} placeholder={t`Search memories`} onChange={setQuery} />}
+      <SearchBar searchable={memories.length > 0} value={query} placeholder={t`Search memories`} onChange={setQuery} />
     </>
   );
 }

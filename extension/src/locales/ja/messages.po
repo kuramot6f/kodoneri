@@ -67,7 +67,7 @@ msgstr "消去"
 msgid "Close panel"
 msgstr "パネルを閉じる"
 
-#: src/content/search.tsx:17
+#: src/content/search.tsx:19
 msgid "Close search"
 msgstr "検索を閉じる"
 
@@ -297,6 +297,11 @@ msgstr "送信"
 #: src/content/ChatView.tsx:62
 msgid "Send and interrupt"
 msgstr "割り込み送信"
+
+#: src/content/search.tsx:43
+#: src/content/search.tsx:43
+msgid "Settings"
+msgstr "設定"
 
 #: src/content/App.tsx:147
 msgid "Show in sidebar"

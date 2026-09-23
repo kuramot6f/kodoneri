@@ -92,7 +92,8 @@ export type RuntimeMessage =
   | { type: "settings"; settings: ModelSettings }
   | { type: "debug"; contextId: string; event: string; data?: DebugData }
   | { type: "debug_export" }
-  | { type: "debug_clear" };
+  | { type: "debug_clear" }
+  | { type: "open_settings" };
 
 /** Models the subscription or a key allows, and the tab's selection resolved against them; settings is null without any. */
 export interface ModelsView {

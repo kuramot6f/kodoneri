@@ -277,6 +277,7 @@ header::after, .bottom-bar::after {
 .history-item mark { background: #ffd60a80; color: inherit; }
 
 .search-row { display: flex; gap: 8px; }
+.search-row > :last-child { margin-left: auto; }
 .search-input {
   flex: 1;
   min-width: 0;

@@ -52,7 +52,7 @@ export function HistoryView({ conversations, onSelect, onDelete }: HistoryViewPr
           </section>
         ))}
       </div>
-      {conversations.length > 0 && <SearchBar value={query} placeholder={t`Search history`} onChange={setQuery} />}
+      <SearchBar searchable={conversations.length > 0} value={query} placeholder={t`Search history`} onChange={setQuery} />
     </>
   );
 }

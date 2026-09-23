@@ -19,6 +19,7 @@ const PNGS = {
   openInFull: "arrow.up.left.and.arrow.down.right.png",
   search: "magnifyingglass.png",
   send: "arrow.up.png",
+  settings: "gear.png",
   sidebar: "sidebar.left.png",
   starBorder: "star.png",
   stop: "stop.fill.png",
