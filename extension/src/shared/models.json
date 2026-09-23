@@ -21,6 +21,11 @@
       "pricing": { "input": 0.1, "cacheRead": 0.01, "output": 0.5, "longContext": { "above": 272000, "input": 0.2, "cacheRead": 0.02, "output": 0.75 } }
     },
     {
+      "id": "claude-fable-5-1", "provider": "anthropic", "label": "Claude Fable 5.1",
+      "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000,
+      "pricing": { "input": 10, "cacheRead": 0.25, "cacheWrite": 12.5, "output": 50 }
+    },
+    {
       "id": "claude-opus-5-5", "provider": "anthropic", "label": "Claude Opus 5.5",
       "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000,
       "pricing": { "input": 4, "cacheRead": 0.2, "cacheWrite": 5, "output": 20 }
@@ -39,6 +44,6 @@
   "plans": {
     "free": ["deepseek-flash", "gpt-6-luna"],
     "plus": ["gpt-6-luna", "gpt-6-sol", "claude-sonnet-5"],
-    "pro": ["gpt-6-luna", "gpt-6-sol", "gpt-6-astra", "claude-sonnet-5", "claude-opus-5-5", "deepseek-flash"]
+    "pro": ["gpt-6-luna", "gpt-6-sol", "gpt-6-astra", "claude-sonnet-5", "claude-opus-5-5", "claude-fable-5-1", "deepseek-flash"]
   }
 }
