@@ -223,15 +223,31 @@ function MarkdownMessage({ content }: { content: string }) {
 }
 
 // 回答完了後に走るメモリ保守の進捗。会話には保存されず、次の質問や会話切替で消える
+// 普段は結果だけを見せ、開くと reasoning・tool call・最後の一文が見える
 function MemoryUpdateView({ progress }: { progress: MemoryProgress }) {
+  const label = !progress.done
+    ? t`Updating memory…`
+    : progress.error
+      ? t`Memory update failed`
+      : hasMemoryWrite(progress.messages) ? t`Memory updated` : t`No memory changes`;
   return (
-    <div className="memory-update">
-      <div className="memory-update-label">{progress.done ? t`Memory updated` : t`Updating memory…`}</div>
-      <Messages messages={progress.messages} />
-      {progress.error && <div className="message error">{t`Error: ${progress.error}`}</div>}
-      {progress.cacheUsage && <CacheRate usage={progress.cacheUsage} />}
-    </div>
+    <details className="memory-update">
+      <summary><Icon name="expand" />{label}</summary>
+      <div className="memory-update-log">
+        <Messages messages={progress.messages} />
+        {progress.error && <div className="message error">{t`Error: ${progress.error}`}</div>}
+        {progress.cacheUsage && <CacheRate usage={progress.cacheUsage} />}
+      </div>
+    </details>
   );
+}
+
+const MEMORY_WRITE_TOOLS = new Set(["patch", "rename", "new", "delete"]);
+
+function hasMemoryWrite(messages: ModelMessage[]): boolean {
+  return messages.some((message) => message.role === "tool" && getToolResults(message).some((result) =>
+    MEMORY_WRITE_TOOLS.has(result.toolName) && result.output.type !== "error-text" && result.output.type !== "error-json"
+  ));
 }
 
 function Reasoning({ content }: { content: string }) {

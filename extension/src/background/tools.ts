@@ -41,7 +41,7 @@ export interface ToolContext {
   requestId: string;
   signal: AbortSignal;
   model: Pick<ModelRuntime, "files" | "fileOptions">;
-  /** The memory branch shares the tool definitions (and so the prompt cache) but may only touch memories. */
+  /** Memory maintenance shares the tool definitions but may only touch memories. */
   scope: "browser" | "memory";
   moveSession: (tabId: number) => Promise<void>;
 }
