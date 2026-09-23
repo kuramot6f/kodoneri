@@ -42,7 +42,7 @@ test("Anthropic converter sends tool file references as image blocks inside tool
           output: {
             type: "content",
             value: [
-              { type: "text", text: "画像を添付しました。" },
+              { type: "text", text: "Image attached." },
               {
                 type: "file",
                 mediaType: "image/png",
@@ -61,7 +61,7 @@ test("Anthropic converter sends tool file references as image blocks inside tool
       type: "tool_result",
       tool_use_id: "tool-1",
       content: [
-        { type: "text", text: "画像を添付しました。" },
+        { type: "text", text: "Image attached." },
         { type: "image", source: { type: "file", file_id: "file-1" } }
       ]
     }]

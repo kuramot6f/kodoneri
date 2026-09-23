@@ -191,7 +191,7 @@ async function uploadImage(context: ToolContext, output: ImageOutput): Promise<T
   return {
     type: "content",
     value: [
-      { type: "text", text: "画像を添付しました。" },
+      { type: "text", text: "Image attached." },
       {
         type: "file",
         mediaType: output.mimeType,
