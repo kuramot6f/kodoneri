@@ -164,7 +164,7 @@ private struct GatewaySection: View {
         } header: {
             Text("chatext")
         } footer: {
-            Text(isSignedIn ? "Usage is recorded after each response and may take a moment to appear." : "Your Apple account is used only to identify you. Your name and email address are not collected.")
+            Text(isSignedIn ? "Usage is recorded after each response and may take a moment to appear." : "chatext doesn’t receive your name or email address when you sign in with Apple.")
         }
         .task {
             if isSignedIn {
