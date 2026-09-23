@@ -25,7 +25,7 @@ export async function navigate({ session, signal, moveSession }: ToolContext, ar
     else if (args.action === "go_to") await browser.tabs.update(tabId, { url: args.url! });
     else {
       const tab = await browser.tabs.update(tabId, { active: true });
-      if (tab.windowId !== undefined) await browser.windows?.update(tab.windowId, { focused: true });
+      if (tab.windowId !== undefined) await browser.windows?.update?.(tab.windowId, { focused: true });
       if (tabId !== session.tabId) await moveSession(tabId);
     }
     await loaded;
