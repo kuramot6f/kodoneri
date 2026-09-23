@@ -3,13 +3,18 @@ import { messages as de } from "../locales/de/messages.ts";
 import { messages as en } from "../locales/en/messages.ts";
 import { messages as es } from "../locales/es/messages.ts";
 import { messages as fr } from "../locales/fr/messages.ts";
+import { messages as id } from "../locales/id/messages.ts";
+import { messages as it } from "../locales/it/messages.ts";
 import { messages as ja } from "../locales/ja/messages.ts";
 import { messages as ko } from "../locales/ko/messages.ts";
 import { messages as ptBR } from "../locales/pt-BR/messages.ts";
+import { messages as ru } from "../locales/ru/messages.ts";
+import { messages as tr } from "../locales/tr/messages.ts";
+import { messages as vi } from "../locales/vi/messages.ts";
 import { messages as zhHans } from "../locales/zh-Hans/messages.ts";
 import { messages as zhHant } from "../locales/zh-Hant/messages.ts";
 
-const catalogs = { en, ja, es, "pt-BR": ptBR, de, fr, ko, "zh-Hans": zhHans, "zh-Hant": zhHant };
+const catalogs = { en, ja, es, "pt-BR": ptBR, de, fr, ko, "zh-Hans": zhHans, "zh-Hant": zhHant, it, ru, vi, tr, id };
 
 type AppLocale = keyof typeof catalogs;
 
@@ -27,7 +32,15 @@ export function resolveLocale(language: string): AppLocale {
     case "de":
     case "fr":
     case "ko":
+    case "it":
+    case "ru":
+    case "vi":
+    case "tr":
+    case "id":
       return base;
+    // Older platforms still report Indonesian by its withdrawn code.
+    case "in":
+      return "id";
     case "pt":
       return "pt-BR";
     case "zh":

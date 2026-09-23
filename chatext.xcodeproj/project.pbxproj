@@ -357,6 +357,11 @@
 				ko,
 				"zh-Hans",
 				"zh-Hant",
+				it,
+				ru,
+				vi,
+				tr,
+				id,
 			);
 			mainGroup = 422D2BBB305E3AA0007990AD;
 			minimizedProjectReferenceProxies = 1;

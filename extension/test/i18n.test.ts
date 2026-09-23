@@ -13,7 +13,10 @@ test("browser languages resolve to a supported locale or the English fallback", 
   assert.equal(resolveLocale("zh-Hans-SG"), "zh-Hans");
   assert.equal(resolveLocale("zh-TW"), "zh-Hant");
   assert.equal(resolveLocale("zh-Hant-HK"), "zh-Hant");
-  assert.equal(resolveLocale("it-IT"), "en");
+  assert.equal(resolveLocale("it-IT"), "it");
+  assert.equal(resolveLocale("ru-RU"), "ru");
+  assert.equal(resolveLocale("in-ID"), "id");
+  assert.equal(resolveLocale("nl-NL"), "en");
 });
 
 test("English source messages and translations load", () => {
