@@ -689,6 +689,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = kuramot6f.chatext.Extension;
 				PRODUCT_NAME = "chatext Extension";
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -727,6 +728,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = kuramot6f.chatext.Extension;
 				PRODUCT_NAME = "chatext Extension";
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
