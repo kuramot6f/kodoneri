@@ -16,6 +16,15 @@ class SafariWebExtensionHandler: NSObject, NSExtensionRequestHandling {
             payload = ApiKeyStore.all()
         case "settings":
             payload = ["chatButton": AppSettings.chatButton]
+        case "debugRecord":
+            if let event = message?["event"] as? String,
+               let metadata = message?["metadata"] as? String {
+                SharedDebugLog.record(event, metadata: metadata)
+            }
+            payload = [:]
+        case "debugClear":
+            SharedDebugLog.clear()
+            payload = [:]
         case "openSettings":
             // iOS extensions cannot launch the app, so the content script opens the chatext:// scheme there instead.
             #if os(macOS)

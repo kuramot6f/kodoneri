@@ -3,6 +3,11 @@ import CryptoKit
 import SafariServices
 import StoreKit
 import SwiftUI
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
 
 /// A grouped form, so the window reads like Settings on both platforms.
 /// Tasks and sheets hang off the `Form`: on iOS it's a `List`, which copies a `Section`'s modifiers onto every row.
@@ -24,6 +29,7 @@ struct ContentView: View {
             }
 
             ExtensionSection(isEnabled: isExtensionEnabled)
+            DiagnosticsSection()
 
             if account.keys != nil {
                 GatewaySection(account: account)
@@ -75,6 +81,40 @@ struct ContentView: View {
                     }
                 }
                 .frame(minWidth: 360, minHeight: 400)
+        }
+    }
+
+}
+
+private struct DiagnosticsSection: View {
+
+    @State private var status: String?
+
+    var body: some View {
+        Section {
+            Button("Copy Debug Logs") {
+                do {
+                    let contents = try SharedDebugLog.export()
+#if os(macOS)
+                    NSPasteboard.general.clearContents()
+                    guard NSPasteboard.general.setString(contents, forType: .string) else {
+                        throw CocoaError(.fileWriteUnknown)
+                    }
+#else
+                    UIPasteboard.general.string = contents
+#endif
+                    status = String(localized: "Debug Logs Copied")
+                } catch {
+                    status = String(localized: "Could Not Copy Debug Logs")
+                }
+            }
+            if let status {
+                Text(status)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+        } header: {
+            Text("Diagnostics")
         }
     }
 

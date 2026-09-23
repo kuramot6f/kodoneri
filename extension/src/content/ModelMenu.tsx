@@ -57,16 +57,6 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
   const model = view?.settings && view.models.find(({ key }) => key === view.settings!.model);
   const groups = view ? groupModels(view.models) : [];
 
-  const copyDiagnostics = async () => {
-    try {
-      const contents = await browser.runtime.sendMessage({ type: "debug_export" } satisfies RuntimeMessage) as string;
-      await navigator.clipboard.writeText(contents);
-      setDiagnosticStatus(t`Diagnostics copied`);
-    } catch {
-      setDiagnosticStatus(t`Could not copy diagnostics`);
-    }
-  };
-
   const clearDiagnostics = async () => {
     try {
       await browser.runtime.sendMessage({ type: "debug_clear" } satisfies RuntimeMessage);
@@ -115,7 +105,6 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
         </>
       )}
       <div className="diagnostic-actions">
-        <button type="button" onClick={() => void copyDiagnostics()}><Trans>Copy diagnostics</Trans></button>
         <button type="button" onClick={() => void clearDiagnostics()}><Trans>Clear</Trans></button>
       </div>
       {diagnosticStatus && <p className="diagnostic-status" role="status">{diagnosticStatus}</p>}

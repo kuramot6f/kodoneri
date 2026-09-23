@@ -4,7 +4,7 @@ export const DEBUG_LOG_LIMIT = 500;
 type DebugValue = string | number | boolean | null;
 export type DebugData = Record<string, DebugValue>;
 
-interface DebugEvent {
+export interface DebugEvent {
   timestamp: string;
   contextId: string;
   scope: "background" | "content";
@@ -35,11 +35,13 @@ export class DebugLog {
     this.now = now;
   }
 
-  record(scope: DebugEvent["scope"], event: string, data?: DebugData): Promise<void> {
+  record(scope: DebugEvent["scope"], event: string, data?: DebugData): Promise<DebugEvent> {
     return this.enqueue(async () => {
       const events = await this.read();
-      events.push({ timestamp: this.now().toISOString(), contextId: this.contextId, scope, event, ...(data ? { data } : {}) });
+      const entry = { timestamp: this.now().toISOString(), contextId: this.contextId, scope, event, ...(data ? { data } : {}) };
+      events.push(entry);
       await this.storage.set({ [DEBUG_LOG_KEY]: events.slice(-DEBUG_LOG_LIMIT) });
+      return entry;
     });
   }
 
