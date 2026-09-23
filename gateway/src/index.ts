@@ -1,8 +1,8 @@
 import { createRemoteJWKSet, jwtVerify } from "jose";
+import { findCatalogModel, PLANS, type Provider } from "../../extension/src/shared/models.ts";
 import { effectivePlan, ensureBilling, syncTransaction, verifyNotification, type BillingRow } from "./billing";
-import { deepSeekCostMicrousd, type DeepSeekUsage } from "./usage";
+import { costMicrousd, extractUsage, readUsage, totalInput } from "./usage";
 
-const MODEL = "deepseek-flash";
 const APPLE_ISSUER = "https://appleid.apple.com";
 const NONCE_TTL_MINUTES = 10;
 
@@ -12,9 +12,44 @@ const appleKeys = createRemoteJWKSet(new URL(`${APPLE_ISSUER}/auth/keys`));
 declare global {
   interface Env {
     CLOUDFLARE_API_TOKEN: string;
+    OPENAI_API_KEY: string;
+    ANTHROPIC_API_KEY: string;
     DEEPSEEK_API_KEY: string;
   }
 }
+
+type Body = Record<string, unknown>;
+
+/** Each provider's API is relayed unchanged under `/{provider}`; only these paths are open. */
+interface Upstream {
+  /** The path whose JSON body names the model; the only one that is metered. */
+  generate: string;
+  files: RegExp;
+  authorize(headers: Headers, env: Env): void;
+  /** Tags the request with the hashed user so the provider can attribute abuse. */
+  identify(body: Body, billingId: string): Body;
+}
+
+const UPSTREAMS: Record<Provider, Upstream> = {
+  openai: {
+    generate: "/responses",
+    files: /^\/files(\/|$)/,
+    authorize: (headers, env) => headers.set("authorization", `Bearer ${env.OPENAI_API_KEY}`),
+    identify: (body, billingId) => ({ ...body, safety_identifier: billingId })
+  },
+  anthropic: {
+    generate: "/v1/messages",
+    files: /^\/v1\/files(\/|$)/,
+    authorize: (headers, env) => headers.set("x-api-key", env.ANTHROPIC_API_KEY),
+    identify: (body, billingId) => ({ ...body, metadata: { ...(body.metadata as Body | undefined), user_id: billingId } })
+  },
+  deepseek: {
+    generate: "/chat/completions",
+    files: /^\/files(\/|$)/,
+    authorize: (headers, env) => headers.set("authorization", `Bearer ${env.DEEPSEEK_API_KEY}`),
+    identify: (body, billingId) => ({ ...body, user_id: billingId })
+  }
+};
 
 export default {
   async fetch(request, env, ctx): Promise<Response> {
@@ -24,9 +59,8 @@ export default {
     if (pathname === "/usage") return request.method === "GET" ? usage(request, env) : status(405);
     if (pathname === "/billing/transaction") return request.method === "POST" ? updateSubscription(request, env) : status(405);
     if (pathname === "/billing/apple/notifications") return request.method === "POST" ? appleNotification(request, env) : status(405);
-    if (pathname === "/chat/completions" || pathname === "/files" || pathname.startsWith("/files/")) {
-      return proxy(request, env, ctx, pathname);
-    }
+    const [, provider, rest = ""] = pathname.match(/^\/([^/]+)(\/.*)?$/) ?? [];
+    if (provider && Object.hasOwn(UPSTREAMS, provider)) return proxy(request, env, ctx, provider as Provider, rest);
     return status(404);
   }
 } satisfies ExportedHandler<Env>;
@@ -76,46 +110,51 @@ async function signIn(request: Request, env: Env): Promise<Response> {
   return Response.json({ token });
 }
 
-/** Forwards authenticated model requests through Cloudflare AI Gateway. */
-async function proxy(request: Request, env: Env, ctx: ExecutionContext, pathname: string): Promise<Response> {
+/** Forwards authenticated model and file requests through Cloudflare AI Gateway, with the provider key swapped in. */
+async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider: Provider, path: string): Promise<Response> {
+  const upstream = UPSTREAMS[provider];
+  const generating = path === upstream.generate;
+  if (!generating && !upstream.files.test(path)) return status(404);
   const user = await authenticate(request, env);
   if (!user) return status(401);
   const billing = await ensureBilling(env, user.userId);
   if (!canUseGateway(billing)) return usageLimitResponse(billing);
+
+  let body: BodyInit | null = request.body;
+  let model: string | null = null;
+  if (generating) {
+    if (request.method !== "POST") return status(405);
+    const input = await request.json<Body>().catch(() => null);
+    if (!input) return status(400);
+    model = typeof input.model === "string" ? input.model : null;
+    const plan = effectivePlan(billing);
+    if (!model || findCatalogModel(model)?.provider !== provider || !PLANS[plan].includes(model)) {
+      return errorResponse(403, "model_not_allowed", `${model ?? "This model"} is not included in the ${plan} plan.`);
+    }
+    body = JSON.stringify(upstream.identify(input, user.billingId));
+  }
   ctx.waitUntil(env.DB.prepare("UPDATE tokens SET last_used_at = datetime('now') WHERE token = ?").bind(user.token).run());
 
   const headers = new Headers(request.headers);
-  headers.set("authorization", `Bearer ${env.DEEPSEEK_API_KEY}`);
+  headers.delete("host");
+  headers.delete("authorization");
+  headers.delete("x-api-key");
+  upstream.authorize(headers, env);
   headers.set("cf-aig-authorization", `Bearer ${env.CLOUDFLARE_API_TOKEN}`);
   headers.set("cf-aig-metadata", JSON.stringify({ user_id: user.billingId }));
   headers.set("cf-aig-collect-log-payload", "false");
-  headers.delete("host");
 
-  let body: BodyInit | null = request.body;
-  if (pathname === "/chat/completions" && request.method === "POST") {
-    const input = await request.json<object>().catch(() => null);
-    if (!input) return status(400);
-    body = JSON.stringify({ ...input, model: MODEL, user_id: user.billingId });
-  }
-
-  const upstream = `https://gateway.ai.cloudflare.com/v1/${env.CLOUDFLARE_ACCOUNT_ID}/${env.CLOUDFLARE_AI_GATEWAY_ID}/deepseek`;
-  const response = await fetch(`${upstream}${pathname}`, { method: request.method, headers, body });
-  if (pathname !== "/chat/completions" || !response.ok) return response;
-
-  const logId = response.headers.get("cf-aig-log-id");
-  if (!logId || !billing.period_start) return response;
-  if (!response.body) {
-    ctx.waitUntil(recordUsage(env, user.userId, user.billingId, billing.period_start, logId));
-    return response;
-  }
+  const base = `https://gateway.ai.cloudflare.com/v1/${env.CLOUDFLARE_ACCOUNT_ID}/${env.CLOUDFLARE_AI_GATEWAY_ID}/${provider}`;
+  const response = await fetch(`${base}${path}`, { method: request.method, headers, body });
+  if (!model || !response.ok || !response.body || !billing.period_start) return response;
 
   const [clientBody, meterBody] = response.body.tee();
-  ctx.waitUntil(readProviderUsage(meterBody, response.headers.get("content-type"))
-    .catch((error) => {
-      console.error("DeepSeek usage response could not be read", logId, error);
-      return null;
-    })
-    .then((providerUsage) => recordUsage(env, user.userId, user.billingId, billing.period_start!, logId, providerUsage)));
+  const eventId = response.headers.get("cf-aig-log-id") ?? crypto.randomUUID();
+  ctx.waitUntil(extractUsage(meterBody, response.headers.get("content-type"))
+    .then((usage) => usage
+      ? recordUsage(env, user.userId, billing.period_start!, eventId, provider, model!, usage)
+      : console.error("Provider response carried no usage", provider, model, eventId))
+    .catch((error) => console.error("Usage could not be recorded", provider, model, eventId, error)));
   return new Response(clientBody, response);
 }
 
@@ -174,7 +213,8 @@ function billingResponse(row: BillingRow): Response {
 }
 
 async function authenticate(request: Request, env: Env): Promise<{ token: string; userId: string; billingId: string } | null> {
-  const token = request.headers.get("authorization")?.match(/^Bearer (\S+)$/)?.[1];
+  // The Anthropic SDK sends its key as x-api-key; the others use a bearer token.
+  const token = request.headers.get("authorization")?.match(/^Bearer (\S+)$/)?.[1] ?? request.headers.get("x-api-key");
   if (!token) return null;
   const row = await env.DB.prepare("SELECT user_id FROM tokens WHERE token = ?").bind(token).first<{ user_id: string }>();
   return row ? { token, userId: row.user_id, billingId: await sha256(row.user_id) } : null;
@@ -188,124 +228,35 @@ function usageLimitResponse(row: BillingRow): Response {
   const message = effectivePlan(row) === "free"
     ? "The free usage limit for this month has been reached. Subscribe to Plus or Pro to continue."
     : "The usage limit for this billing period has been reached.";
-  return Response.json({ error: { message, type: "usage_limit_exceeded" } }, { status: 402 });
+  return errorResponse(402, "usage_limit_exceeded", message);
 }
 
+function errorResponse(code: number, type: string, message: string): Response {
+  return Response.json({ error: { message, type } }, { status: code });
+}
+
+/** Prices the provider-reported usage from the catalog; the event id keeps a retried write from counting twice. */
 async function recordUsage(
   env: Env,
   userId: string,
-  billingId: string,
   periodStart: string,
-  logId: string,
-  providerUsage: DeepSeekUsage | null = null
+  eventId: string,
+  provider: Provider,
+  model: string,
+  raw: Record<string, unknown>
 ): Promise<void> {
-  const url = `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/ai-gateway/gateways/${env.CLOUDFLARE_AI_GATEWAY_ID}/logs/${encodeURIComponent(logId)}`;
-  let failure = "log was not ready";
-  for (const delay of [0, 250, 750, 1_500, 3_000, 5_000]) {
-    if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
-    const response = await fetch(url, { headers: { authorization: `Bearer ${env.CLOUDFLARE_API_TOKEN}` } });
-    if (!response.ok) {
-      failure = `logs API returned ${response.status}`;
-      continue;
-    }
-    const payload = await response.json<CloudflareLogResponse>().catch(() => null);
-    if (!payload) {
-      failure = "logs API returned invalid JSON";
-      continue;
-    }
-    const log = payload.result;
-    if (!payload.success || !log) {
-      failure = "log detail was empty";
-      continue;
-    }
-    if (!belongsTo(log.metadata, billingId)) {
-      failure = "log metadata did not match the user";
-      continue;
-    }
-    const inputTokens = Math.max(log.tokens_in ?? 0, providerUsage?.prompt_tokens ?? 0);
-    const outputTokens = Math.max(log.tokens_out ?? 0, providerUsage?.completion_tokens ?? 0);
-    if (inputTokens <= 0) {
-      failure = "token counts were not ready";
-      continue;
-    }
-    const loggedAt = new Date(log.created_at);
-    const costMicrousd = log.cost == null
-      ? deepSeekCostMicrousd(
-        { ...providerUsage, prompt_tokens: inputTokens, completion_tokens: outputTokens },
-        Number.isNaN(loggedAt.getTime()) ? new Date() : loggedAt
-      )
-      : Math.max(0, Math.round(log.cost * 1_000_000));
-    await env.DB.prepare(`
-      INSERT OR IGNORE INTO usage_events
-        (log_id, user_id, period_start, cost_microusd, input_tokens, output_tokens)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `).bind(logId, userId, periodStart, costMicrousd, inputTokens, outputTokens).run();
-    return;
-  }
-  console.error("AI Gateway usage was not recorded", logId, failure);
-}
-
-async function readProviderUsage(body: ReadableStream<Uint8Array>, contentType: string | null): Promise<DeepSeekUsage | null> {
-  if (!contentType?.includes("text/event-stream")) {
-    const payload = await new Response(body).json() as { usage?: DeepSeekUsage };
-    return payload.usage ?? null;
-  }
-
-  const reader = body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = "";
-  let usage: DeepSeekUsage | null = null;
-  const readLines = (text: string) => {
-    for (const line of text.split(/\r?\n/)) {
-      if (!line.startsWith("data:")) continue;
-      const data = line.slice(5).trim();
-      if (!data || data === "[DONE]") continue;
-      try {
-        const parsed = JSON.parse(data) as { usage?: DeepSeekUsage | null };
-        if (parsed.usage) usage = parsed.usage;
-      } catch {
-        // Ignore non-JSON SSE events while continuing to drain the metering branch.
-      }
-    }
-  };
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    const boundary = buffer.lastIndexOf("\n");
-    if (boundary < 0) continue;
-    readLines(buffer.slice(0, boundary + 1));
-    buffer = buffer.slice(boundary + 1);
-  }
-  readLines(buffer + decoder.decode());
-  return usage;
-}
-
-function belongsTo(metadata: unknown, billingId: string): boolean {
-  try {
-    const value = typeof metadata === "string" ? JSON.parse(metadata) as unknown : metadata;
-    return typeof value === "object" && value !== null && (value as Record<string, unknown>).user_id === billingId;
-  } catch {
-    return false;
-  }
+  const usage = readUsage(provider, raw);
+  const cost = costMicrousd(findCatalogModel(model)!.pricing, usage, new Date());
+  await env.DB.prepare(`
+    INSERT OR IGNORE INTO usage_events
+      (log_id, user_id, period_start, cost_microusd, input_tokens, output_tokens)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).bind(eventId, userId, periodStart, cost, totalInput(usage), usage.output).run();
 }
 
 async function sha256(value: string): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
-}
-
-interface CloudflareLogResponse {
-  success: boolean;
-  result?: {
-    created_at: string;
-    path: string;
-    tokens_in: number | null;
-    tokens_out: number | null;
-    cost?: number;
-    metadata?: unknown;
-  };
 }
 
 function status(code: number): Response {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { PROVIDERS, clampEffort } from "../shared/models";
-import type { Effort, ModelSettings } from "../shared/models";
+import type { Effort, ModelInfo, ModelSettings } from "../shared/models";
 import type { ModelsView, RuntimeMessage } from "../shared/protocol";
 
 const EFFORT_LABELS: Record<Effort, string> = {
@@ -55,7 +55,7 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
   };
 
   const model = view?.settings && view.models.find(({ key }) => key === view.settings!.model);
-  const providers = Object.keys(PROVIDERS) as (keyof typeof PROVIDERS)[];
+  const groups = view ? groupModels(view.models) : [];
 
   const copyDiagnostics = async () => {
     try {
@@ -91,14 +91,11 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
                 save({ model: next.key, effort: clampEffort(next, view.settings!.effort) });
               }}
             >
-              {providers.map((provider) => {
-                const models = view.models.filter((candidate) => candidate.provider === provider);
-                return models.length === 0 ? null : (
-                  <optgroup label={PROVIDERS[provider]} key={provider}>
-                    {models.map(({ key, label }) => <option value={key} key={key}>{label}</option>)}
-                  </optgroup>
-                );
-              })}
+              {groups.map(({ label, models }) => (
+                <optgroup label={label} key={label}>
+                  {models.map(({ key, label }) => <option value={key} key={key}>{label}</option>)}
+                </optgroup>
+              ))}
             </select>
           </label>
           {model.efforts.length > 0 && (
@@ -124,4 +121,14 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
       {diagnosticStatus && <p className="diagnostic-status" role="status">{diagnosticStatus}</p>}
     </div>
   );
+}
+
+/** Subscription models under "chatext", models on the user's own keys under their provider. */
+function groupModels(models: ModelInfo[]): { label: string; models: ModelInfo[] }[] {
+  const groups = new Map<string, ModelInfo[]>();
+  for (const model of models) {
+    const label = model.access === "chatext" ? "chatext" : PROVIDERS[model.provider].label;
+    groups.set(label, [...groups.get(label) ?? [], model]);
+  }
+  return [...groups].map(([label, models]) => ({ label, models }));
 }

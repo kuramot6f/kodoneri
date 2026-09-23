@@ -94,7 +94,7 @@ export type RuntimeMessage =
   | { type: "debug_export" }
   | { type: "debug_clear" };
 
-/** Models whose provider has a key, and the selection clamped to them; settings is null without any key. */
+/** Models the subscription or a key allows, and the tab's selection resolved against them; settings is null without any. */
 export interface ModelsView {
   models: ModelInfo[];
   settings: ModelSettings | null;

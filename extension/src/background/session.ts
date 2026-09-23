@@ -12,14 +12,16 @@ import type {
   AskMessage,
   MemoryProgress,
   PanelState,
+  ModelsView,
   RuntimeMessage,
   TabMessage,
   TabView
 } from "../shared/protocol";
-import { loadConversation, loadSettings, saveConversation } from "../shared/store";
+import type { ModelSettings } from "../shared/models";
+import { loadConversation, loadSettings, saveConversation, saveSettings } from "../shared/store";
 import { compact, generateTitle, MEMORY_UPDATE_PROMPT, streamAnswer } from "./agent";
 import { applyCompaction, planCompaction } from "./compaction";
-import { createRuntime, refreshApiKeys, resolveSettings } from "./provider";
+import { availableModels, createRuntime, refreshApiKeys, resolveSettings } from "./provider";
 import type { ModelRuntime } from "./provider";
 import { createTools } from "./tools";
 import { createConversationSystemPrompt, createRuntimeContext, formatSelectionContext } from "./prompt";
@@ -31,6 +33,8 @@ interface Session {
   tabId: number;
   panel: PanelState;
   conversation: Conversation | null;
+  /** The tab's model choice; without one the tab follows the last used settings. */
+  settings?: ModelSettings;
   run: { requestId: string; controller: AbortController; done: Promise<void> } | null;
   step: ModelMessage[] | null;
   compacting: boolean;
@@ -42,6 +46,7 @@ interface Session {
 interface StoredTabState {
   conversationId: string | null;
   panel: PanelState;
+  settings?: ModelSettings;
 }
 
 type PanelMessage = Extract<RuntimeMessage, { type: "sync" | "ask" | "cancel" | "open" | "panel" }>;
@@ -74,16 +79,17 @@ async function restoreSession(tabId: number): Promise<Session> {
     // Stored tab state that cannot be read would otherwise keep this tab without a panel for good.
     stored = undefined;
   }
-  const session = createSession(tabId, { ...DEFAULT_PANEL, ...stored?.panel }, conversation);
+  const session = createSession(tabId, { ...DEFAULT_PANEL, ...stored?.panel }, conversation, stored?.settings ?? conversation?.settings);
   sessions.set(tabId, session);
   return session;
 }
 
-function createSession(tabId: number, panel: PanelState, conversation: Conversation | null): Session {
+function createSession(tabId: number, panel: PanelState, conversation: Conversation | null, settings?: ModelSettings): Session {
   return {
     tabId,
     panel,
     conversation,
+    settings,
     run: null,
     step: null,
     compacting: false,
@@ -115,6 +121,7 @@ export async function handlePanelMessage(tabId: number, message: PanelMessage): 
   } else if (message.type === "open") {
     session.run?.controller.abort();
     session.conversation = message.conversationId ? await loadConversation(message.conversationId) : null;
+    session.settings = session.conversation?.settings;
     session.step = null;
     session.memory = null;
     session.cacheUsage = null;
@@ -124,6 +131,22 @@ export async function handlePanelMessage(tabId: number, message: PanelMessage): 
     persist(session);
   }
   return view(session);
+}
+
+/** The models the menu offers and the tab's choice resolved against them. */
+export async function modelsView(tabId: number): Promise<ModelsView> {
+  const session = await getSession(tabId);
+  // The menu is where a key or plan changed in the app is first noticed, so re-read them here too.
+  const [, lastUsed] = await Promise.all([refreshApiKeys().catch(() => undefined), loadSettings()]);
+  return { models: availableModels(), settings: resolveSettings(session.settings, lastUsed) };
+}
+
+/** A choice in the menu applies to this tab and becomes the default for new conversations. */
+export async function selectModel(tabId: number, settings: ModelSettings): Promise<void> {
+  const session = await getSession(tabId);
+  session.settings = settings;
+  persist(session);
+  await saveSettings(settings);
 }
 
 /** switch_tab carries the conversation to the tab the user now sees; the old tab is left empty. */
@@ -192,7 +215,7 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
 
     let models: Models;
     try {
-      models = await resolveModels();
+      models = await resolveModels(session, conversation);
     } catch (error) {
       append(conversation, [taggedMessage("runtime_error", errorMessage(error))]);
       session.step = null;
@@ -219,9 +242,14 @@ interface Models {
   low: ModelRuntime;
 }
 
-async function resolveModels(): Promise<Models> {
-  const settings = resolveSettings(await loadSettings());
+/** A model that is no longer available falls back to the last used one, then to the first available. */
+async function resolveModels(session: Session, conversation: Conversation): Promise<Models> {
+  const settings = resolveSettings(session.settings, await loadSettings());
   if (!settings) throw new Error(i18n._({ id: "errors.apiKeyMissing", message: "No API key is configured. Configure one in the chatext app." }));
+  session.settings = settings;
+  conversation.settings = settings;
+  persist(session);
+  await saveSettings(settings);
   return { main: createRuntime(settings, settings.effort), low: createRuntime(settings, "lowest") };
 }
 
@@ -372,7 +400,7 @@ function lastAnswer(conversation: Conversation): string {
 }
 
 function persist(session: Session): void {
-  const state: StoredTabState = { conversationId: session.conversation?.id ?? null, panel: session.panel };
+  const state: StoredTabState = { conversationId: session.conversation?.id ?? null, panel: session.panel, settings: session.settings };
   void browser.storage.session.set({ [`tab:${session.tabId}`]: state });
 }
 

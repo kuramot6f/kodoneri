@@ -1,18 +1,32 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { clampEffort, findModel, lowestEffort, MODELS } from "../src/shared/models.ts";
+import { CATALOG, PLANS, PROVIDERS, clampEffort, findModel, lowestEffort } from "../src/shared/models.ts";
 
-test("every catalog entry has a unique key and a known provider", () => {
-  const keys = new Set(MODELS.map((model) => model.key));
-  assert.equal(keys.size, MODELS.length);
-  for (const model of MODELS) assert.ok(["openai", "anthropic", "deepseek", "chatext"].includes(model.provider), model.key);
+test("every catalog entry has a unique id, a known provider and a price", () => {
+  const ids = new Set(CATALOG.map((model) => model.id));
+  assert.equal(ids.size, CATALOG.length);
+  for (const model of CATALOG) {
+    assert.ok(Object.hasOwn(PROVIDERS, model.provider), model.id);
+    assert.ok(model.pricing.input > 0 && model.pricing.output > 0, model.id);
+  }
+});
+
+test("every plan lists catalog models only", () => {
+  for (const id of Object.values(PLANS).flat()) assert.ok(CATALOG.some((model) => model.id === id), id);
+});
+
+test("findModel reads the access from the key", () => {
+  assert.equal(findModel("chatext:gpt-6-sol")?.access, "chatext");
+  assert.equal(findModel("byok:gpt-6-sol")?.provider, "openai");
+  assert.equal(findModel("other:gpt-6-sol"), undefined);
+  assert.equal(findModel("byok:gpt-5.6-sol"), undefined);
 });
 
 test("clampEffort keeps levels the model offers and falls back to its lowest", () => {
-  const flash = findModel("deepseek/deepseek-flash")!;
+  const flash = findModel("byok:deepseek-flash")!;
   assert.equal(clampEffort(flash, "high"), "high");
   assert.equal(clampEffort(flash, "medium"), "none");
-  const astra = findModel("openai/gpt-6-astra")!;
-  assert.equal(clampEffort(astra, "none"), "low");
-  assert.equal(lowestEffort(findModel("anthropic/claude-haiku-4-5")!), "none");
+  const opus = findModel("chatext:claude-opus-5-5")!;
+  assert.equal(clampEffort(opus, "none"), "low");
+  assert.equal(lowestEffort(findModel("byok:gpt-6-astra")!), "low");
 });

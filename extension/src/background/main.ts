@@ -1,12 +1,11 @@
-import type { ModelsView, RuntimeMessage } from "../shared/protocol";
+import type { RuntimeMessage } from "../shared/protocol";
 import { activateBrowserLocale } from "../shared/i18n.ts";
-import { loadSettings, saveSettings } from "../shared/store";
 import { errorMessage } from "../shared/errors";
 import { fetchText } from "../shared/fetch";
 import { clearFrames, registerFrame } from "./frames";
 import { clearDebugLog, debugEvent, exportDebugLog } from "./debug";
-import { availableModels, refreshApiKeys, resolveSettings } from "./provider";
-import { handlePanelMessage, removeSession, togglePanel } from "./session";
+import { refreshApiKeys } from "./provider";
+import { handlePanelMessage, modelsView, removeSession, selectModel, togglePanel } from "./session";
 
 activateBrowserLocale();
 debugEvent("worker_started");
@@ -41,13 +40,9 @@ browser.runtime.onMessage.addListener((message: RuntimeMessage, sender) => {
     registerFrame(message.ref, sender);
     return;
   }
-  if (message.type === "models") {
-    // The menu is where a key added or removed in the app is first noticed, so re-read the Keychain here too.
-    return Promise.all([refreshApiKeys().catch(() => undefined), loadSettings()])
-      .then(([, settings]): ModelsView => ({ models: availableModels(), settings: resolveSettings(settings) }));
-  }
-  if (message.type === "settings") {
-    return saveSettings(message.settings);
+  if (message.type === "models" || message.type === "settings") {
+    if (sender.tab?.id === undefined) return;
+    return message.type === "models" ? modelsView(sender.tab.id) : selectModel(sender.tab.id, message.settings);
   }
   if (message.type === "fetch") {
     return fetchText(message.url).catch((error: unknown) => ({ error: errorMessage(error) }));
