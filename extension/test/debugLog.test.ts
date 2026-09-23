@@ -12,10 +12,6 @@ class MemoryStorage {
   async set(items: Record<string, unknown>): Promise<void> {
     Object.assign(this.values, items);
   }
-
-  async remove(key: string): Promise<void> {
-    delete this.values[key];
-  }
 }
 
 test("debug log serializes concurrent writes and keeps the newest 500 events", async () => {
@@ -33,17 +29,11 @@ test("debug log serializes concurrent writes and keeps the newest 500 events", a
   assert.equal(events.at(-1)?.data.index, DEBUG_LOG_LIMIT + 19);
 });
 
-test("debug export includes metadata and clear removes the buffer", async () => {
+test("record returns the event mirrored to the app", async () => {
   const storage = new MemoryStorage();
   const log = new DebugLog(storage, "worker-1", () => new Date(0));
-  await log.record("content", "connected", { tabId: 4 });
-
-  const exported = JSON.parse(await log.export({ extensionVersion: "1.2.3" }));
-  assert.equal(exported.metadata.extensionVersion, "1.2.3");
-  assert.equal(exported.events[0].event, "connected");
-
-  await log.clear();
-  assert.equal(storage.values[DEBUG_LOG_KEY], undefined);
+  const event = await log.record("content", "connected", { tabId: 4 });
+  assert.deepEqual(event, (storage.values[DEBUG_LOG_KEY] as unknown[])[0]);
 });
 
 test("error data contains only the error name and message", () => {

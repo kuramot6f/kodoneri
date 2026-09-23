@@ -33,10 +33,6 @@ nonisolated enum SharedDebugLog {
         AppSettings.defaults.set(metadata, forKey: metadataKey)
     }
 
-    static func clear() {
-        AppSettings.defaults.removeObject(forKey: eventsKey)
-    }
-
     static func export() throws -> String {
         let events = try (AppSettings.defaults.stringArray(forKey: eventsKey) ?? []).map { event in
             try JSONSerialization.jsonObject(with: Data(event.utf8))

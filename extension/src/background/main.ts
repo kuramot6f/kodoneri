@@ -3,7 +3,7 @@ import { activateBrowserLocale } from "../shared/i18n.ts";
 import { errorMessage } from "../shared/errors";
 import { fetchText } from "../shared/fetch";
 import { clearFrames, registerFrame } from "./frames";
-import { clearDebugLog, debugEvent } from "./debug";
+import { debugEvent } from "./debug";
 import { hasCredentials, refreshApiKeys } from "./provider";
 import { loadChatButton, saveChatButton } from "../shared/store";
 import { handlePanelMessage, modelsView, removeSession, selectModel, togglePanel } from "./session";
@@ -39,7 +39,6 @@ browser.runtime.onMessage.addListener((message: RuntimeMessage, sender) => {
     return;
   }
   if (message.type === "keepalive") return;
-  if (message.type === "debug_clear") return clearDebugLog();
   if (message.type === "credentials") return refreshApiKeys().catch(() => undefined).then(hasCredentials);
   if (message.type === "app_settings") return refreshAppSettings().catch(() => undefined);
   if (message.type === "open_settings") return browser.runtime.sendNativeMessage("application.id", { type: "openSettings" });
