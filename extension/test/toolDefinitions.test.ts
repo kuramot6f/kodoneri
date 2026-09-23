@@ -17,12 +17,11 @@ test("grep needs a ref except for collection resource types, which take none", (
 
 test("navigate requires ref and url exactly where the action needs them", () => {
   ok(navigateInput, { action: "back", ref: "tab_2" });
-  ok(navigateInput, { action: "open_tab", url: "https://example.com" });
-  ok(navigateInput, { action: "go_to", ref: "tab_2", url: "https://example.com" });
-  fails(navigateInput, { action: "open_tab" });
+  ok(navigateInput, { action: "open", url: "https://example.com" });
+  ok(navigateInput, { action: "open", ref: "tab_2", url: "https://example.com" });
+  fails(navigateInput, { action: "open" });
+  fails(navigateInput, { action: "open", ref: "tab_2" });
   fails(navigateInput, { action: "back" });
-  fails(navigateInput, { action: "go_to", url: "https://example.com" });
-  fails(navigateInput, { action: "open_tab", url: "https://example.com", ref: "tab_2" });
   fails(navigateInput, { action: "switch_tab", ref: "iframe_1" });
   fails(navigateInput, { action: "reload", ref: "tab_2", url: "https://example.com" });
   fails(navigateInput, { action: "back", ref: "tab_2", extra: true });

@@ -4,7 +4,7 @@ import type { ToolContext } from "./tools.ts";
 const LOAD_TIMEOUT_MS = 30_000;
 
 export async function navigate({ session, signal, moveSession }: ToolContext, args: NavigateInput) {
-  if (args.action === "open_tab") {
+  if (args.action === "open" && args.ref === undefined) {
     const tab = await browser.tabs.create({ url: args.url!, active: false });
     return output(args.action, tab, session.tabId);
   }
@@ -22,7 +22,7 @@ export async function navigate({ session, signal, moveSession }: ToolContext, ar
     if (args.action === "back") await browser.tabs.goBack(tabId);
     else if (args.action === "forward") await browser.tabs.goForward(tabId);
     else if (args.action === "reload") await browser.tabs.reload(tabId);
-    else if (args.action === "go_to") await browser.tabs.update(tabId, { url: args.url! });
+    else if (args.action === "open") await browser.tabs.update(tabId, { url: args.url! });
     else {
       const tab = await browser.tabs.update(tabId, { active: true });
       if (tab.windowId !== undefined) await browser.windows?.update?.(tab.windowId, { focused: true });
