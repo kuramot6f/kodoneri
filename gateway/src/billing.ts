@@ -1,4 +1,5 @@
 import type { JWSTransactionDecodedPayload, SignedDataVerifier } from "@apple/app-store-server-library";
+import { importPKCS8, SignJWT } from "jose";
 
 const PRODUCTS = {
   plus: { plan: "plus", allowanceMicrousd: 2_500_000 },
@@ -19,6 +20,8 @@ export interface BillingRow {
   app_account_token: string;
   plan: Plan;
   product_id: string | null;
+  original_transaction_id: string | null;
+  environment: StoreEnvironment | null;
   period_start: string | null;
   period_end: string | null;
   allowance_microusd: number;
@@ -32,9 +35,26 @@ export async function ensureBilling(env: Env, userId: string, now = new Date()):
   await env.DB.prepare(
     "INSERT OR IGNORE INTO billing (user_id, app_account_token) VALUES (?, ?)"
   ).bind(userId, crypto.randomUUID().toLowerCase()).run();
-  let row = await env.DB.prepare("SELECT * FROM billing WHERE user_id = ?").bind(userId).first<BillingRow>();
-  if (!row) throw new Error("billing row was not created");
+  let row = await selectBilling(env, userId);
 
+  // A paid period that just ran out may already have renewed without us hearing, so ask the App Store once.
+  if (row.plan !== "free" && effectivePlan(row, now) === "free" && row.original_transaction_id && row.environment) {
+    await refreshSubscription(env, userId, row.original_transaction_id, row.environment)
+      .catch((error) => console.error("App Store subscription status could not be refreshed", error));
+    row = await selectBilling(env, userId);
+  }
+  return normalizeFree(env, row, now);
+}
+
+async function selectBilling(env: Env, userId: string): Promise<BillingRow> {
+  const row = await env.DB.prepare("SELECT * FROM billing WHERE user_id = ?").bind(userId).first<BillingRow>();
+  if (!row) throw new Error("billing row is missing");
+  return row;
+}
+
+/** Moves a row without an active subscription onto the current free month. */
+async function normalizeFree(env: Env, row: BillingRow, now = new Date()): Promise<BillingRow> {
+  const userId = row.user_id;
   if (effectivePlan(row, now) === "free") {
     const { start, end } = freePeriod(now);
     await env.DB.prepare(`
@@ -51,8 +71,7 @@ export async function ensureBilling(env: Env, userId: string, now = new Date()):
       start, start, start, start,
       userId
     ).run();
-    row = await env.DB.prepare("SELECT * FROM billing WHERE user_id = ?").bind(userId).first<BillingRow>();
-    if (!row) throw new Error("billing row was not normalized");
+    return selectBilling(env, userId);
   }
   return row;
 }
@@ -67,21 +86,32 @@ export function freePeriod(now = new Date()): { start: string; end: string } {
   return { start: start.toISOString(), end: end.toISOString() };
 }
 
+/**
+ * Uses a signed transaction only to find whose subscription it is; the plan itself comes from the App Store,
+ * because transactions arrive out of order (a renewal is issued before its period starts, an upgrade replaces it).
+ */
 export async function syncTransaction(env: Env, signedTransaction: string, expectedUserId?: string): Promise<BillingRow | null> {
-  const transaction = await verifyTransaction(env, signedTransaction);
-  const product = transaction.productId ? PRODUCTS[transaction.productId as keyof typeof PRODUCTS] : undefined;
-  if (!product) return null;
-
-  const { appAccountToken, transactionId, originalTransactionId, purchaseDate, expiresDate, environment } = transaction;
-  if (!appAccountToken || !transactionId || !originalTransactionId || !purchaseDate || !expiresDate || !environment) {
+  const { productId, appAccountToken, originalTransactionId, environment } = await verifyTransaction(env, signedTransaction);
+  if (!productId || !Object.hasOwn(PRODUCTS, productId)) return null;
+  if (!appAccountToken || !originalTransactionId || (environment !== "Sandbox" && environment !== "Production")) {
     throw new Error("transaction is missing required subscription fields");
   }
 
-  const accountToken = appAccountToken.toLowerCase();
   const owner = await env.DB.prepare(
     "SELECT user_id FROM billing WHERE app_account_token = ?"
-  ).bind(accountToken).first<{ user_id: string }>();
+  ).bind(appAccountToken.toLowerCase()).first<{ user_id: string }>();
   if (!owner || (expectedUserId && owner.user_id !== expectedUserId)) throw new Error("transaction account does not match user");
+
+  await refreshSubscription(env, owner.user_id, originalTransactionId, environment);
+  return normalizeFree(env, await selectBilling(env, owner.user_id));
+}
+
+/** Stores the subscription's latest transaction as the App Store reports it now. */
+async function refreshSubscription(env: Env, userId: string, originalTransactionId: string, environment: StoreEnvironment): Promise<void> {
+  const transaction = await latestTransaction(env, originalTransactionId, environment);
+  const product = transaction.productId ? PRODUCTS[transaction.productId as keyof typeof PRODUCTS] : undefined;
+  const { transactionId, purchaseDate, expiresDate } = transaction;
+  if (!product || !transactionId || !purchaseDate || !expiresDate) throw new Error("latest transaction is not a known subscription");
 
   const periodStart = new Date(purchaseDate).toISOString();
   // A refunded or revoked subscription ends when it was revoked, not when it would have expired.
@@ -91,7 +121,7 @@ export async function syncTransaction(env: Env, signedTransaction: string, expec
       INSERT OR IGNORE INTO storekit_transactions
         (transaction_id, original_transaction_id, user_id, product_id, environment, purchased_at, expires_at)
       VALUES (?, ?, ?, ?, ?, ?, ?)
-    `).bind(transactionId, originalTransactionId, owner.user_id, transaction.productId, environment, periodStart, periodEnd),
+    `).bind(transactionId, originalTransactionId, userId, transaction.productId, environment, periodStart, periodEnd),
     env.DB.prepare(`
       UPDATE billing
       SET plan = ?, product_id = ?, original_transaction_id = ?, latest_transaction_id = ?, environment = ?,
@@ -101,15 +131,39 @@ export async function syncTransaction(env: Env, signedTransaction: string, expec
           output_tokens = CASE WHEN period_start = ? THEN output_tokens ELSE 0 END,
           requests = CASE WHEN period_start = ? THEN requests ELSE 0 END,
           updated_at = datetime('now')
-      WHERE user_id = ? AND (period_start IS NULL OR period_start <= ?)
+      WHERE user_id = ?
     `).bind(
       product.plan, transaction.productId, originalTransactionId, transactionId, environment,
       periodStart, periodEnd, product.allowanceMicrousd,
       periodStart, periodStart, periodStart, periodStart,
-      owner.user_id, periodStart
+      userId
     )
   ]);
-  return ensureBilling(env, owner.user_id);
+}
+
+/** Asks the App Store Server API for the newest transaction of a subscription. */
+async function latestTransaction(env: Env, originalTransactionId: string, environment: StoreEnvironment): Promise<JWSTransactionDecodedPayload> {
+  const host = environment === "Production" ? "api.storekit.itunes.apple.com" : "api.storekit-sandbox.itunes.apple.com";
+  const response = await fetch(`https://${host}/inApps/v1/subscriptions/${encodeURIComponent(originalTransactionId)}`, {
+    headers: { authorization: `Bearer ${await appStoreToken(env)}` }
+  });
+  if (!response.ok) throw new Error(`App Store Server API answered ${response.status}`);
+  const body = await response.json() as { data?: { lastTransactions?: { originalTransactionId?: string; signedTransactionInfo?: string }[] }[] };
+  const signed = body.data?.flatMap((group) => group.lastTransactions ?? [])
+    .find((item) => item.originalTransactionId === originalTransactionId)?.signedTransactionInfo;
+  if (!signed) throw new Error("App Store has no status for this subscription");
+  return verifyTransaction(env, signed);
+}
+
+async function appStoreToken(env: Env): Promise<string> {
+  const key = await importPKCS8(env.APPLE_PRIVATE_KEY, "ES256");
+  return new SignJWT({ bid: env.APPLE_BUNDLE_ID })
+    .setProtectedHeader({ alg: "ES256", kid: env.APPLE_KEY_ID, typ: "JWT" })
+    .setIssuer(env.APPLE_ISSUER_ID)
+    .setAudience("appstoreconnect-v1")
+    .setIssuedAt()
+    .setExpirationTime("5m")
+    .sign(key);
 }
 
 export async function verifyNotification(env: Env, signedPayload: string): Promise<string | null> {

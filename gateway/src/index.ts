@@ -13,6 +13,10 @@ const appleKeys = createRemoteJWKSet(new URL(`${APPLE_ISSUER}/auth/keys`));
 declare global {
   interface Env {
     CLOUDFLARE_API_TOKEN: string;
+    // App Store Connect In-App Purchase key; APPLE_PRIVATE_KEY is the .p8 file's contents.
+    APPLE_ISSUER_ID: string;
+    APPLE_KEY_ID: string;
+    APPLE_PRIVATE_KEY: string;
   }
 }
 
