@@ -19,6 +19,14 @@ mise install
 cd extension && npm ci
 ```
 
+サーバーの URL と ID はコミットしないので、example をコピーして埋める:
+
+```sh
+cp extension/.env.example extension/.env.local
+cp Secrets.example.xcconfig Secrets.xcconfig
+cp gateway/wrangler.example.jsonc gateway/wrangler.jsonc
+```
+
 ## ビルド
 
 Xcode でビルドすれば、拡張ターゲットの **Build Web Extension** フェーズが

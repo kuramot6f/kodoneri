@@ -11,7 +11,7 @@ import type { Effort, ModelInfo, ModelSettings, Plan, Provider } from "../shared
 import { TOOL_HISTORY_TTL_MS } from "../shared/conversation";
 
 /** The chatext gateway relays each provider's own API under `/{provider}`; the key is the gateway token. */
-const GATEWAY_URL = "https://<gateway-host>";
+const GATEWAY_URL = import.meta.env.VITE_GATEWAY_URL;
 /** Where each SDK's default base URL sits on the gateway. */
 const GATEWAY_BASE: Record<Provider, string> = {
   openai: `${GATEWAY_URL}/openai`,

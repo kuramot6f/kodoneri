@@ -5,6 +5,10 @@ node_modules/
 extension/dist/
 extension/.env.local
 
+# サーバーの URL と ID。*.example をコピーして作る。
+Secrets.xcconfig
+gateway/wrangler.jsonc
+
 # Xcode
 xcuserdata/
 build/
