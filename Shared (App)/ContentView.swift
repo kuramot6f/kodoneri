@@ -170,7 +170,12 @@ final class Account {
         }
         let (data, response) = try await URLSession.shared.data(for: request)
         guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw URLError(.badServerResponse) }
-        return try JSONDecoder().decode(Response.self, from: data)
+        let decoder = JSONDecoder()
+        // The gateway sends `Date.toISOString()`, which has milliseconds.
+        decoder.dateDecodingStrategy = .custom {
+            try Date(try $0.singleValueContainer().decode(String.self), strategy: .iso8601.year().month().day().time(includingFractionalSeconds: true))
+        }
+        return try decoder.decode(Response.self, from: data)
     }
 
     nonisolated static func sha256(_ value: String) -> String {
@@ -184,10 +189,14 @@ struct GatewayUsage: Decodable {
     let currency: String
     let allowanceUsd: Double
     let estimatedCostUsd: Double
-    let inputTokens: Int
-    let outputTokens: Int
-    let requests: Int
+    let period: Period?
     let appAccountToken: UUID
+
+    struct Period: Decodable {
+        let end: Date
+    }
+
+    var fraction: Double { allowanceUsd > 0 ? min(estimatedCostUsd / allowanceUsd, 1) : 1 }
 }
 
 /// One row per provider.
@@ -246,12 +255,18 @@ private struct GatewaySection: View {
                     LabeledContent("Plan") {
                         Text(usage.plan.capitalized)
                     }
-                    LabeledContent("This period") {
-                        Text("\(usage.estimatedCostUsd.formatted(.currency(code: usage.currency).precision(.fractionLength(2...6)))) / \(usage.allowanceUsd.formatted(.currency(code: usage.currency)))")
-                    }
-                    LabeledContent("Usage") {
-                        Text("\(usage.requests.formatted()) requests · \((usage.inputTokens + usage.outputTokens).formatted()) tokens")
-                            .foregroundStyle(.secondary)
+                    VStack(alignment: .leading) {
+                        Gauge(value: usage.fraction) {
+                            Text("Usage")
+                        } currentValueLabel: {
+                            Text(usage.fraction, format: .percent.precision(.fractionLength(0)))
+                        }
+                        .gaugeStyle(.linearCapacity)
+                        if let end = usage.period?.end {
+                            Text("Resets \(end, format: .relative(presentation: .named))")
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
                 Button(account.usage?.plan == "free" ? "Subscribe" : "Change Subscription") {
