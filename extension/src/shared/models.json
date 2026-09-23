@@ -43,7 +43,7 @@
   ],
   "plans": {
     "free": ["deepseek-flash", "gpt-6-luna"],
-    "plus": ["gpt-6-luna", "gpt-6-sol", "claude-sonnet-5"],
+    "plus": ["deepseek-flash", "gpt-6-luna", "gpt-6-sol", "claude-sonnet-5"],
     "pro": ["gpt-6-luna", "gpt-6-sol", "gpt-6-astra", "claude-sonnet-5", "claude-opus-5-5", "claude-fable-5-1", "deepseek-flash"]
   }
 }

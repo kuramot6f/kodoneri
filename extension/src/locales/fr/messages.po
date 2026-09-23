@@ -22,7 +22,7 @@ msgstr "« {preview} »"
 msgid "{0, plural, one {# media item} other {# media items}}"
 msgstr "{0, plural, one {# élément multimédia} other {# éléments multimédias}}"
 
-#: src/content/ChatView.tsx:243
+#: src/content/ChatView.tsx:258
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "{mediaCount, plural, one {# élément multimédia} other {# éléments multimédias}}"
 
@@ -34,7 +34,7 @@ msgstr "Ajouter aux favoris"
 msgid "Add to favorites (the AI will no longer be able to edit it)"
 msgstr "Ajouter aux favoris (l’IA ne pourra plus la modifier)"
 
-#: src/content/ChatView.tsx:132
+#: src/content/ChatView.tsx:134
 msgid "Ask about this page"
 msgstr "Posez une question sur cette page"
 
@@ -46,7 +46,7 @@ msgstr "Retour à la liste"
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:331
+#: src/content/ChatView.tsx:350
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Taux de succès du cache : {0} % ({1} / {2} tokens)"
 
@@ -58,10 +58,6 @@ msgstr "Historique des discussions"
 msgid "Chats"
 msgstr "Discussions"
 
-#: src/content/ModelMenu.tsx:119
-msgid "Clear"
-msgstr "Effacer"
-
 #: src/content/App.tsx:177
 #: src/content/App.tsx:177
 msgid "Close panel"
@@ -71,7 +67,7 @@ msgstr "Fermer le panneau"
 msgid "Close search"
 msgstr "Fermer la recherche"
 
-#: src/content/ChatView.tsx:100
+#: src/content/ChatView.tsx:102
 msgid "Compacting conversation…"
 msgstr "Compactage de la conversation…"
 
@@ -81,21 +77,9 @@ msgid "Content"
 msgstr "Contenu"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:322
+#: src/background/session.ts:323
 msgid "errors.compactionFailed"
 msgstr "Impossible de compacter la conversation. {error}"
-
-#: src/content/ModelMenu.tsx:118
-msgid "Copy diagnostics"
-msgstr "Copier les diagnostics"
-
-#: src/content/ModelMenu.tsx:75
-msgid "Could not clear diagnostics"
-msgstr "Impossible d’effacer les diagnostics"
-
-#: src/content/ModelMenu.tsx:66
-msgid "Could not copy diagnostics"
-msgstr "Impossible de copier les diagnostics"
 
 #: src/content/HistoryView.tsx:47
 #: src/content/HistoryView.tsx:47
@@ -106,14 +90,6 @@ msgstr "Supprimer cette conversation"
 #: src/content/MemoryListView.tsx:67
 msgid "Delete this memory"
 msgstr "Supprimer cette mémoire"
-
-#: src/content/ModelMenu.tsx:73
-msgid "Diagnostics cleared"
-msgstr "Diagnostics effacés"
-
-#: src/content/ModelMenu.tsx:64
-msgid "Diagnostics copied"
-msgstr "Diagnostics copiés"
 
 #: src/content/App.tsx:172
 msgid "Done"
@@ -133,15 +109,15 @@ msgid "Enlarge"
 msgstr "Agrandir"
 
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:273
+#: src/content/ChatView.tsx:288
 msgid "Error: {0}"
 msgstr "Erreur : {0}"
 
-#: src/content/ChatView.tsx:208
+#: src/content/ChatView.tsx:231
 msgid "Error: {content}"
 msgstr "Erreur : {content}"
 
-#: src/content/ChatView.tsx:341
+#: src/content/ChatView.tsx:360
 msgid "Execution was denied."
 msgstr "Non exécuté."
 
@@ -149,19 +125,19 @@ msgstr "Non exécuté."
 msgid "Finish editing and return to the list"
 msgstr "Terminer la modification et revenir à la liste"
 
-#: src/content/ChatView.tsx:99
+#: src/content/ChatView.tsx:101
 msgid "Generating response…"
 msgstr "Génération de la réponse…"
 
-#: src/content/ChatView.tsx:180
+#: src/content/ChatView.tsx:182
 msgid "Get started for free"
 msgstr "Commencer gratuitement"
 
-#: src/content/ChatView.tsx:342
+#: src/content/ChatView.tsx:361
 msgid "Image or file"
 msgstr "Image ou fichier"
 
-#: src/content/ChatView.tsx:112
+#: src/content/ChatView.tsx:114
 msgid "Include {selectionSummary}"
 msgstr "Inclure {selectionSummary}"
 
@@ -173,11 +149,11 @@ msgstr "mémoire"
 msgid "Memory"
 msgstr "Mémoire"
 
-#: src/content/ChatView.tsx:266
+#: src/content/ChatView.tsx:281
 msgid "Memory update failed"
 msgstr "Échec de la mise à jour de la mémoire"
 
-#: src/content/ChatView.tsx:267
+#: src/content/ChatView.tsx:282
 msgid "Memory updated"
 msgstr "Mémoire mise à jour"
 
@@ -185,13 +161,13 @@ msgstr "Mémoire mise à jour"
 msgid "Menu (chat history and memory)"
 msgstr "Menu (historique des discussions et mémoire)"
 
-#: src/content/ModelMenu.tsx:86
+#: src/content/ModelMenu.tsx:66
 msgid "Model"
 msgstr "Modèle"
 
-#: src/content/ChatView.tsx:120
-#: src/content/ChatView.tsx:121
-#: src/content/ModelMenu.tsx:80
+#: src/content/ChatView.tsx:122
+#: src/content/ChatView.tsx:123
+#: src/content/ModelMenu.tsx:60
 msgid "Model and reasoning effort"
 msgstr "Modèle et niveau de réflexion"
 
@@ -206,15 +182,15 @@ msgstr "Nouvelle discussion"
 msgid "New memory"
 msgstr "Nouvelle mémoire"
 
-#: src/content/ModelMenu.tsx:82
-msgid "No API key is configured. Configure one in the chatext app."
-msgstr "Aucune clé API n’est configurée. Configurez-en une dans l’app chatext."
+#: src/content/ModelMenu.tsx:62
+msgid "No API key is configured. Configure one in the Kodoneri app."
+msgstr "Aucune clé API n’est configurée. Configurez-en une dans l’app Kodoneri."
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:93
-#: src/background/session.ts:252
+#: src/background/provider.ts:105
+#: src/background/session.ts:253
 msgid "errors.apiKeyMissing"
-msgstr "Aucune clé API n’est configurée. Configurez-en une dans l’app chatext."
+msgstr "Aucune clé API n’est configurée. Configurez-en une dans l’app Kodoneri."
 
 #. js-lingui-explicit-id
 #: src/background/agent.ts:142
@@ -229,7 +205,7 @@ msgstr "Aucune conversation correspondante."
 msgid "No matching memories."
 msgstr "Aucune mémoire correspondante."
 
-#: src/content/ChatView.tsx:267
+#: src/content/ChatView.tsx:282
 msgid "No memory changes"
 msgstr "Aucune modification de la mémoire"
 
@@ -256,7 +232,7 @@ msgstr "Aucun titre n’a été reçu."
 msgid "Open chat"
 msgstr "Ouvrir le chat"
 
-#: src/content/ChatView.tsx:182
+#: src/content/ChatView.tsx:184
 msgid "Open Settings"
 msgstr "Ouvrir les réglages"
 
@@ -264,11 +240,12 @@ msgstr "Ouvrir les réglages"
 msgid "Open this conversation"
 msgstr "Ouvrir cette conversation"
 
-#: src/content/ChatView.tsx:291
+#: src/content/ChatView.tsx:246
+#: src/content/ChatView.tsx:306
 msgid "Reasoning"
 msgstr "Réflexion"
 
-#: src/content/ModelMenu.tsx:103
+#: src/content/ModelMenu.tsx:83
 msgid "Reasoning effort"
 msgstr "Niveau de réflexion"
 
@@ -287,7 +264,7 @@ msgstr "Génération de la réponse annulée."
 msgid "Restore size"
 msgstr "Rétablir la taille"
 
-#: src/content/ChatView.tsx:309
+#: src/content/ChatView.tsx:324
 msgid "Running…"
 msgstr "Exécution…"
 
@@ -303,11 +280,11 @@ msgstr "Rechercher dans l’historique"
 msgid "Search memories"
 msgstr "Rechercher dans la mémoire"
 
-#: src/content/ChatView.tsx:64
+#: src/content/ChatView.tsx:66
 msgid "Send"
 msgstr "Envoyer"
 
-#: src/content/ChatView.tsx:64
+#: src/content/ChatView.tsx:66
 msgid "Send and interrupt"
 msgstr "Interrompre et envoyer"
 
@@ -320,11 +297,11 @@ msgstr "Réglages"
 msgid "Show in sidebar"
 msgstr "Afficher dans la barre latérale"
 
-#: src/content/ChatView.tsx:181
-msgid "Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
-msgstr "Connectez-vous avec Apple pour utiliser l’offre gratuite de chatext, ou ajoutez votre propre clé API OpenAI, Anthropic ou DeepSeek."
+#: src/content/ChatView.tsx:183
+msgid "Sign in with Apple to use Kodoneri’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
+msgstr "Connectez-vous avec Apple pour utiliser l’offre gratuite de Kodoneri, ou ajoutez votre propre clé API OpenAI, Anthropic ou DeepSeek."
 
-#: src/content/ChatView.tsx:64
+#: src/content/ChatView.tsx:66
 msgid "Stop response"
 msgstr "Arrêter la réponse"
 
@@ -349,7 +326,7 @@ msgstr "Aujourd’hui"
 msgid "Untitled"
 msgstr "Sans titre"
 
-#: src/content/ChatView.tsx:264
+#: src/content/ChatView.tsx:279
 msgid "Updating memory…"
 msgstr "Mise à jour de la mémoire…"
 

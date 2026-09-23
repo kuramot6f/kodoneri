@@ -48,7 +48,8 @@ export interface ModelSettings {
 export const PROVIDERS = catalog.providers;
 export const PLANS = catalog.plans as Record<Plan, string[]>;
 export const CATALOG = catalog.models as CatalogModel[];
-export const DEFAULT_SETTINGS: ModelSettings = { model: modelKey("chatext", PLANS.free[0]!), effort: "medium" };
+export const DEFAULT_MODEL_ID = "deepseek-flash";
+export const DEFAULT_SETTINGS: ModelSettings = { model: modelKey("chatext", DEFAULT_MODEL_ID), effort: "low" };
 
 export function modelKey(access: Access, id: string): string {
   return `${access}:${id}`;

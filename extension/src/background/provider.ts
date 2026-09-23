@@ -6,7 +6,7 @@ import type { DeepSeekFilesOptions, DeepSeekLanguageModelOptions } from "@ai-sdk
 import { createOpenAI } from "@ai-sdk/openai";
 import type { OpenAIFilesOptions, OpenAILanguageModelResponsesOptions } from "@ai-sdk/openai";
 import type { LanguageModel, streamText, uploadFile } from "ai";
-import { CATALOG, PLANS, clampEffort, findModel, isPlan, lowestEffort, modelKey } from "../shared/models";
+import { CATALOG, DEFAULT_MODEL_ID, PLANS, clampEffort, findModel, isPlan, lowestEffort, modelKey } from "../shared/models";
 import type { Effort, ModelInfo, ModelSettings, Plan, Provider } from "../shared/models";
 import { TOOL_HISTORY_TTL_MS } from "../shared/conversation";
 
@@ -79,7 +79,7 @@ export function availableModels(): ModelInfo[] {
   return [...subscribed, ...own];
 }
 
-/** The first candidate whose model is available wins; without one, the first available model takes the first candidate's effort. */
+/** The first candidate whose model is available wins; without one, the default model (else the first available) takes the first candidate's effort. */
 export function resolveSettings(...candidates: (ModelSettings | undefined)[]): ModelSettings | null {
   const models = availableModels();
   const settings = candidates.filter((candidate) => candidate !== undefined);
@@ -87,7 +87,7 @@ export function resolveSettings(...candidates: (ModelSettings | undefined)[]): M
     const info = models.find((model) => model.key === candidate.model);
     if (info) return { model: info.key, effort: clampEffort(info, candidate.effort) };
   }
-  const info = models[0];
+  const info = models.find((model) => model.id === DEFAULT_MODEL_ID) ?? models[0];
   return info ? { model: info.key, effort: clampEffort(info, settings[0]?.effort ?? "medium") } : null;
 }
 
@@ -102,7 +102,7 @@ export function createMemoryRuntime(settings: ModelSettings): ModelRuntime {
 export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"): ModelRuntime {
   const info = findModel(settings.model);
   const apiKey = info && apiKeys[info.access === "chatext" ? "chatext" : info.provider];
-  if (!info || !apiKey) throw new Error(i18n._({ id: "errors.apiKeyMissing", message: "No API key is configured. Configure one in the chatext app." }));
+  if (!info || !apiKey) throw new Error(i18n._({ id: "errors.apiKeyMissing", message: "No API key is configured. Configure one in the Kodoneri app." }));
   const baseURL = info.access === "chatext" ? GATEWAY_BASE[info.provider] : undefined;
   const level = effort === "lowest" ? lowestEffort(info) : clampEffort(info, effort);
   const expiresAfter = TOOL_HISTORY_TTL_MS / 1000;

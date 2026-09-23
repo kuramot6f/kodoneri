@@ -22,7 +22,7 @@ msgstr "“{preview}”"
 msgid "{0, plural, one {# media item} other {# media items}}"
 msgstr "{0, plural, one {# media item} other {# media items}}"
 
-#: src/content/ChatView.tsx:243
+#: src/content/ChatView.tsx:258
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "{mediaCount, plural, one {# media item} other {# media items}}"
 
@@ -34,7 +34,7 @@ msgstr "Add to favorites"
 msgid "Add to favorites (the AI will no longer be able to edit it)"
 msgstr "Add to favorites (the AI will no longer be able to edit it)"
 
-#: src/content/ChatView.tsx:132
+#: src/content/ChatView.tsx:134
 msgid "Ask about this page"
 msgstr "Ask about this page"
 
@@ -46,7 +46,7 @@ msgstr "Back to list"
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:331
+#: src/content/ChatView.tsx:350
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Cache hit rate: {0}% ({1} / {2} tokens)"
 
@@ -58,10 +58,6 @@ msgstr "Chat history"
 msgid "Chats"
 msgstr "Chats"
 
-#: src/content/ModelMenu.tsx:119
-msgid "Clear"
-msgstr "Clear"
-
 #: src/content/App.tsx:177
 #: src/content/App.tsx:177
 msgid "Close panel"
@@ -71,7 +67,7 @@ msgstr "Close panel"
 msgid "Close search"
 msgstr "Close search"
 
-#: src/content/ChatView.tsx:100
+#: src/content/ChatView.tsx:102
 msgid "Compacting conversation…"
 msgstr "Compacting conversation…"
 
@@ -81,21 +77,9 @@ msgid "Content"
 msgstr "Content"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:322
+#: src/background/session.ts:323
 msgid "errors.compactionFailed"
 msgstr "Conversation compaction failed. {error}"
-
-#: src/content/ModelMenu.tsx:118
-msgid "Copy diagnostics"
-msgstr "Copy diagnostics"
-
-#: src/content/ModelMenu.tsx:75
-msgid "Could not clear diagnostics"
-msgstr "Could not clear diagnostics"
-
-#: src/content/ModelMenu.tsx:66
-msgid "Could not copy diagnostics"
-msgstr "Could not copy diagnostics"
 
 #: src/content/HistoryView.tsx:47
 #: src/content/HistoryView.tsx:47
@@ -106,14 +90,6 @@ msgstr "Delete this conversation"
 #: src/content/MemoryListView.tsx:67
 msgid "Delete this memory"
 msgstr "Delete this memory"
-
-#: src/content/ModelMenu.tsx:73
-msgid "Diagnostics cleared"
-msgstr "Diagnostics cleared"
-
-#: src/content/ModelMenu.tsx:64
-msgid "Diagnostics copied"
-msgstr "Diagnostics copied"
 
 #: src/content/App.tsx:172
 msgid "Done"
@@ -133,15 +109,15 @@ msgid "Enlarge"
 msgstr "Enlarge"
 
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:273
+#: src/content/ChatView.tsx:288
 msgid "Error: {0}"
 msgstr "Error: {0}"
 
-#: src/content/ChatView.tsx:208
+#: src/content/ChatView.tsx:231
 msgid "Error: {content}"
 msgstr "Error: {content}"
 
-#: src/content/ChatView.tsx:341
+#: src/content/ChatView.tsx:360
 msgid "Execution was denied."
 msgstr "Execution was denied."
 
@@ -149,19 +125,19 @@ msgstr "Execution was denied."
 msgid "Finish editing and return to the list"
 msgstr "Finish editing and return to the list"
 
-#: src/content/ChatView.tsx:99
+#: src/content/ChatView.tsx:101
 msgid "Generating response…"
 msgstr "Generating response…"
 
-#: src/content/ChatView.tsx:180
+#: src/content/ChatView.tsx:182
 msgid "Get started for free"
 msgstr "Get started for free"
 
-#: src/content/ChatView.tsx:342
+#: src/content/ChatView.tsx:361
 msgid "Image or file"
 msgstr "Image or file"
 
-#: src/content/ChatView.tsx:112
+#: src/content/ChatView.tsx:114
 msgid "Include {selectionSummary}"
 msgstr "Include {selectionSummary}"
 
@@ -173,11 +149,11 @@ msgstr "memory"
 msgid "Memory"
 msgstr "Memory"
 
-#: src/content/ChatView.tsx:266
+#: src/content/ChatView.tsx:281
 msgid "Memory update failed"
 msgstr "Memory update failed"
 
-#: src/content/ChatView.tsx:267
+#: src/content/ChatView.tsx:282
 msgid "Memory updated"
 msgstr "Memory updated"
 
@@ -185,13 +161,13 @@ msgstr "Memory updated"
 msgid "Menu (chat history and memory)"
 msgstr "Menu (chat history and memory)"
 
-#: src/content/ModelMenu.tsx:86
+#: src/content/ModelMenu.tsx:66
 msgid "Model"
 msgstr "Model"
 
-#: src/content/ChatView.tsx:120
-#: src/content/ChatView.tsx:121
-#: src/content/ModelMenu.tsx:80
+#: src/content/ChatView.tsx:122
+#: src/content/ChatView.tsx:123
+#: src/content/ModelMenu.tsx:60
 msgid "Model and reasoning effort"
 msgstr "Model and reasoning effort"
 
@@ -206,15 +182,15 @@ msgstr "New chat"
 msgid "New memory"
 msgstr "New memory"
 
-#: src/content/ModelMenu.tsx:82
-msgid "No API key is configured. Configure one in the chatext app."
-msgstr "No API key is configured. Configure one in the chatext app."
+#: src/content/ModelMenu.tsx:62
+msgid "No API key is configured. Configure one in the Kodoneri app."
+msgstr "No API key is configured. Configure one in the Kodoneri app."
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:93
-#: src/background/session.ts:252
+#: src/background/provider.ts:105
+#: src/background/session.ts:253
 msgid "errors.apiKeyMissing"
-msgstr "No API key is configured. Configure one in the chatext app."
+msgstr "No API key is configured. Configure one in the Kodoneri app."
 
 #. js-lingui-explicit-id
 #: src/background/agent.ts:142
@@ -229,7 +205,7 @@ msgstr "No matching conversations."
 msgid "No matching memories."
 msgstr "No matching memories."
 
-#: src/content/ChatView.tsx:267
+#: src/content/ChatView.tsx:282
 msgid "No memory changes"
 msgstr "No memory changes"
 
@@ -256,7 +232,7 @@ msgstr "No title was received."
 msgid "Open chat"
 msgstr "Open chat"
 
-#: src/content/ChatView.tsx:182
+#: src/content/ChatView.tsx:184
 msgid "Open Settings"
 msgstr "Open Settings"
 
@@ -264,11 +240,12 @@ msgstr "Open Settings"
 msgid "Open this conversation"
 msgstr "Open this conversation"
 
-#: src/content/ChatView.tsx:291
+#: src/content/ChatView.tsx:246
+#: src/content/ChatView.tsx:306
 msgid "Reasoning"
 msgstr "Reasoning"
 
-#: src/content/ModelMenu.tsx:103
+#: src/content/ModelMenu.tsx:83
 msgid "Reasoning effort"
 msgstr "Reasoning effort"
 
@@ -287,7 +264,7 @@ msgstr "Response generation was cancelled."
 msgid "Restore size"
 msgstr "Restore size"
 
-#: src/content/ChatView.tsx:309
+#: src/content/ChatView.tsx:324
 msgid "Running…"
 msgstr "Running…"
 
@@ -303,11 +280,11 @@ msgstr "Search history"
 msgid "Search memories"
 msgstr "Search memories"
 
-#: src/content/ChatView.tsx:64
+#: src/content/ChatView.tsx:66
 msgid "Send"
 msgstr "Send"
 
-#: src/content/ChatView.tsx:64
+#: src/content/ChatView.tsx:66
 msgid "Send and interrupt"
 msgstr "Send and interrupt"
 
@@ -320,11 +297,11 @@ msgstr "Settings"
 msgid "Show in sidebar"
 msgstr "Show in sidebar"
 
-#: src/content/ChatView.tsx:181
-msgid "Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
-msgstr "Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
+#: src/content/ChatView.tsx:183
+msgid "Sign in with Apple to use Kodoneri’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
+msgstr "Sign in with Apple to use Kodoneri’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
 
-#: src/content/ChatView.tsx:64
+#: src/content/ChatView.tsx:66
 msgid "Stop response"
 msgstr "Stop response"
 
@@ -349,7 +326,7 @@ msgstr "Today"
 msgid "Untitled"
 msgstr "Untitled"
 
-#: src/content/ChatView.tsx:264
+#: src/content/ChatView.tsx:279
 msgid "Updating memory…"
 msgstr "Updating memory…"
 

@@ -29,16 +29,13 @@ struct ContentView: View {
             }
 
             ExtensionSection(isEnabled: isExtensionEnabled)
-            DiagnosticsSection()
 
             if account.keys != nil {
                 GatewaySection(account: account)
                 ApiKeysSection(account: account)
             }
 
-            if account.token != nil {
-                SignOutSection(account: account)
-            }
+            MoreSection(account: account)
         }
         .formStyle(.grouped)
         .navigationTitle("Kodoneri")
@@ -86,9 +83,12 @@ struct ContentView: View {
 
 }
 
-private struct DiagnosticsSection: View {
+/// Last on the page, with sign-out at the very bottom as in Settings.
+private struct MoreSection: View {
 
+    let account: Account
     @State private var status: String?
+    @State private var isConfirmingSignOut = false
 
     var body: some View {
         Section {
@@ -113,8 +113,17 @@ private struct DiagnosticsSection: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
-        } header: {
-            Text("Diagnostics")
+            Link(destination: URL(string: "https://github.com/kuramot6f/kodoneri")!) {
+                Text(verbatim: "GitHub")
+            }
+            if account.token != nil {
+                Button("Sign Out", role: .destructive) {
+                    isConfirmingSignOut = true
+                }
+                .confirmationDialog("Are you sure you want to sign out?", isPresented: $isConfirmingSignOut, titleVisibility: .visible) {
+                    Button("Sign Out", role: .destructive) { account.signOut() }
+                }
+            }
         }
     }
 
@@ -357,25 +366,6 @@ private struct GatewaySection: View {
 
 }
 
-/// Last on the page, apart from the account it signs out of, as in Settings.
-private struct SignOutSection: View {
-
-    let account: Account
-    @State private var isConfirming = false
-
-    var body: some View {
-        Section {
-            Button("Sign Out", role: .destructive) {
-                isConfirming = true
-            }
-            .confirmationDialog("Are you sure you want to sign out?", isPresented: $isConfirming, titleVisibility: .visible) {
-                Button("Sign Out", role: .destructive) { account.signOut() }
-            }
-        }
-    }
-
-}
-
 private struct ExtensionSection: View {
 
     let isEnabled: Bool?
@@ -383,7 +373,7 @@ private struct ExtensionSection: View {
 
     var body: some View {
         Section {
-            Toggle("Chat Button on Web Pages", isOn: $chatButton)
+            Toggle("Show Chat Button on Web Pages", isOn: $chatButton)
             if SafariExtension.canManage {
                 if let isEnabled {
                     LabeledContent("Status") {
@@ -401,8 +391,6 @@ private struct ExtensionSection: View {
             }
         } header: {
             Text("Safari Extension")
-        } footer: {
-            Text("Shows a button at the bottom right of web pages that opens the chat.")
         }
     }
 
