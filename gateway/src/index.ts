@@ -1,6 +1,7 @@
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { findCatalogModel, PLANS, type Provider } from "../../extension/src/shared/models.ts";
 import { effectivePlan, ensureBilling, syncTransaction, verifyNotification, type BillingRow } from "./billing";
+import { UPSTREAMS, clientResponse, prepareBody, requestHeaders, type Body } from "./upstream";
 import { costMicrousd, extractUsage, readUsage, totalInput } from "./usage";
 
 const APPLE_ISSUER = "https://appleid.apple.com";
@@ -14,35 +15,6 @@ declare global {
     CLOUDFLARE_API_TOKEN: string;
   }
 }
-
-type Body = Record<string, unknown>;
-
-/** Each provider's API is relayed unchanged under `/{provider}`; only these paths are open. */
-interface Upstream {
-  /** The path whose JSON body names the model; the only one that is metered. */
-  generate: string;
-  files: RegExp;
-  /** Tags the request with the hashed user so the provider can attribute abuse. */
-  identify(body: Body, billingId: string): Body;
-}
-
-const UPSTREAMS: Record<Provider, Upstream> = {
-  openai: {
-    generate: "/responses",
-    files: /^\/files(\/|$)/,
-    identify: (body, billingId) => ({ ...body, safety_identifier: billingId })
-  },
-  anthropic: {
-    generate: "/v1/messages",
-    files: /^\/v1\/files(\/|$)/,
-    identify: (body, billingId) => ({ ...body, metadata: { ...(body.metadata as Body | undefined), user_id: billingId } })
-  },
-  deepseek: {
-    generate: "/chat/completions",
-    files: /^\/files(\/|$)/,
-    identify: (body, billingId) => ({ ...body, user_id: billingId })
-  }
-};
 
 export default {
   async fetch(request, env, ctx): Promise<Response> {
@@ -108,16 +80,16 @@ async function signIn(request: Request, env: Env): Promise<Response> {
 async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider: Provider, path: string): Promise<Response> {
   const upstream = UPSTREAMS[provider];
   const generating = path === upstream.generate;
-  if (!generating && !upstream.files.test(path)) return status(404);
+  if (!generating && path !== upstream.files) return status(404);
+  if (request.method !== "POST") return status(405);
   const user = await authenticate(request, env);
   if (!user) return status(401);
   const billing = await ensureBilling(env, user.userId);
   if (!canUseGateway(billing)) return usageLimitResponse(billing);
 
-  let body: BodyInit | null = request.body;
+  let body: BodyInit;
   let model: string | null = null;
   if (generating) {
-    if (request.method !== "POST") return status(405);
     const input = await request.json<Body>().catch(() => null);
     if (!input) return status(400);
     model = typeof input.model === "string" ? input.model : null;
@@ -125,22 +97,22 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
     if (!model || findCatalogModel(model)?.provider !== provider || !PLANS[plan].includes(model)) {
       return errorResponse(403, "model_not_allowed", `${model ?? "This model"} is not included in the ${plan} plan.`);
     }
-    body = JSON.stringify(upstream.identify(input, user.billingId));
+    const prepared = prepareBody(provider, input, user.billingId);
+    if (!prepared) return errorResponse(400, "tool_not_allowed", "Only function tools are available through chatext.");
+    body = JSON.stringify(prepared);
+  } else {
+    body = await request.arrayBuffer();
   }
   ctx.waitUntil(env.DB.prepare("UPDATE tokens SET last_used_at = datetime('now') WHERE token_hash = ?").bind(user.tokenHash).run());
 
-  const headers = new Headers(request.headers);
-  headers.delete("host");
-  headers.delete("authorization");
-  headers.delete("x-api-key");
-  headers.delete("cf-aig-byok-alias");
+  const headers = requestHeaders(request.headers);
   headers.set("cf-aig-authorization", `Bearer ${env.CLOUDFLARE_API_TOKEN}`);
   headers.set("cf-aig-metadata", JSON.stringify({ user_id: user.billingId }));
   headers.set("cf-aig-collect-log-payload", "false");
 
   const base = `https://gateway.ai.cloudflare.com/v1/${env.CLOUDFLARE_ACCOUNT_ID}/${env.CLOUDFLARE_AI_GATEWAY_ID}/${provider}`;
-  const response = await fetch(`${base}${path}`, { method: request.method, headers, body });
-  if (!model || !response.ok || !response.body || !billing.period_start) return response;
+  const response = await fetch(`${base}${path}`, { method: "POST", headers, body });
+  if (!model || !response.ok || !response.body || !billing.period_start) return clientResponse(response.body, response);
 
   const [clientBody, meterBody] = response.body.tee();
   const eventId = response.headers.get("cf-aig-log-id") ?? crypto.randomUUID();
@@ -149,7 +121,7 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
       ? recordUsage(env, user.userId, billing.period_start!, eventId, provider, model!, usage)
       : console.error("Provider response carried no usage", provider, model, eventId))
     .catch((error) => console.error("Usage could not be recorded", provider, model, eventId, error)));
-  return new Response(clientBody, response);
+  return clientResponse(clientBody, response);
 }
 
 /** Returns the current StoreKit period and D1-backed usage totals. */

@@ -84,7 +84,8 @@ export async function syncTransaction(env: Env, signedTransaction: string, expec
   if (!owner || (expectedUserId && owner.user_id !== expectedUserId)) throw new Error("transaction account does not match user");
 
   const periodStart = new Date(purchaseDate).toISOString();
-  const periodEnd = new Date(expiresDate).toISOString();
+  // A refunded or revoked subscription ends when it was revoked, not when it would have expired.
+  const periodEnd = new Date(transaction.revocationDate ?? expiresDate).toISOString();
   await env.DB.batch([
     env.DB.prepare(`
       INSERT OR IGNORE INTO storekit_transactions
