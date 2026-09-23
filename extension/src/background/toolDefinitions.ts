@@ -65,20 +65,18 @@ export const deleteInput = z.object({
   ref: memoryRef.describe("Memory ref from list (type=memory).")
 });
 
-const URL_ACTIONS = new Set(["open_tab", "go_to"]);
-
 export const navigateInput = z.object({
-  action: z.enum(["back", "forward", "reload", "open_tab", "close_tab", "switch_tab", "go_to"]),
+  action: z.enum(["back", "forward", "reload", "open", "close_tab", "switch_tab"]),
   ref: z.string().regex(/^tab_[0-9]+$/).optional()
-    .describe("Tab ref from list (type=tab) or browser_context, such as tab_1043. Required for every action except open_tab."),
+    .describe("Tab ref from list (type=tab) or browser_context, such as tab_1043. Required for every action except open, where omitting it opens url in a new background tab."),
   url: z.string().min(1).max(10000).optional()
-    .describe("Required for open_tab and go_to.")
+    .describe("Required for open; not allowed for other actions.")
 }).strict().superRefine((args, context) => {
-  if (args.action === "open_tab" ? args.ref !== undefined : args.ref === undefined) {
-    context.addIssue({ code: "custom", message: args.action === "open_tab" ? "ref cannot be specified for open_tab." : `${args.action} requires ref. Use the browser_context ref for the current tab.` });
+  if (args.action !== "open" && args.ref === undefined) {
+    context.addIssue({ code: "custom", message: `${args.action} requires ref. Use the browser_context ref for the current tab.` });
   }
-  if (URL_ACTIONS.has(args.action) ? args.url === undefined : args.url !== undefined) {
-    context.addIssue({ code: "custom", message: URL_ACTIONS.has(args.action) ? `${args.action} requires url.` : `url cannot be specified for ${args.action}.` });
+  if ((args.action === "open") !== (args.url !== undefined)) {
+    context.addIssue({ code: "custom", message: args.action === "open" ? "open requires url." : `url cannot be specified for ${args.action}.` });
   }
 });
 
@@ -112,6 +110,6 @@ export const TOOL_DESCRIPTIONS = {
   rename: "State-changing rename of one memory topic. Fails for favorites (is_editable=false).",
   new: "State-changing creation of a new memory topic. A topic is a persistent semantic area (a project, preference, background, plan, or constraint) that future conversations can reuse; prefer patch on an existing topic when the information belongs there. Fails when 10 topics already exist or content exceeds 1000 characters. Returns the created ref.",
   delete: "State-changing deletion of a whole memory topic. Use when the user asked to forget it, or all its content is invalid, superseded, stale with no future utility, or duplicated elsewhere; remove a single statement with patch instead. Fails for favorites (is_editable=false).",
-  navigate: "State-changing browser navigation and tab management. Every action except open_tab requires a tab ref from list (type=tab) or browser_context; the current page's ref is given in browser_context. open_tab opens a new tab in the background; use switch_tab when it must become active. switch_tab also moves this conversation into that tab: it becomes the current tab for capture_viewport and browser_context, and the previous tab keeps its own ref. The tab running this conversation cannot be closed. go_to and open_tab require url. Returns after the browser accepts the operation, not after the destination finishes loading. Observe the resulting page or tabs before dependent actions.",
+  navigate: "State-changing browser navigation and tab management. Every action except open requires a tab ref from list (type=tab) or browser_context; the current page's ref is given in browser_context. open loads url in the ref tab, or in a new background tab when ref is omitted; use switch_tab when a tab must become active. switch_tab also moves this conversation into that tab: it becomes the current tab for capture_viewport and browser_context, and the previous tab keeps its own ref. The tab running this conversation cannot be closed. open requires url. Returns after the browser accepts the operation, not after the destination finishes loading. Observe the resulting page or tabs before dependent actions.",
   interact: "State-changing operation on the first live DOM element matching query in the referenced tab or iframe. Works in background tabs. Tabs opened by click remain in the background; use list (type=tab) and switch_tab when one must become active. Returns action, query, element, and success after dispatch, not confirmation of navigation, submission, or task completion. type replaces an input/textarea/contenteditable value; press dispatches synthetic keydown/keyup events and does not guarantee native key behavior; select chooses an option by value; check sets a checkbox/radio to checked. Invalid selectors, absent or incompatible elements, and unavailable refs fail. Choose selectors from observed HTML. Observe the result before planning dependent actions; do not blindly retry an operation whose outcome is unknown."
 } as const;
