@@ -102,9 +102,10 @@ async function signIn(request: Request, env: Env): Promise<Response> {
   if (consumed.meta.changes !== 1) return status(401);
 
   const token = crypto.randomUUID().replaceAll("-", "") + crypto.randomUUID().replaceAll("-", "");
+  const tokenHash = await sha256(token);
   await env.DB.batch([
     env.DB.prepare("INSERT OR IGNORE INTO users (id) VALUES (?)").bind(subject),
-    env.DB.prepare("INSERT INTO tokens (token, user_id) VALUES (?, ?)").bind(token, subject)
+    env.DB.prepare("INSERT INTO tokens (token_hash, user_id) VALUES (?, ?)").bind(tokenHash, subject)
   ]);
   await ensureBilling(env, subject);
   return Response.json({ token });
@@ -133,7 +134,7 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
     }
     body = JSON.stringify(upstream.identify(input, user.billingId));
   }
-  ctx.waitUntil(env.DB.prepare("UPDATE tokens SET last_used_at = datetime('now') WHERE token = ?").bind(user.token).run());
+  ctx.waitUntil(env.DB.prepare("UPDATE tokens SET last_used_at = datetime('now') WHERE token_hash = ?").bind(user.tokenHash).run());
 
   const headers = new Headers(request.headers);
   headers.delete("host");
@@ -212,12 +213,13 @@ function billingResponse(row: BillingRow): Response {
   });
 }
 
-async function authenticate(request: Request, env: Env): Promise<{ token: string; userId: string; billingId: string } | null> {
+async function authenticate(request: Request, env: Env): Promise<{ tokenHash: string; userId: string; billingId: string } | null> {
   // The Anthropic SDK sends its key as x-api-key; the others use a bearer token.
   const token = request.headers.get("authorization")?.match(/^Bearer (\S+)$/)?.[1] ?? request.headers.get("x-api-key");
   if (!token) return null;
-  const row = await env.DB.prepare("SELECT user_id FROM tokens WHERE token = ?").bind(token).first<{ user_id: string }>();
-  return row ? { token, userId: row.user_id, billingId: await sha256(row.user_id) } : null;
+  const tokenHash = await sha256(token);
+  const row = await env.DB.prepare("SELECT user_id FROM tokens WHERE token_hash = ?").bind(tokenHash).first<{ user_id: string }>();
+  return row ? { tokenHash, userId: row.user_id, billingId: await sha256(row.user_id) } : null;
 }
 
 function canUseGateway(row: BillingRow): boolean {

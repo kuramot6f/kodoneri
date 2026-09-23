@@ -10,7 +10,9 @@
     "test": "node --experimental-strip-types --test test/*.test.ts",
     "typecheck": "wrangler types && tsc --noEmit",
     "db:init": "wrangler d1 execute chatext-gateway --remote --file schema.sql",
-    "db:init:local": "wrangler d1 execute chatext-gateway --local --file schema.sql"
+    "db:init:local": "wrangler d1 execute chatext-gateway --local --file schema.sql",
+    "db:migrate:tokens": "node scripts/migrate-token-hashes.mjs --remote",
+    "db:migrate:tokens:local": "node scripts/migrate-token-hashes.mjs --local"
   },
   "dependencies": {
     "@apple/app-store-server-library": "3.1.0",
