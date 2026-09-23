@@ -3,15 +3,17 @@ import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
 import { isTouchDevice } from "./device";
 import { Icon } from "./Icon";
+import type { RuntimeMessage } from "../shared/protocol";
 
 interface SearchBarProps {
+  searchable: boolean;
   value: string;
   placeholder: string;
   onChange: (value: string) => void;
 }
 
-/** Sticky bottom search button shared by the chat history and memory lists; the field appears only while open. */
-export function SearchBar({ value, placeholder, onChange }: SearchBarProps) {
+/** Sticky bottom bar shared by the chat history and memory lists: search on the left, settings on the right. */
+export function SearchBar({ searchable, value, placeholder, onChange }: SearchBarProps) {
   const { t } = useLingui();
   const [open, setOpen] = useState(false);
   const label = open ? t`Close search` : placeholder;
@@ -22,10 +24,12 @@ export function SearchBar({ value, placeholder, onChange }: SearchBarProps) {
   return (
     <div className="bottom-bar">
       <div className="search-row">
-        <button className="round" type="button" aria-label={label} title={label} aria-expanded={open} onClick={toggle}>
-          <Icon name={open ? "close" : "search"} />
-        </button>
-        {open && (
+        {searchable && (
+          <button className="round" type="button" aria-label={label} title={label} aria-expanded={open} onClick={toggle}>
+            <Icon name={open ? "close" : "search"} />
+          </button>
+        )}
+        {searchable && open && (
           <input
             className="search-input"
             type="search"
@@ -36,9 +40,19 @@ export function SearchBar({ value, placeholder, onChange }: SearchBarProps) {
             onChange={(event) => onChange(event.target.value)}
           />
         )}
+        <button className="round" type="button" aria-label={t`Settings`} title={t`Settings`} onClick={openSettings}>
+          <Icon name="settings" />
+        </button>
       </div>
     </div>
   );
+}
+
+// iOS の拡張はアプリを直接起動できないので、ページ自体を URL スキームへ遷移させて Safari の確認を出す。
+// macOS はネイティブメッセージでアプリを開く。
+function openSettings() {
+  if (isTouchDevice()) location.href = "chatext://settings";
+  else void browser.runtime.sendMessage({ type: "open_settings" } satisfies RuntimeMessage);
 }
 
 export function normalizeQuery(query: string): string {
