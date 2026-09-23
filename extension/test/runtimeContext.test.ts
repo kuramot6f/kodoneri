@@ -3,7 +3,7 @@ import test from "node:test";
 import { createRuntimeContext } from "../src/background/prompt.ts";
 
 function context(locale: string, date: string, timezone: string) {
-  return JSON.parse(createRuntimeContext(locale, new Date(date), timezone).split("\n")[1]);
+  return JSON.parse(createRuntimeContext(locale, new Date(date), timezone));
 }
 
 test("runtime date follows the device timezone across a UTC date boundary", () => {

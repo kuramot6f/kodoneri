@@ -164,7 +164,7 @@ function MessageView({
   if (message.role === "system" || message.role === "tool") return null;
   if (message.role === "user") {
     const { kind } = getMeta(message);
-    if (kind === "browser_context" || kind === "compaction" || kind === "memory_update") return null;
+    if (kind === "runtime_context" || kind === "memory_context" || kind === "browser_context" || kind === "compaction" || kind === "memory_update") return null;
     if (kind === "selection_context") {
       const { selection } = getMeta(message);
       return selection ? <SelectionMessage selection={selection} /> : null;

@@ -3,7 +3,8 @@ import test from "node:test";
 import { jsonSchema, tool } from "ai";
 import { MockLanguageModelV3, simulateReadableStream } from "ai/test";
 import { streamAnswer } from "../src/background/agent.ts";
-import { createConversationSystemPrompt, SYSTEM_PROMPT } from "../src/background/prompt.ts";
+import { formatMemoryContext, SYSTEM_PROMPT } from "../src/background/prompt.ts";
+import { latestContext, taggedMessage } from "../src/shared/conversation.ts";
 import type { ModelMessage } from "ai";
 
 const usage = {
@@ -115,12 +116,22 @@ test("streamAnswer reports cancellation and keeps the partial text as a message"
   assert.deepEqual(result.partial, { role: "assistant", content: [{ type: "text", text: "par" }] });
 });
 
-test("a conversation system prompt embeds the initial memory list as reference data", () => {
+test("the memory list is reference data outside the fixed system prompt", () => {
   const memoryList = JSON.stringify({ memories: [{ ref: "memory_1", title: "Preferences" }] });
-  const prompt = createConversationSystemPrompt(memoryList);
+  const context = formatMemoryContext(memoryList);
 
-  assert.ok(prompt.startsWith(SYSTEM_PROMPT));
-  assert.ok(prompt.includes(memoryList));
-  assert.match(prompt, /list\(type=memory\)/);
-  assert.doesNotMatch(prompt, /list\(type=tab\)/);
+  assert.ok(context.includes(memoryList));
+  assert.match(context, /list\(type=memory\)/);
+  assert.ok(!SYSTEM_PROMPT.includes(memoryList));
+});
+
+test("latestContext returns the newest context of a kind without its tag", () => {
+  const messages: ModelMessage[] = [
+    taggedMessage("memory_context", "old"),
+    { role: "user", content: "q" },
+    taggedMessage("memory_context", "new"),
+    taggedMessage("runtime_context", "runtime")
+  ];
+  assert.equal(latestContext(messages, "memory_context"), "new");
+  assert.equal(latestContext(messages, "browser_context"), undefined);
 });
