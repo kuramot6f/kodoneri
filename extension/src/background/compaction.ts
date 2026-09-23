@@ -10,7 +10,7 @@ interface ConversationCompaction {
 export const COMPACTION_THRESHOLD_RATIO = 0.8;
 const RECENT_TURNS_TO_KEEP = 5;
 
-const TAIL_CONTEXT_NAMES = new Set(["browser_context", "selection_context"]);
+const TAIL_CONTEXT_NAMES = new Set(["runtime_context", "memory_context", "browser_context", "selection_context"]);
 
 export function planCompaction(
   messages: ModelMessage[],

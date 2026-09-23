@@ -27,6 +27,8 @@ export interface Conversation {
 }
 
 type MessageKind =
+  | "runtime_context"
+  | "memory_context"
   | "browser_context"
   | "selection_context"
   | "runtime_error"
@@ -58,6 +60,12 @@ export function createConversation(firstQuestion: string): Conversation {
 
 export function taggedMessage(kind: MessageKind, content: string, meta: Omit<Meta, "kind"> = {}): UserModelMessage {
   return withMeta({ role: "user", content: [{ type: "text", text: `[${kind}]\n${content}` }] }, { ...meta, kind });
+}
+
+/** The content of the latest message of that kind; contexts are appended only when it changes, so the history stays append-only. */
+export function latestContext(messages: ModelMessage[], kind: MessageKind): string | undefined {
+  const message = messages.findLast((candidate) => candidate.role === "user" && getMeta(candidate).kind === kind);
+  return message && getMessageText(message);
 }
 
 export function stamp<T extends ModelMessage>(message: T, at = Date.now()): T {

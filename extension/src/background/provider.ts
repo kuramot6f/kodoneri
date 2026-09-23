@@ -94,7 +94,16 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
       };
     }
     case "anthropic": {
-      const anthropic = createAnthropic({ apiKey, baseURL, headers: { "anthropic-dangerous-direct-browser-access": "true" } });
+      const anthropic = createAnthropic({
+        apiKey,
+        baseURL,
+        headers: {
+          "anthropic-dangerous-direct-browser-access": "true",
+          // Opts into drop_block: a thinking block whose prefix changed (compaction, expired tool history)
+          // is dropped instead of failing the request. Models without the check accept it too.
+          "anthropic-beta": "thinking-binding-controls-2026-08-01"
+        }
+      });
       const options = info.efforts.length === 0
         ? {}
         : level === "none"

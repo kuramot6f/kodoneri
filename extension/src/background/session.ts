@@ -5,6 +5,7 @@ import {
   createConversation,
   expireToolHistory,
   getMessageText,
+  latestContext,
   stamp,
   taggedMessage
 } from "../shared/conversation";
@@ -24,7 +25,7 @@ import { applyCompaction, planCompaction } from "./compaction";
 import { availableModels, createRuntime, refreshApiKeys, resolveSettings } from "./provider";
 import type { ModelRuntime } from "./provider";
 import { createTools } from "./tools";
-import { createConversationSystemPrompt, createRuntimeContext, formatSelectionContext } from "./prompt";
+import { createRuntimeContext, formatMemoryContext, formatSelectionContext, SYSTEM_PROMPT } from "./prompt";
 import { listMemories } from "./stored";
 import { debugEvent } from "./debug";
 import { errorData } from "../shared/debugLog";
@@ -193,16 +194,17 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
     const firstTurn = conversation.messages.length === 0;
     // Keys live in memory and are re-read from the Keychain only when a conversation starts.
     if (firstTurn) await refreshApiKeys().catch(() => undefined);
-    // Instructions are rebuilt for every question from the current memories and are never persisted.
-    const systemPrompt = createConversationSystemPrompt(JSON.stringify(await listMemories()));
+    // The system prompt never changes; what changes is appended as context only when it differs from the
+    // latest one, so the prompt cache and the thinking blocks bound to earlier turns stay valid.
+    const runtimeContext = createRuntimeContext(browser.i18n.getUILanguage(), new Date(now));
+    const memoryContext = formatMemoryContext(JSON.stringify(await listMemories()));
+    const page = { ref: `tab_${session.tabId}`, title: message.title, url: message.url, htmlLength: message.htmlLength };
+    const lastPage = JSON.parse(latestContext(conversation.messages, "browser_context") ?? "null") as typeof page | null;
     conversation.messages = [
       ...conversation.messages,
-      stamp(taggedMessage("browser_context", JSON.stringify({
-        ref: `tab_${session.tabId}`,
-        title: message.title,
-        url: message.url,
-        htmlLength: message.htmlLength
-      })), now),
+      ...(runtimeContext !== latestContext(conversation.messages, "runtime_context") ? [stamp(taggedMessage("runtime_context", runtimeContext), now)] : []),
+      ...(memoryContext !== latestContext(conversation.messages, "memory_context") ? [stamp(taggedMessage("memory_context", memoryContext), now)] : []),
+      ...(lastPage?.ref !== page.ref || lastPage.url !== page.url ? [stamp(taggedMessage("browser_context", JSON.stringify(page)), now)] : []),
       ...(message.selection ? [stamp(taggedMessage("selection_context", formatSelectionContext(message.selection), { selection: message.selection }), now)] : []),
       stamp({ role: "user", content: message.text }, now)
     ];
@@ -223,7 +225,7 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
       pushView(session);
       return;
     }
-    await answer(session, conversation, models, systemPrompt, message.requestId, controller.signal, firstTurn ? message.text : null);
+    await answer(session, conversation, models, message.requestId, controller.signal, firstTurn ? message.text : null);
   } finally {
     debugEvent("request_finished", {
       tabId: session.tabId,
@@ -257,7 +259,6 @@ async function answer(
   session: Session,
   conversation: Conversation,
   models: Models,
-  systemPrompt: string,
   requestId: string,
   signal: AbortSignal,
   titleQuestion: string | null
@@ -271,7 +272,6 @@ async function answer(
     moveSession: (tabId: number) => moveSession(session, tabId)
   };
   const live = () => session.conversation === conversation;
-  const instructions = `${systemPrompt}\n\n${createRuntimeContext(browser.i18n.getUILanguage())}`;
   const result = await streamAnswer(models.main, conversation.messages, createTools(runtime), signal, {
     onUpdate: (step) => {
       if (!live() || !session.step) return;
@@ -286,7 +286,7 @@ async function answer(
       pushView(session);
     },
     onToolError: (toolName, errorMessage) => debugEvent("tool_failed", { requestId, toolName, errorMessage })
-  }, instructions);
+  }, SYSTEM_PROMPT);
   debugEvent("answer_finished", {
     tabId: session.tabId,
     requestId,
@@ -333,10 +333,10 @@ async function answer(
       if (live()) pushView(session);
     }).catch(() => undefined);
   }
-  void maintainMemory(session, conversation, models.low, instructions);
+  void maintainMemory(session, conversation, models.low);
 }
 
-async function maintainMemory(session: Session, conversation: Conversation, model: ModelRuntime, instructions: string): Promise<void> {
+async function maintainMemory(session: Session, conversation: Conversation, model: ModelRuntime): Promise<void> {
   const progress: MemoryProgress = { messages: [], done: false, cacheUsage: null };
   let finished: ModelMessage[] = [];
   session.memory = progress;
@@ -365,7 +365,7 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
         progress.messages = finished;
       }
     },
-    instructions
+    SYSTEM_PROMPT
   );
   progress.done = true;
   progress.cacheUsage = result.cacheUsage;
