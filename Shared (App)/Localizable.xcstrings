@@ -988,166 +988,166 @@
         }
       }
     },
-    "If you haven’t turned on chatext yet, go to Settings > Apps > Safari > Extensions." : {
+    "If you haven’t turned on Kodoneri yet, go to Settings > Apps > Safari > Extensions." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Falls du chatext noch nicht aktiviert hast, öffne Einstellungen > Apps > Safari > Erweiterungen."
+            "value" : "Falls du Kodoneri noch nicht aktiviert hast, öffne Einstellungen > Apps > Safari > Erweiterungen."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si aún no has activado chatext, ve a Ajustes > Apps > Safari > Extensiones."
+            "value" : "Si aún no has activado Kodoneri, ve a Ajustes > Apps > Safari > Extensiones."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si vous n’avez pas encore activé chatext, accédez à Réglages > Apps > Safari > Extensions."
+            "value" : "Si vous n’avez pas encore activé Kodoneri, accédez à Réglages > Apps > Safari > Extensions."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jika Anda belum menyalakan chatext, buka Pengaturan > App > Safari > Ekstensi."
+            "value" : "Jika Anda belum menyalakan Kodoneri, buka Pengaturan > App > Safari > Ekstensi."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se non hai ancora attivato chatext, vai in Impostazioni > App > Safari > Estensioni."
+            "value" : "Se non hai ancora attivato Kodoneri, vai in Impostazioni > App > Safari > Estensioni."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "chatextをまだオンにしていない場合は、設定 > アプリ > Safari > 機能拡張 を開いてください。"
+            "value" : "コドネリをまだオンにしていない場合は、設定 > アプリ > Safari > 機能拡張 を開いてください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "아직 chatext를 켜지 않았다면 설정 > 앱 > Safari > 확장 프로그램으로 이동하세요."
+            "value" : "아직 Kodoneri를 켜지 않았다면 설정 > 앱 > Safari > 확장 프로그램으로 이동하세요."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se você ainda não ativou o chatext, acesse Ajustes > Apps > Safari > Extensões."
+            "value" : "Se você ainda não ativou o Kodoneri, acesse Ajustes > Apps > Safari > Extensões."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Если вы ещё не включили chatext, откройте «Настройки» > «Приложения» > Safari > «Расширения»."
+            "value" : "Если вы ещё не включили Kodoneri, откройте «Настройки» > «Приложения» > Safari > «Расширения»."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "chatext’i henüz açmadıysanız Ayarlar > Uygulamalar > Safari > Uzantılar’a gidin."
+            "value" : "Kodoneri’i henüz açmadıysanız Ayarlar > Uygulamalar > Safari > Uzantılar’a gidin."
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nếu bạn chưa bật chatext, hãy đi tới Cài đặt > Ứng dụng > Safari > Tiện ích mở rộng."
+            "value" : "Nếu bạn chưa bật Kodoneri, hãy đi tới Cài đặt > Ứng dụng > Safari > Tiện ích mở rộng."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "如果尚未开启 chatext，请前往“设置”>“App”>“Safari 浏览器”>“扩展”。"
+            "value" : "如果尚未开启 Kodoneri，请前往“设置”>“App”>“Safari 浏览器”>“扩展”。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "若尚未開啟 chatext，請前往「設定」>「App」>「Safari」>「延伸功能」。"
+            "value" : "若尚未開啟 Kodoneri，請前往「設定」>「App」>「Safari」>「延伸功能」。"
           }
         }
       }
     },
-    "If you haven’t turned on chatext yet, go to Settings > Safari > Extensions." : {
+    "If you haven’t turned on Kodoneri yet, go to Settings > Safari > Extensions." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Falls du chatext noch nicht aktiviert hast, öffne Einstellungen > Safari > Erweiterungen."
+            "value" : "Falls du Kodoneri noch nicht aktiviert hast, öffne Einstellungen > Safari > Erweiterungen."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si aún no has activado chatext, ve a Ajustes > Safari > Extensiones."
+            "value" : "Si aún no has activado Kodoneri, ve a Ajustes > Safari > Extensiones."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si vous n’avez pas encore activé chatext, accédez à Réglages > Safari > Extensions."
+            "value" : "Si vous n’avez pas encore activé Kodoneri, accédez à Réglages > Safari > Extensions."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jika Anda belum menyalakan chatext, buka Pengaturan > Safari > Ekstensi."
+            "value" : "Jika Anda belum menyalakan Kodoneri, buka Pengaturan > Safari > Ekstensi."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se non hai ancora attivato chatext, vai in Impostazioni > Safari > Estensioni."
+            "value" : "Se non hai ancora attivato Kodoneri, vai in Impostazioni > Safari > Estensioni."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "chatextをまだオンにしていない場合は、設定 > Safari > 機能拡張 を開いてください。"
+            "value" : "コドネリをまだオンにしていない場合は、設定 > Safari > 機能拡張 を開いてください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "아직 chatext를 켜지 않았다면 설정 > Safari > 확장 프로그램으로 이동하세요."
+            "value" : "아직 Kodoneri를 켜지 않았다면 설정 > Safari > 확장 프로그램으로 이동하세요."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se você ainda não ativou o chatext, acesse Ajustes > Safari > Extensões."
+            "value" : "Se você ainda não ativou o Kodoneri, acesse Ajustes > Safari > Extensões."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Если вы ещё не включили chatext, откройте «Настройки» > Safari > «Расширения»."
+            "value" : "Если вы ещё не включили Kodoneri, откройте «Настройки» > Safari > «Расширения»."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "chatext’i henüz açmadıysanız Ayarlar > Safari > Uzantılar’a gidin."
+            "value" : "Kodoneri’i henüz açmadıysanız Ayarlar > Safari > Uzantılar’a gidin."
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nếu bạn chưa bật chatext, hãy đi tới Cài đặt > Safari > Tiện ích mở rộng."
+            "value" : "Nếu bạn chưa bật Kodoneri, hãy đi tới Cài đặt > Safari > Tiện ích mở rộng."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "如果尚未开启 chatext，请前往“设置”>“Safari 浏览器”>“扩展”。"
+            "value" : "如果尚未开启 Kodoneri，请前往“设置”>“Safari 浏览器”>“扩展”。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "若尚未開啟 chatext，請前往「設定」>「Safari」>「延伸功能」。"
+            "value" : "若尚未開啟 Kodoneri，請前往「設定」>「Safari」>「延伸功能」。"
           }
         }
       }
@@ -1890,84 +1890,84 @@
         }
       }
     },
-    "Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key." : {
+    "Sign in with Apple to use Kodoneri’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Melde dich mit Apple an, um den kostenlosen Plan von chatext zu nutzen, oder füge deinen eigenen API-Schlüssel für OpenAI, Anthropic oder DeepSeek hinzu."
+            "value" : "Melde dich mit Apple an, um den kostenlosen Plan von Kodoneri zu nutzen, oder füge deinen eigenen API-Schlüssel für OpenAI, Anthropic oder DeepSeek hinzu."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inicia sesión con Apple para usar el plan gratuito de chatext o añade tu propia clave de API de OpenAI, Anthropic o DeepSeek."
+            "value" : "Inicia sesión con Apple para usar el plan gratuito de Kodoneri o añade tu propia clave de API de OpenAI, Anthropic o DeepSeek."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Connectez-vous avec Apple pour utiliser l’offre gratuite de chatext, ou ajoutez votre propre clé API OpenAI, Anthropic ou DeepSeek."
+            "value" : "Connectez-vous avec Apple pour utiliser l’offre gratuite de Kodoneri, ou ajoutez votre propre clé API OpenAI, Anthropic ou DeepSeek."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Masuk dengan Apple untuk menggunakan paket gratis chatext, atau tambahkan kunci API OpenAI, Anthropic, atau DeepSeek milik Anda."
+            "value" : "Masuk dengan Apple untuk menggunakan paket gratis Kodoneri, atau tambahkan kunci API OpenAI, Anthropic, atau DeepSeek milik Anda."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Accedi con Apple per usare il piano gratuito di chatext o aggiungi la tua chiave API di OpenAI, Anthropic o DeepSeek."
+            "value" : "Accedi con Apple per usare il piano gratuito di Kodoneri o aggiungi la tua chiave API di OpenAI, Anthropic o DeepSeek."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Appleでサインインしてchatextの無料プランを使うか、お持ちのOpenAI・Anthropic・DeepSeekのAPIキーを追加してください。"
+            "value" : "Appleでサインインしてコドネリの無料プランを使うか、お持ちのOpenAI・Anthropic・DeepSeekのAPIキーを追加してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple로 로그인하여 chatext 무료 플랜을 사용하거나, 보유한 OpenAI, Anthropic 또는 DeepSeek API 키를 추가하세요."
+            "value" : "Apple로 로그인하여 Kodoneri 무료 플랜을 사용하거나, 보유한 OpenAI, Anthropic 또는 DeepSeek API 키를 추가하세요."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inicie sessão com a Apple para usar o plano gratuito do chatext ou adicione sua própria chave de API da OpenAI, Anthropic ou DeepSeek."
+            "value" : "Inicie sessão com a Apple para usar o plano gratuito do Kodoneri ou adicione sua própria chave de API da OpenAI, Anthropic ou DeepSeek."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Войдите с Apple, чтобы пользоваться бесплатным тарифом chatext, или добавьте свой API-ключ OpenAI, Anthropic или DeepSeek."
+            "value" : "Войдите с Apple, чтобы пользоваться бесплатным тарифом Kodoneri, или добавьте свой API-ключ OpenAI, Anthropic или DeepSeek."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "chatext’in ücretsiz planını kullanmak için Apple ile giriş yapın veya kendi OpenAI, Anthropic ya da DeepSeek API anahtarınızı ekleyin."
+            "value" : "Kodoneri’in ücretsiz planını kullanmak için Apple ile giriş yapın veya kendi OpenAI, Anthropic ya da DeepSeek API anahtarınızı ekleyin."
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Đăng nhập bằng Apple để dùng gói miễn phí của chatext, hoặc thêm khóa API OpenAI, Anthropic hay DeepSeek của riêng bạn."
+            "value" : "Đăng nhập bằng Apple để dùng gói miễn phí của Kodoneri, hoặc thêm khóa API OpenAI, Anthropic hay DeepSeek của riêng bạn."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "通过 Apple 登录以使用 chatext 免费方案，或添加你自己的 OpenAI、Anthropic 或 DeepSeek API 密钥。"
+            "value" : "通过 Apple 登录以使用 Kodoneri 免费方案，或添加你自己的 OpenAI、Anthropic 或 DeepSeek API 密钥。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用 Apple 登入以使用 chatext 免費方案，或加入你自己的 OpenAI、Anthropic 或 DeepSeek API 金鑰。"
+            "value" : "使用 Apple 登入以使用 Kodoneri 免費方案，或加入你自己的 OpenAI、Anthropic 或 DeepSeek API 金鑰。"
           }
         }
       }
@@ -2628,87 +2628,94 @@
         }
       }
     },
-    "chatext" : {
-      "shouldTranslate" : false
+    "Kodoneri" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コドネリ"
+          }
+        }
+      }
     },
-    "chatext doesn’t receive your name or email address when you sign in with Apple." : {
+    "Kodoneri doesn’t receive your name or email address when you sign in with Apple." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "chatext erhält weder deinen Namen noch deine E-Mail-Adresse, wenn du dich mit Apple anmeldest."
+            "value" : "Kodoneri erhält weder deinen Namen noch deine E-Mail-Adresse, wenn du dich mit Apple anmeldest."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "chatext no recibe tu nombre ni tu correo electrónico cuando inicias sesión con Apple."
+            "value" : "Kodoneri no recibe tu nombre ni tu correo electrónico cuando inicias sesión con Apple."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "chatext ne reçoit ni votre nom ni votre adresse e-mail lorsque vous vous connectez avec Apple."
+            "value" : "Kodoneri ne reçoit ni votre nom ni votre adresse e-mail lorsque vous vous connectez avec Apple."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "chatext tidak menerima nama atau alamat email Anda saat Anda masuk dengan Apple."
+            "value" : "Kodoneri tidak menerima nama atau alamat email Anda saat Anda masuk dengan Apple."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "chatext non riceve il tuo nome né il tuo indirizzo email quando accedi con Apple."
+            "value" : "Kodoneri non riceve il tuo nome né il tuo indirizzo email quando accedi con Apple."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Appleでサインインしても、名前やメールアドレスはchatextに渡りません。"
+            "value" : "Appleでサインインしても、名前やメールアドレスはコドネリに渡りません。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple로 로그인해도 chatext는 이름이나 이메일 주소를 받지 않습니다."
+            "value" : "Apple로 로그인해도 Kodoneri는 이름이나 이메일 주소를 받지 않습니다."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O chatext não recebe seu nome nem seu e-mail quando você inicia sessão com a Apple."
+            "value" : "O Kodoneri não recebe seu nome nem seu e-mail quando você inicia sessão com a Apple."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "chatext не получает ваше имя и адрес электронной почты при входе с Apple."
+            "value" : "Kodoneri не получает ваше имя и адрес электронной почты при входе с Apple."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple ile giriş yaptığınızda chatext adınızı veya e-posta adresinizi almaz."
+            "value" : "Apple ile giriş yaptığınızda Kodoneri adınızı veya e-posta adresinizi almaz."
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "chatext không nhận tên hoặc địa chỉ email của bạn khi bạn đăng nhập bằng Apple."
+            "value" : "Kodoneri không nhận tên hoặc địa chỉ email của bạn khi bạn đăng nhập bằng Apple."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "通过 Apple 登录时，chatext 不会收到你的姓名或电子邮件地址。"
+            "value" : "通过 Apple 登录时，Kodoneri 不会收到你的姓名或电子邮件地址。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用 Apple 登入時，chatext 不會收到你的姓名或電子郵件地址。"
+            "value" : "使用 Apple 登入時，Kodoneri 不會收到你的姓名或電子郵件地址。"
           }
         }
       }

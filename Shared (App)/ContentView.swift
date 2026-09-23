@@ -21,7 +21,7 @@ struct ContentView: View {
         Form {
             if keys?.isEmpty == true {
                 Section {
-                    Text("Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key.")
+                    Text("Sign in with Apple to use Kodoneri’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key.")
                 } header: {
                     Text("Get Started for Free")
                 }
@@ -162,9 +162,9 @@ private struct GatewaySection: View {
                     .foregroundStyle(.red)
             }
         } header: {
-            Text("chatext")
+            Text("Kodoneri")
         } footer: {
-            Text(isSignedIn ? "Usage is recorded after each response and may take a moment to appear." : "chatext doesn’t receive your name or email address when you sign in with Apple.")
+            Text(isSignedIn ? "Usage is recorded after each response and may take a moment to appear." : "Kodoneri doesn’t receive your name or email address when you sign in with Apple.")
         }
         .task {
             if isSignedIn {
@@ -423,9 +423,9 @@ private struct ExtensionSection: View {
                 }
             } else if #available(iOS 18, *) {
                 // Safari can't report the state here, so the directions read the same whether the extension is on or off.
-                Text("If you haven’t turned on chatext yet, go to Settings > Apps > Safari > Extensions.")
+                Text("If you haven’t turned on Kodoneri yet, go to Settings > Apps > Safari > Extensions.")
             } else {
-                Text("If you haven’t turned on chatext yet, go to Settings > Safari > Extensions.")
+                Text("If you haven’t turned on Kodoneri yet, go to Settings > Safari > Extensions.")
             }
         } header: {
             Text("Safari Extension")
