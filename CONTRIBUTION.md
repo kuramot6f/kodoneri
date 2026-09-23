@@ -10,7 +10,7 @@ Safari 拡張（Web Extension）本体と、それを配布する iOS / macOS �
 | `Shared (App)` | 拡張を配布し、API キーを編集する SwiftUI アプリ（iOS / macOS 共通） |
 | `Shared (Extension)` | `SafariWebExtensionHandler.swift`（native messaging）と、アプリとも共有する `ApiKeyStore.swift`（Keychain） |
 | `chatext.xcodeproj` | iOS / macOS それぞれのアプリ＋拡張ターゲット |
-| `worklog/` `design/` | 作業ログと設計メモ |
+| `design/` | 設計メモ |
 
 ## 開発環境
 

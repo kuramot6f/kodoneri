@@ -9,6 +9,9 @@ extension/.env.local
 Secrets.xcconfig
 gateway/wrangler.jsonc
 
+# 作業ログはローカルだけに残す。
+worklog/
+
 # Xcode
 xcuserdata/
 build/
