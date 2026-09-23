@@ -1,0 +1,361 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-09-23 16:11+0900\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: it\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/content/pageSelection.ts:32
+msgid "“{preview}”"
+msgstr "«{preview}»"
+
+#. placeholder {0}: selection.media.length
+#: src/content/pageSelection.ts:35
+msgid "{0, plural, one {# media item} other {# media items}}"
+msgstr "{0, plural, one {# elemento multimediale} other {# elementi multimediali}}"
+
+#: src/content/ChatView.tsx:243
+msgid "{mediaCount, plural, one {# media item} other {# media items}}"
+msgstr "{mediaCount, plural, one {# elemento multimediale} other {# elementi multimediali}}"
+
+#: src/content/MemoryListView.tsx:60
+msgid "Add to favorites"
+msgstr "Aggiungi ai preferiti"
+
+#: src/content/MemoryListView.tsx:61
+msgid "Add to favorites (the AI will no longer be able to edit it)"
+msgstr "Aggiungi ai preferiti (l’IA non potrà più modificarla)"
+
+#: src/content/ChatView.tsx:132
+msgid "Ask about this page"
+msgstr "Chiedi qualcosa su questa pagina"
+
+#: src/content/App.tsx:159
+#: src/content/App.tsx:159
+msgid "Back to list"
+msgstr "Torna all’elenco"
+
+#. placeholder {0}: rate.toFixed(1)
+#. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
+#. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
+#: src/content/ChatView.tsx:331
+msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
+msgstr "Percentuale di cache hit: {0}% ({1} / {2} token)"
+
+#: src/content/App.tsx:148
+msgid "Chat history"
+msgstr "Cronologia chat"
+
+#: src/content/App.tsx:142
+msgid "Chats"
+msgstr "Chat"
+
+#: src/content/ModelMenu.tsx:119
+msgid "Clear"
+msgstr "Cancella"
+
+#: src/content/App.tsx:168
+#: src/content/App.tsx:168
+msgid "Close panel"
+msgstr "Chiudi pannello"
+
+#: src/content/search.tsx:18
+msgid "Close search"
+msgstr "Chiudi ricerca"
+
+#: src/content/ChatView.tsx:100
+msgid "Compacting conversation…"
+msgstr "Compattazione della conversazione…"
+
+#: src/content/MemoryEditor.tsx:29
+#: src/content/MemoryEditor.tsx:30
+msgid "Content"
+msgstr "Contenuto"
+
+#. js-lingui-explicit-id
+#: src/background/session.ts:322
+msgid "errors.compactionFailed"
+msgstr "Impossibile compattare la conversazione. {error}"
+
+#: src/content/ModelMenu.tsx:118
+msgid "Copy diagnostics"
+msgstr "Copia diagnostica"
+
+#: src/content/ModelMenu.tsx:75
+msgid "Could not clear diagnostics"
+msgstr "Impossibile cancellare la diagnostica"
+
+#: src/content/ModelMenu.tsx:66
+msgid "Could not copy diagnostics"
+msgstr "Impossibile copiare la diagnostica"
+
+#: src/content/HistoryView.tsx:47
+#: src/content/HistoryView.tsx:47
+msgid "Delete this conversation"
+msgstr "Elimina questa conversazione"
+
+#: src/content/MemoryListView.tsx:67
+#: src/content/MemoryListView.tsx:67
+msgid "Delete this memory"
+msgstr "Elimina questa memoria"
+
+#: src/content/ModelMenu.tsx:73
+msgid "Diagnostics cleared"
+msgstr "Diagnostica cancellata"
+
+#: src/content/ModelMenu.tsx:64
+msgid "Diagnostics copied"
+msgstr "Diagnostica copiata"
+
+#: src/content/App.tsx:163
+msgid "Done"
+msgstr "Fine"
+
+#. placeholder {0}: memories.editing?.title.trim() || t`memory`
+#: src/content/App.tsx:162
+msgid "Edit {0}"
+msgstr "Modifica {0}"
+
+#: src/content/MemoryListView.tsx:53
+msgid "Edit this memory"
+msgstr "Modifica questa memoria"
+
+#: src/content/App.tsx:146
+msgid "Enlarge"
+msgstr "Ingrandisci"
+
+#. placeholder {0}: progress.error
+#: src/content/ChatView.tsx:273
+msgid "Error: {0}"
+msgstr "Errore: {0}"
+
+#: src/content/ChatView.tsx:208
+msgid "Error: {content}"
+msgstr "Errore: {content}"
+
+#: src/content/ChatView.tsx:341
+msgid "Execution was denied."
+msgstr "Non eseguito."
+
+#: src/content/App.tsx:163
+msgid "Finish editing and return to the list"
+msgstr "Termina la modifica e torna all’elenco"
+
+#: src/content/ChatView.tsx:99
+msgid "Generating response…"
+msgstr "Generazione della risposta…"
+
+#: src/content/ChatView.tsx:180
+msgid "Get started for free"
+msgstr "Inizia gratis"
+
+#: src/content/ChatView.tsx:342
+msgid "Image or file"
+msgstr "Immagine o file"
+
+#: src/content/ChatView.tsx:112
+msgid "Include {selectionSummary}"
+msgstr "Includi {selectionSummary}"
+
+#: src/content/App.tsx:162
+msgid "memory"
+msgstr "memoria"
+
+#: src/content/App.tsx:143
+msgid "Memory"
+msgstr "Memoria"
+
+#: src/content/ChatView.tsx:266
+msgid "Memory update failed"
+msgstr "Aggiornamento della memoria non riuscito"
+
+#: src/content/ChatView.tsx:267
+msgid "Memory updated"
+msgstr "Memoria aggiornata"
+
+#: src/content/App.tsx:148
+msgid "Menu (chat history and memory)"
+msgstr "Menu (cronologia chat e memoria)"
+
+#: src/content/ModelMenu.tsx:86
+msgid "Model"
+msgstr "Modello"
+
+#: src/content/ChatView.tsx:120
+#: src/content/ChatView.tsx:121
+#: src/content/ModelMenu.tsx:80
+msgid "Model and reasoning effort"
+msgstr "Modello e livello di ragionamento"
+
+#: src/content/App.tsx:195
+#: src/content/App.tsx:195
+msgid "New chat"
+msgstr "Nuova chat"
+
+#: src/content/MemoryListView.tsx:36
+#: src/content/MemoryListView.tsx:37
+#: src/content/MemoryListView.tsx:42
+msgid "New memory"
+msgstr "Nuova memoria"
+
+#: src/content/ModelMenu.tsx:82
+msgid "No API key is configured. Configure one in the chatext app."
+msgstr "Nessuna chiave API configurata. Configurane una nell’app chatext."
+
+#. js-lingui-explicit-id
+#: src/background/provider.ts:93
+#: src/background/session.ts:252
+msgid "errors.apiKeyMissing"
+msgstr "Nessuna chiave API configurata. Configurane una nell’app chatext."
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:142
+msgid "errors.noCompaction"
+msgstr "Nessun risultato della compattazione ricevuto."
+
+#: src/content/HistoryView.tsx:37
+msgid "No matching conversations."
+msgstr "Nessuna conversazione corrispondente."
+
+#: src/content/MemoryListView.tsx:48
+msgid "No matching memories."
+msgstr "Nessuna memoria corrispondente."
+
+#: src/content/ChatView.tsx:267
+msgid "No memory changes"
+msgstr "Nessuna modifica alla memoria"
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:104
+msgid "errors.noResponse"
+msgstr "Nessuna risposta ricevuta."
+
+#: src/content/HistoryView.tsx:35
+msgid "No saved conversations."
+msgstr "Nessuna conversazione salvata."
+
+#: src/content/MemoryListView.tsx:46
+msgid "No saved memories."
+msgstr "Nessuna memoria salvata."
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:128
+msgid "errors.noTitle"
+msgstr "Nessun titolo ricevuto."
+
+#: src/content/ChatView.tsx:182
+msgid "Open Settings"
+msgstr "Apri Impostazioni"
+
+#: src/content/HistoryView.tsx:43
+msgid "Open this conversation"
+msgstr "Apri questa conversazione"
+
+#: src/content/ChatView.tsx:291
+msgid "Reasoning"
+msgstr "Ragionamento"
+
+#: src/content/ModelMenu.tsx:103
+msgid "Reasoning effort"
+msgstr "Livello di ragionamento"
+
+#: src/content/MemoryListView.tsx:60
+#: src/content/MemoryListView.tsx:61
+msgid "Remove from favorites"
+msgstr "Rimuovi dai preferiti"
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:99
+#: src/background/agent.ts:111
+msgid "errors.responseCancelled"
+msgstr "Generazione della risposta annullata."
+
+#: src/content/App.tsx:146
+msgid "Restore size"
+msgstr "Ripristina dimensioni"
+
+#: src/content/ChatView.tsx:309
+msgid "Running…"
+msgstr "In esecuzione…"
+
+#: src/content/App.tsx:142
+msgid "Saved conversations"
+msgstr "Conversazioni salvate"
+
+#: src/content/HistoryView.tsx:55
+msgid "Search history"
+msgstr "Cerca nella cronologia"
+
+#: src/content/MemoryListView.tsx:74
+msgid "Search memories"
+msgstr "Cerca nella memoria"
+
+#: src/content/ChatView.tsx:64
+msgid "Send"
+msgstr "Invia"
+
+#: src/content/ChatView.tsx:64
+msgid "Send and interrupt"
+msgstr "Interrompi e invia"
+
+#: src/content/search.tsx:42
+#: src/content/search.tsx:42
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: src/content/App.tsx:147
+msgid "Show in sidebar"
+msgstr "Mostra nella barra laterale"
+
+#: src/content/ChatView.tsx:181
+msgid "Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
+msgstr "Accedi con Apple per usare il piano gratuito di chatext o aggiungi la tua chiave API di OpenAI, Anthropic o DeepSeek."
+
+#: src/content/ChatView.tsx:64
+msgid "Stop response"
+msgstr "Interrompi risposta"
+
+#: src/content/App.tsx:147
+msgid "Switch to floating panel"
+msgstr "Passa al pannello mobile"
+
+#: src/content/MemoryEditor.tsx:20
+#: src/content/MemoryEditor.tsx:21
+msgid "Title"
+msgstr "Titolo"
+
+#: src/content/MemoryEditor.tsx:16
+msgid "Title:"
+msgstr "Titolo:"
+
+#: src/content/HistoryView.tsx:24
+msgid "Today"
+msgstr "Oggi"
+
+#: src/content/MemoryListView.tsx:50
+msgid "Untitled"
+msgstr "Senza titolo"
+
+#: src/content/ChatView.tsx:264
+msgid "Updating memory…"
+msgstr "Aggiornamento della memoria…"
+
+#: src/content/App.tsx:143
+msgid "What the AI remembers"
+msgstr "Cosa ricorda l’IA"
+
+#: src/content/HistoryView.tsx:24
+msgid "Yesterday"
+msgstr "Ieri"
+
+#: src/content/MemoryListView.tsx:37
+msgid "You can save up to {MEMORY_MAX_COUNT} memories"
+msgstr "Puoi salvare fino a {MEMORY_MAX_COUNT} memorie"

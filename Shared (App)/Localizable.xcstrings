@@ -24,6 +24,18 @@
             "value" : "%@ requêtes · %@ jetons"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ permintaan · %@ token"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ richieste · %@ token"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -40,6 +52,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ solicitações · %@ tokens"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запросов: %@ · токенов: %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ istek · %@ token"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ yêu cầu · %@ token"
           }
         },
         "zh-Hans" : {
@@ -76,6 +106,18 @@
             "value" : "Clés API"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunci API"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiavi API"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -92,6 +134,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chaves de API"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API-ключи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API Anahtarları"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khóa API"
           }
         },
         "zh-Hans" : {
@@ -128,6 +188,18 @@
             "value" : "Clé API"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunci API"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiave API"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -144,6 +216,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chave de API"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API-ключ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API anahtarı"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khóa API"
           }
         },
         "zh-Hans" : {
@@ -180,6 +270,18 @@
             "value" : "Modifier l’abonnement"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ubah Langganan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambia abbonamento"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -196,6 +298,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alterar assinatura"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменить подписку"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aboneliği Değiştir"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thay đổi gói đăng ký"
           }
         },
         "zh-Hans" : {
@@ -232,6 +352,18 @@
             "value" : "Vérifiez que les abonnements Plus et Pro sont disponibles dans App Store Connect pour cette app."
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pastikan langganan Plus dan Pro tersedia di App Store Connect untuk app ini."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verifica che gli abbonamenti Plus e Pro siano disponibili in App Store Connect per questa app."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -248,6 +380,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verifique se as assinaturas Plus e Pro estão disponíveis no App Store Connect para este app."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проверьте, что подписки Plus и Pro доступны для этого приложения в App Store Connect."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus ve Pro aboneliklerinin bu uygulama için App Store Connect’te kullanılabilir olduğunu kontrol edin."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hãy kiểm tra xem gói đăng ký Plus và Pro đã khả dụng trong App Store Connect cho ứng dụng này chưa."
           }
         },
         "zh-Hans" : {
@@ -284,6 +434,18 @@
             "value" : "Effacer la clé API %@"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hapus kunci API %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancella chiave API di %@"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -300,6 +462,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Limpar chave de API (%@)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалить API-ключ %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ API anahtarını temizle"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xóa khóa API %@"
           }
         },
         "zh-Hans" : {
@@ -336,6 +516,18 @@
             "value" : "Désactivée"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nonaktif"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disattiva"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -352,6 +544,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desativada"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выключено"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapalı"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã tắt"
           }
         },
         "zh-Hans" : {
@@ -388,6 +598,18 @@
             "value" : "OK"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selesai"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fine"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -404,6 +626,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Готово"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitti"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xong"
           }
         },
         "zh-Hans" : {
@@ -440,6 +680,18 @@
             "value" : "Activer dans les réglages de Safari…"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktifkan di Pengaturan Safari…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Attiva nelle impostazioni di Safari…"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -456,6 +708,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ativar nos Ajustes do Safari…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Включить в настройках Safari…"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Safari Ayarları’nda Aç…"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bật trong Cài đặt Safari…"
           }
         },
         "zh-Hans" : {
@@ -492,6 +762,18 @@
             "value" : "Activée"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktif"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Attiva"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -508,6 +790,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ativada"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Включено"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açık"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã bật"
           }
         },
         "zh-Hans" : {
@@ -544,6 +844,18 @@
             "value" : "Commencer gratuitement"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mulai Gratis"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inizia gratis"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -560,6 +872,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Comece grátis"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Начать бесплатно"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ücretsiz Başlayın"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bắt đầu miễn phí"
           }
         },
         "zh-Hans" : {
@@ -596,6 +926,18 @@
             "value" : "Si vous n’avez pas encore activé chatext, accédez à Réglages > Apps > Safari > Extensions."
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jika Anda belum menyalakan chatext, buka Pengaturan > App > Safari > Ekstensi."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se non hai ancora attivato chatext, vai in Impostazioni > App > Safari > Estensioni."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -612,6 +954,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Se você ainda não ativou o chatext, acesse Ajustes > Apps > Safari > Extensões."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Если вы ещё не включили chatext, откройте «Настройки» > «Приложения» > Safari > «Расширения»."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "chatext’i henüz açmadıysanız Ayarlar > Uygulamalar > Safari > Uzantılar’a gidin."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nếu bạn chưa bật chatext, hãy đi tới Cài đặt > Ứng dụng > Safari > Tiện ích mở rộng."
           }
         },
         "zh-Hans" : {
@@ -648,6 +1008,18 @@
             "value" : "Si vous n’avez pas encore activé chatext, accédez à Réglages > Safari > Extensions."
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jika Anda belum menyalakan chatext, buka Pengaturan > Safari > Ekstensi."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se non hai ancora attivato chatext, vai in Impostazioni > Safari > Estensioni."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -664,6 +1036,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Se você ainda não ativou o chatext, acesse Ajustes > Safari > Extensões."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Если вы ещё не включили chatext, откройте «Настройки» > Safari > «Расширения»."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "chatext’i henüz açmadıysanız Ayarlar > Safari > Uzantılar’a gidin."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nếu bạn chưa bật chatext, hãy đi tới Cài đặt > Safari > Tiện ích mở rộng."
           }
         },
         "zh-Hans" : {
@@ -700,6 +1090,18 @@
             "value" : "Les clés sont chiffrées et conservées dans votre trousseau iCloud."
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunci dienkripsi dan disimpan di Rantai Kunci iCloud Anda."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le chiavi sono crittografate e conservate nel tuo portachiavi iCloud."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -716,6 +1118,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "As chaves são criptografadas e mantidas nas suas Chaves do iCloud."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ключи шифруются и хранятся в вашей связке ключей iCloud."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anahtarlar şifrelenir ve iCloud Anahtar Zinciri’nizde saklanır."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Các khóa được mã hóa và lưu trong Chuỗi khóa iCloud của bạn."
           }
         },
         "zh-Hans" : {
@@ -752,6 +1172,18 @@
             "value" : "Chargement des abonnements…"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memuat langganan…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caricamento abbonamenti…"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -768,6 +1200,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Carregando assinaturas…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Загрузка подписок…"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abonelikler yükleniyor…"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đang tải gói đăng ký…"
           }
         },
         "zh-Hans" : {
@@ -804,6 +1254,18 @@
             "value" : "Gérer dans les réglages de Safari…"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kelola di Pengaturan Safari…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestisci nelle impostazioni di Safari…"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -820,6 +1282,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gerenciar nos Ajustes do Safari…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Управлять в настройках Safari…"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Safari Ayarları’nda Yönet…"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quản lý trong Cài đặt Safari…"
           }
         },
         "zh-Hans" : {
@@ -856,6 +1336,18 @@
             "value" : "Offre"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paket"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piano"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -872,6 +1364,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Plano"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тариф"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gói"
           }
         },
         "zh-Hans" : {
@@ -908,6 +1418,18 @@
             "value" : "Actualiser l’utilisation"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segarkan Penggunaan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aggiorna utilizzo"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -924,6 +1446,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Atualizar uso"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обновить данные об использовании"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanımı Yenile"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Làm mới mức sử dụng"
           }
         },
         "zh-Hans" : {
@@ -960,6 +1500,18 @@
             "value" : "Restaurer les achats"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulihkan Pembelian"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ripristina acquisti"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -976,6 +1528,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Restaurar compras"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Восстановить покупки"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satın Alımları Geri Yükle"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khôi phục giao dịch mua"
           }
         },
         "zh-Hans" : {
@@ -1012,6 +1582,18 @@
             "value" : "Extension Safari"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekstensi Safari"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estensione Safari"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1028,6 +1610,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Extensão do Safari"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Расширение Safari"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Safari Uzantısı"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiện ích mở rộng Safari"
           }
         },
         "zh-Hans" : {
@@ -1064,6 +1664,18 @@
             "value" : "Se déconnecter"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keluar"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esci"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1080,6 +1692,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Terminar sessão"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выйти"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çıkış Yap"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đăng xuất"
           }
         },
         "zh-Hans" : {
@@ -1116,6 +1746,18 @@
             "value" : "Connectez-vous avec Apple pour utiliser l’offre gratuite de chatext, ou ajoutez votre propre clé API OpenAI, Anthropic ou DeepSeek."
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Masuk dengan Apple untuk menggunakan paket gratis chatext, atau tambahkan kunci API OpenAI, Anthropic, atau DeepSeek milik Anda."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accedi con Apple per usare il piano gratuito di chatext o aggiungi la tua chiave API di OpenAI, Anthropic o DeepSeek."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1132,6 +1774,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inicie sessão com a Apple para usar o plano gratuito do chatext ou adicione sua própria chave de API da OpenAI, Anthropic ou DeepSeek."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войдите с Apple, чтобы пользоваться бесплатным тарифом chatext, или добавьте свой API-ключ OpenAI, Anthropic или DeepSeek."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "chatext’in ücretsiz planını kullanmak için Apple ile giriş yapın veya kendi OpenAI, Anthropic ya da DeepSeek API anahtarınızı ekleyin."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đăng nhập bằng Apple để dùng gói miễn phí của chatext, hoặc thêm khóa API OpenAI, Anthropic hay DeepSeek của riêng bạn."
           }
         },
         "zh-Hans" : {
@@ -1168,6 +1828,18 @@
             "value" : "Connecté avec Apple"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Telah masuk dengan Apple"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accesso eseguito con Apple"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1184,6 +1856,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sessão iniciada com a Apple"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выполнен вход с Apple"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple ile giriş yapıldı"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã đăng nhập bằng Apple"
           }
         },
         "zh-Hans" : {
@@ -1220,6 +1910,18 @@
             "value" : "État"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Status"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stato"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1236,6 +1938,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Статус"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durum"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trạng thái"
           }
         },
         "zh-Hans" : {
@@ -1272,6 +1992,18 @@
             "value" : "S’abonner"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berlangganan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbonati"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1288,6 +2020,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Assinar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оформить подписку"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abone Ol"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đăng ký"
           }
         },
         "zh-Hans" : {
@@ -1324,6 +2074,18 @@
             "value" : "Les abonnements sont actuellement indisponibles."
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langganan saat ini tidak tersedia."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gli abbonamenti non sono al momento disponibili."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1340,6 +2102,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "As assinaturas não estão disponíveis no momento."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подписки сейчас недоступны."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abonelikler şu anda kullanılamıyor."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiện không có gói đăng ký nào."
           }
         },
         "zh-Hans" : {
@@ -1376,6 +2156,18 @@
             "value" : "Cette période"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Periode ini"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questo periodo"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1392,6 +2184,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Este período"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Текущий период"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu dönem"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kỳ này"
           }
         },
         "zh-Hans" : {
@@ -1428,6 +2238,18 @@
             "value" : "Inconnu"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak diketahui"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sconosciuto"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1444,6 +2266,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desconhecido"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Неизвестно"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilinmiyor"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không xác định"
           }
         },
         "zh-Hans" : {
@@ -1480,6 +2320,18 @@
             "value" : "Utilisation"
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Penggunaan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilizzo"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1496,6 +2348,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Uso"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Использование"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanım"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mức sử dụng"
           }
         },
         "zh-Hans" : {
@@ -1532,6 +2402,18 @@
             "value" : "L’utilisation est enregistrée après chaque réponse et peut mettre un moment à s’afficher."
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Penggunaan dicatat setelah setiap respons dan mungkin perlu beberapa saat untuk muncul."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’utilizzo viene registrato dopo ogni risposta e potrebbe richiedere un momento per comparire."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1548,6 +2430,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "O uso é registrado após cada resposta e pode levar um momento para aparecer."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Использование записывается после каждого ответа и может отобразиться с небольшой задержкой."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanım her yanıttan sonra kaydedilir ve görünmesi biraz zaman alabilir."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mức sử dụng được ghi lại sau mỗi câu trả lời và có thể mất một lúc để hiển thị."
           }
         },
         "zh-Hans" : {
@@ -1587,6 +2487,18 @@
             "value" : "chatext ne reçoit ni votre nom ni votre adresse e-mail lorsque vous vous connectez avec Apple."
           }
         },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "chatext tidak menerima nama atau alamat email Anda saat Anda masuk dengan Apple."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "chatext non riceve il tuo nome né il tuo indirizzo email quando accedi con Apple."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1603,6 +2515,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "O chatext não recebe seu nome nem seu e-mail quando você inicia sessão com a Apple."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "chatext не получает ваше имя и адрес электронной почты при входе с Apple."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple ile giriş yaptığınızda chatext adınızı veya e-posta adresinizi almaz."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "chatext không nhận tên hoặc địa chỉ email của bạn khi bạn đăng nhập bằng Apple."
           }
         },
         "zh-Hans" : {

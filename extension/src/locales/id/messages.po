@@ -1,0 +1,361 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-09-23 16:11+0900\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: id\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/content/pageSelection.ts:32
+msgid "“{preview}”"
+msgstr "“{preview}”"
+
+#. placeholder {0}: selection.media.length
+#: src/content/pageSelection.ts:35
+msgid "{0, plural, one {# media item} other {# media items}}"
+msgstr "{0} item media"
+
+#: src/content/ChatView.tsx:243
+msgid "{mediaCount, plural, one {# media item} other {# media items}}"
+msgstr "{mediaCount} item media"
+
+#: src/content/MemoryListView.tsx:60
+msgid "Add to favorites"
+msgstr "Tambahkan ke favorit"
+
+#: src/content/MemoryListView.tsx:61
+msgid "Add to favorites (the AI will no longer be able to edit it)"
+msgstr "Tambahkan ke favorit (AI tidak dapat mengeditnya lagi)"
+
+#: src/content/ChatView.tsx:132
+msgid "Ask about this page"
+msgstr "Tanyakan tentang halaman ini"
+
+#: src/content/App.tsx:159
+#: src/content/App.tsx:159
+msgid "Back to list"
+msgstr "Kembali ke daftar"
+
+#. placeholder {0}: rate.toFixed(1)
+#. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
+#. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
+#: src/content/ChatView.tsx:331
+msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
+msgstr "Tingkat hit cache: {0}% ({1} / {2} token)"
+
+#: src/content/App.tsx:148
+msgid "Chat history"
+msgstr "Riwayat obrolan"
+
+#: src/content/App.tsx:142
+msgid "Chats"
+msgstr "Obrolan"
+
+#: src/content/ModelMenu.tsx:119
+msgid "Clear"
+msgstr "Hapus"
+
+#: src/content/App.tsx:168
+#: src/content/App.tsx:168
+msgid "Close panel"
+msgstr "Tutup panel"
+
+#: src/content/search.tsx:18
+msgid "Close search"
+msgstr "Tutup pencarian"
+
+#: src/content/ChatView.tsx:100
+msgid "Compacting conversation…"
+msgstr "Memadatkan percakapan…"
+
+#: src/content/MemoryEditor.tsx:29
+#: src/content/MemoryEditor.tsx:30
+msgid "Content"
+msgstr "Isi"
+
+#. js-lingui-explicit-id
+#: src/background/session.ts:322
+msgid "errors.compactionFailed"
+msgstr "Gagal memadatkan percakapan. {error}"
+
+#: src/content/ModelMenu.tsx:118
+msgid "Copy diagnostics"
+msgstr "Salin diagnostik"
+
+#: src/content/ModelMenu.tsx:75
+msgid "Could not clear diagnostics"
+msgstr "Tidak dapat menghapus diagnostik"
+
+#: src/content/ModelMenu.tsx:66
+msgid "Could not copy diagnostics"
+msgstr "Tidak dapat menyalin diagnostik"
+
+#: src/content/HistoryView.tsx:47
+#: src/content/HistoryView.tsx:47
+msgid "Delete this conversation"
+msgstr "Hapus percakapan ini"
+
+#: src/content/MemoryListView.tsx:67
+#: src/content/MemoryListView.tsx:67
+msgid "Delete this memory"
+msgstr "Hapus memori ini"
+
+#: src/content/ModelMenu.tsx:73
+msgid "Diagnostics cleared"
+msgstr "Diagnostik dihapus"
+
+#: src/content/ModelMenu.tsx:64
+msgid "Diagnostics copied"
+msgstr "Diagnostik disalin"
+
+#: src/content/App.tsx:163
+msgid "Done"
+msgstr "Selesai"
+
+#. placeholder {0}: memories.editing?.title.trim() || t`memory`
+#: src/content/App.tsx:162
+msgid "Edit {0}"
+msgstr "Edit {0}"
+
+#: src/content/MemoryListView.tsx:53
+msgid "Edit this memory"
+msgstr "Edit memori ini"
+
+#: src/content/App.tsx:146
+msgid "Enlarge"
+msgstr "Perbesar"
+
+#. placeholder {0}: progress.error
+#: src/content/ChatView.tsx:273
+msgid "Error: {0}"
+msgstr "Kesalahan: {0}"
+
+#: src/content/ChatView.tsx:208
+msgid "Error: {content}"
+msgstr "Kesalahan: {content}"
+
+#: src/content/ChatView.tsx:341
+msgid "Execution was denied."
+msgstr "Tidak dijalankan."
+
+#: src/content/App.tsx:163
+msgid "Finish editing and return to the list"
+msgstr "Selesai mengedit dan kembali ke daftar"
+
+#: src/content/ChatView.tsx:99
+msgid "Generating response…"
+msgstr "Membuat respons…"
+
+#: src/content/ChatView.tsx:180
+msgid "Get started for free"
+msgstr "Mulai gratis"
+
+#: src/content/ChatView.tsx:342
+msgid "Image or file"
+msgstr "Gambar atau file"
+
+#: src/content/ChatView.tsx:112
+msgid "Include {selectionSummary}"
+msgstr "Sertakan {selectionSummary}"
+
+#: src/content/App.tsx:162
+msgid "memory"
+msgstr "memori"
+
+#: src/content/App.tsx:143
+msgid "Memory"
+msgstr "Memori"
+
+#: src/content/ChatView.tsx:266
+msgid "Memory update failed"
+msgstr "Gagal memperbarui memori"
+
+#: src/content/ChatView.tsx:267
+msgid "Memory updated"
+msgstr "Memori diperbarui"
+
+#: src/content/App.tsx:148
+msgid "Menu (chat history and memory)"
+msgstr "Menu (riwayat obrolan dan memori)"
+
+#: src/content/ModelMenu.tsx:86
+msgid "Model"
+msgstr "Model"
+
+#: src/content/ChatView.tsx:120
+#: src/content/ChatView.tsx:121
+#: src/content/ModelMenu.tsx:80
+msgid "Model and reasoning effort"
+msgstr "Model dan tingkat penalaran"
+
+#: src/content/App.tsx:195
+#: src/content/App.tsx:195
+msgid "New chat"
+msgstr "Obrolan baru"
+
+#: src/content/MemoryListView.tsx:36
+#: src/content/MemoryListView.tsx:37
+#: src/content/MemoryListView.tsx:42
+msgid "New memory"
+msgstr "Memori baru"
+
+#: src/content/ModelMenu.tsx:82
+msgid "No API key is configured. Configure one in the chatext app."
+msgstr "Belum ada kunci API yang dikonfigurasi. Konfigurasikan di app chatext."
+
+#. js-lingui-explicit-id
+#: src/background/provider.ts:93
+#: src/background/session.ts:252
+msgid "errors.apiKeyMissing"
+msgstr "Belum ada kunci API yang dikonfigurasi. Konfigurasikan di app chatext."
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:142
+msgid "errors.noCompaction"
+msgstr "Hasil pemadatan percakapan tidak diterima."
+
+#: src/content/HistoryView.tsx:37
+msgid "No matching conversations."
+msgstr "Tidak ada percakapan yang cocok."
+
+#: src/content/MemoryListView.tsx:48
+msgid "No matching memories."
+msgstr "Tidak ada memori yang cocok."
+
+#: src/content/ChatView.tsx:267
+msgid "No memory changes"
+msgstr "Tidak ada perubahan memori"
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:104
+msgid "errors.noResponse"
+msgstr "Tidak ada respons yang diterima."
+
+#: src/content/HistoryView.tsx:35
+msgid "No saved conversations."
+msgstr "Tidak ada percakapan tersimpan."
+
+#: src/content/MemoryListView.tsx:46
+msgid "No saved memories."
+msgstr "Tidak ada memori tersimpan."
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:128
+msgid "errors.noTitle"
+msgstr "Tidak ada judul yang diterima."
+
+#: src/content/ChatView.tsx:182
+msgid "Open Settings"
+msgstr "Buka Pengaturan"
+
+#: src/content/HistoryView.tsx:43
+msgid "Open this conversation"
+msgstr "Buka percakapan ini"
+
+#: src/content/ChatView.tsx:291
+msgid "Reasoning"
+msgstr "Penalaran"
+
+#: src/content/ModelMenu.tsx:103
+msgid "Reasoning effort"
+msgstr "Tingkat penalaran"
+
+#: src/content/MemoryListView.tsx:60
+#: src/content/MemoryListView.tsx:61
+msgid "Remove from favorites"
+msgstr "Hapus dari favorit"
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:99
+#: src/background/agent.ts:111
+msgid "errors.responseCancelled"
+msgstr "Pembuatan respons dibatalkan."
+
+#: src/content/App.tsx:146
+msgid "Restore size"
+msgstr "Kembalikan ukuran"
+
+#: src/content/ChatView.tsx:309
+msgid "Running…"
+msgstr "Menjalankan…"
+
+#: src/content/App.tsx:142
+msgid "Saved conversations"
+msgstr "Percakapan tersimpan"
+
+#: src/content/HistoryView.tsx:55
+msgid "Search history"
+msgstr "Cari riwayat"
+
+#: src/content/MemoryListView.tsx:74
+msgid "Search memories"
+msgstr "Cari memori"
+
+#: src/content/ChatView.tsx:64
+msgid "Send"
+msgstr "Kirim"
+
+#: src/content/ChatView.tsx:64
+msgid "Send and interrupt"
+msgstr "Sela dan kirim"
+
+#: src/content/search.tsx:42
+#: src/content/search.tsx:42
+msgid "Settings"
+msgstr "Pengaturan"
+
+#: src/content/App.tsx:147
+msgid "Show in sidebar"
+msgstr "Tampilkan di bar samping"
+
+#: src/content/ChatView.tsx:181
+msgid "Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
+msgstr "Masuk dengan Apple untuk menggunakan paket gratis chatext, atau tambahkan kunci API OpenAI, Anthropic, atau DeepSeek milik Anda."
+
+#: src/content/ChatView.tsx:64
+msgid "Stop response"
+msgstr "Hentikan respons"
+
+#: src/content/App.tsx:147
+msgid "Switch to floating panel"
+msgstr "Beralih ke panel mengambang"
+
+#: src/content/MemoryEditor.tsx:20
+#: src/content/MemoryEditor.tsx:21
+msgid "Title"
+msgstr "Judul"
+
+#: src/content/MemoryEditor.tsx:16
+msgid "Title:"
+msgstr "Judul:"
+
+#: src/content/HistoryView.tsx:24
+msgid "Today"
+msgstr "Hari ini"
+
+#: src/content/MemoryListView.tsx:50
+msgid "Untitled"
+msgstr "Tanpa judul"
+
+#: src/content/ChatView.tsx:264
+msgid "Updating memory…"
+msgstr "Memperbarui memori…"
+
+#: src/content/App.tsx:143
+msgid "What the AI remembers"
+msgstr "Yang diingat AI"
+
+#: src/content/HistoryView.tsx:24
+msgid "Yesterday"
+msgstr "Kemarin"
+
+#: src/content/MemoryListView.tsx:37
+msgid "You can save up to {MEMORY_MAX_COUNT} memories"
+msgstr "Anda dapat menyimpan hingga {MEMORY_MAX_COUNT} memori"

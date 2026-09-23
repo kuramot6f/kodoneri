@@ -1,0 +1,361 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-09-23 16:11+0900\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ru\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/content/pageSelection.ts:32
+msgid "“{preview}”"
+msgstr "«{preview}»"
+
+#. placeholder {0}: selection.media.length
+#: src/content/pageSelection.ts:35
+msgid "{0, plural, one {# media item} other {# media items}}"
+msgstr "{0, plural, one {# медиафайл} few {# медиафайла} many {# медиафайлов} other {# медиафайла}}"
+
+#: src/content/ChatView.tsx:243
+msgid "{mediaCount, plural, one {# media item} other {# media items}}"
+msgstr "{mediaCount, plural, one {# медиафайл} few {# медиафайла} many {# медиафайлов} other {# медиафайла}}"
+
+#: src/content/MemoryListView.tsx:60
+msgid "Add to favorites"
+msgstr "Добавить в избранное"
+
+#: src/content/MemoryListView.tsx:61
+msgid "Add to favorites (the AI will no longer be able to edit it)"
+msgstr "Добавить в избранное (ИИ больше не сможет его изменить)"
+
+#: src/content/ChatView.tsx:132
+msgid "Ask about this page"
+msgstr "Спросите об этой странице"
+
+#: src/content/App.tsx:159
+#: src/content/App.tsx:159
+msgid "Back to list"
+msgstr "Назад к списку"
+
+#. placeholder {0}: rate.toFixed(1)
+#. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
+#. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
+#: src/content/ChatView.tsx:331
+msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
+msgstr "Попадания в кэш: {0}% ({1} / {2} токенов)"
+
+#: src/content/App.tsx:148
+msgid "Chat history"
+msgstr "История чатов"
+
+#: src/content/App.tsx:142
+msgid "Chats"
+msgstr "Чаты"
+
+#: src/content/ModelMenu.tsx:119
+msgid "Clear"
+msgstr "Очистить"
+
+#: src/content/App.tsx:168
+#: src/content/App.tsx:168
+msgid "Close panel"
+msgstr "Закрыть панель"
+
+#: src/content/search.tsx:18
+msgid "Close search"
+msgstr "Закрыть поиск"
+
+#: src/content/ChatView.tsx:100
+msgid "Compacting conversation…"
+msgstr "Сжатие беседы…"
+
+#: src/content/MemoryEditor.tsx:29
+#: src/content/MemoryEditor.tsx:30
+msgid "Content"
+msgstr "Содержание"
+
+#. js-lingui-explicit-id
+#: src/background/session.ts:322
+msgid "errors.compactionFailed"
+msgstr "Не удалось сжать беседу. {error}"
+
+#: src/content/ModelMenu.tsx:118
+msgid "Copy diagnostics"
+msgstr "Скопировать диагностику"
+
+#: src/content/ModelMenu.tsx:75
+msgid "Could not clear diagnostics"
+msgstr "Не удалось очистить диагностику"
+
+#: src/content/ModelMenu.tsx:66
+msgid "Could not copy diagnostics"
+msgstr "Не удалось скопировать диагностику"
+
+#: src/content/HistoryView.tsx:47
+#: src/content/HistoryView.tsx:47
+msgid "Delete this conversation"
+msgstr "Удалить эту беседу"
+
+#: src/content/MemoryListView.tsx:67
+#: src/content/MemoryListView.tsx:67
+msgid "Delete this memory"
+msgstr "Удалить это воспоминание"
+
+#: src/content/ModelMenu.tsx:73
+msgid "Diagnostics cleared"
+msgstr "Диагностика очищена"
+
+#: src/content/ModelMenu.tsx:64
+msgid "Diagnostics copied"
+msgstr "Диагностика скопирована"
+
+#: src/content/App.tsx:163
+msgid "Done"
+msgstr "Готово"
+
+#. placeholder {0}: memories.editing?.title.trim() || t`memory`
+#: src/content/App.tsx:162
+msgid "Edit {0}"
+msgstr "Изменить: {0}"
+
+#: src/content/MemoryListView.tsx:53
+msgid "Edit this memory"
+msgstr "Изменить это воспоминание"
+
+#: src/content/App.tsx:146
+msgid "Enlarge"
+msgstr "Увеличить"
+
+#. placeholder {0}: progress.error
+#: src/content/ChatView.tsx:273
+msgid "Error: {0}"
+msgstr "Ошибка: {0}"
+
+#: src/content/ChatView.tsx:208
+msgid "Error: {content}"
+msgstr "Ошибка: {content}"
+
+#: src/content/ChatView.tsx:341
+msgid "Execution was denied."
+msgstr "Не выполнено."
+
+#: src/content/App.tsx:163
+msgid "Finish editing and return to the list"
+msgstr "Завершить редактирование и вернуться к списку"
+
+#: src/content/ChatView.tsx:99
+msgid "Generating response…"
+msgstr "Создание ответа…"
+
+#: src/content/ChatView.tsx:180
+msgid "Get started for free"
+msgstr "Начать бесплатно"
+
+#: src/content/ChatView.tsx:342
+msgid "Image or file"
+msgstr "Изображение или файл"
+
+#: src/content/ChatView.tsx:112
+msgid "Include {selectionSummary}"
+msgstr "Включить: {selectionSummary}"
+
+#: src/content/App.tsx:162
+msgid "memory"
+msgstr "воспоминание"
+
+#: src/content/App.tsx:143
+msgid "Memory"
+msgstr "Память"
+
+#: src/content/ChatView.tsx:266
+msgid "Memory update failed"
+msgstr "Не удалось обновить память"
+
+#: src/content/ChatView.tsx:267
+msgid "Memory updated"
+msgstr "Память обновлена"
+
+#: src/content/App.tsx:148
+msgid "Menu (chat history and memory)"
+msgstr "Меню (история чатов и память)"
+
+#: src/content/ModelMenu.tsx:86
+msgid "Model"
+msgstr "Модель"
+
+#: src/content/ChatView.tsx:120
+#: src/content/ChatView.tsx:121
+#: src/content/ModelMenu.tsx:80
+msgid "Model and reasoning effort"
+msgstr "Модель и уровень рассуждений"
+
+#: src/content/App.tsx:195
+#: src/content/App.tsx:195
+msgid "New chat"
+msgstr "Новый чат"
+
+#: src/content/MemoryListView.tsx:36
+#: src/content/MemoryListView.tsx:37
+#: src/content/MemoryListView.tsx:42
+msgid "New memory"
+msgstr "Новое воспоминание"
+
+#: src/content/ModelMenu.tsx:82
+msgid "No API key is configured. Configure one in the chatext app."
+msgstr "API-ключ не настроен. Настройте его в приложении chatext."
+
+#. js-lingui-explicit-id
+#: src/background/provider.ts:93
+#: src/background/session.ts:252
+msgid "errors.apiKeyMissing"
+msgstr "API-ключ не настроен. Настройте его в приложении chatext."
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:142
+msgid "errors.noCompaction"
+msgstr "Результат сжатия беседы не получен."
+
+#: src/content/HistoryView.tsx:37
+msgid "No matching conversations."
+msgstr "Подходящих бесед нет."
+
+#: src/content/MemoryListView.tsx:48
+msgid "No matching memories."
+msgstr "Подходящих воспоминаний нет."
+
+#: src/content/ChatView.tsx:267
+msgid "No memory changes"
+msgstr "Память не изменилась"
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:104
+msgid "errors.noResponse"
+msgstr "Ответ не получен."
+
+#: src/content/HistoryView.tsx:35
+msgid "No saved conversations."
+msgstr "Нет сохранённых бесед."
+
+#: src/content/MemoryListView.tsx:46
+msgid "No saved memories."
+msgstr "Нет сохранённых воспоминаний."
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:128
+msgid "errors.noTitle"
+msgstr "Заголовок не получен."
+
+#: src/content/ChatView.tsx:182
+msgid "Open Settings"
+msgstr "Открыть настройки"
+
+#: src/content/HistoryView.tsx:43
+msgid "Open this conversation"
+msgstr "Открыть эту беседу"
+
+#: src/content/ChatView.tsx:291
+msgid "Reasoning"
+msgstr "Рассуждение"
+
+#: src/content/ModelMenu.tsx:103
+msgid "Reasoning effort"
+msgstr "Уровень рассуждений"
+
+#: src/content/MemoryListView.tsx:60
+#: src/content/MemoryListView.tsx:61
+msgid "Remove from favorites"
+msgstr "Удалить из избранного"
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:99
+#: src/background/agent.ts:111
+msgid "errors.responseCancelled"
+msgstr "Создание ответа отменено."
+
+#: src/content/App.tsx:146
+msgid "Restore size"
+msgstr "Исходный размер"
+
+#: src/content/ChatView.tsx:309
+msgid "Running…"
+msgstr "Выполняется…"
+
+#: src/content/App.tsx:142
+msgid "Saved conversations"
+msgstr "Сохранённые беседы"
+
+#: src/content/HistoryView.tsx:55
+msgid "Search history"
+msgstr "Поиск по истории"
+
+#: src/content/MemoryListView.tsx:74
+msgid "Search memories"
+msgstr "Поиск воспоминаний"
+
+#: src/content/ChatView.tsx:64
+msgid "Send"
+msgstr "Отправить"
+
+#: src/content/ChatView.tsx:64
+msgid "Send and interrupt"
+msgstr "Прервать и отправить"
+
+#: src/content/search.tsx:42
+#: src/content/search.tsx:42
+msgid "Settings"
+msgstr "Настройки"
+
+#: src/content/App.tsx:147
+msgid "Show in sidebar"
+msgstr "Показать в боковой панели"
+
+#: src/content/ChatView.tsx:181
+msgid "Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
+msgstr "Войдите с Apple, чтобы пользоваться бесплатным тарифом chatext, или добавьте свой API-ключ OpenAI, Anthropic или DeepSeek."
+
+#: src/content/ChatView.tsx:64
+msgid "Stop response"
+msgstr "Остановить ответ"
+
+#: src/content/App.tsx:147
+msgid "Switch to floating panel"
+msgstr "Переключить на плавающую панель"
+
+#: src/content/MemoryEditor.tsx:20
+#: src/content/MemoryEditor.tsx:21
+msgid "Title"
+msgstr "Заголовок"
+
+#: src/content/MemoryEditor.tsx:16
+msgid "Title:"
+msgstr "Заголовок:"
+
+#: src/content/HistoryView.tsx:24
+msgid "Today"
+msgstr "Сегодня"
+
+#: src/content/MemoryListView.tsx:50
+msgid "Untitled"
+msgstr "Без названия"
+
+#: src/content/ChatView.tsx:264
+msgid "Updating memory…"
+msgstr "Обновление памяти…"
+
+#: src/content/App.tsx:143
+msgid "What the AI remembers"
+msgstr "Что помнит ИИ"
+
+#: src/content/HistoryView.tsx:24
+msgid "Yesterday"
+msgstr "Вчера"
+
+#: src/content/MemoryListView.tsx:37
+msgid "You can save up to {MEMORY_MAX_COUNT} memories"
+msgstr "Можно сохранить до {MEMORY_MAX_COUNT} воспоминаний"
