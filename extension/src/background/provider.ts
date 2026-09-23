@@ -19,6 +19,8 @@ const GATEWAY_BASE: Record<Provider, string> = {
   deepseek: `${GATEWAY_URL}/deepseek`
 };
 
+const MEMORY_MODEL_ID = "gpt-6-luna";
+
 type ProviderOptions = NonNullable<Parameters<typeof streamText>[0]["providerOptions"]>;
 type FilesApi = Parameters<typeof uploadFile>[0]["api"];
 
@@ -70,6 +72,14 @@ export function resolveSettings(...candidates: (ModelSettings | undefined)[]): M
   }
   const info = models[0];
   return info ? { model: info.key, effort: clampEffort(info, settings[0]?.effort ?? "medium") } : null;
+}
+
+/** Memory maintenance runs on GPT-6 Luna reached the same way as the chosen model; without it, on the chosen model's lowest effort. */
+export function createMemoryRuntime(settings: ModelSettings): ModelRuntime {
+  const key = modelKey(findModel(settings.model)?.access ?? "byok", MEMORY_MODEL_ID);
+  return availableModels().some((model) => model.key === key)
+    ? createRuntime({ model: key, effort: "low" }, "low")
+    : createRuntime(settings, "lowest");
 }
 
 export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"): ModelRuntime {

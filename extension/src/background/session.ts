@@ -6,6 +6,7 @@ import {
   expireToolHistory,
   getMessageText,
   latestContext,
+  recentTurns,
   stamp,
   taggedMessage
 } from "../shared/conversation";
@@ -20,9 +21,9 @@ import type {
 } from "../shared/protocol";
 import type { ModelSettings } from "../shared/models";
 import { loadConversation, loadSettings, saveConversation, saveSettings } from "../shared/store";
-import { compact, generateTitle, MEMORY_UPDATE_PROMPT, streamAnswer } from "./agent";
+import { compact, generateTitle, MEMORY_SYSTEM_PROMPT, MEMORY_TURNS, MEMORY_UPDATE_REQUEST, streamAnswer } from "./agent";
 import { applyCompaction, planCompaction } from "./compaction";
-import { availableModels, createRuntime, refreshApiKeys, resolveSettings } from "./provider";
+import { availableModels, createMemoryRuntime, createRuntime, refreshApiKeys, resolveSettings } from "./provider";
 import type { ModelRuntime } from "./provider";
 import { createTools } from "./tools";
 import { createRuntimeContext, formatMemoryContext, formatSelectionContext, SYSTEM_PROMPT } from "./prompt";
@@ -238,10 +239,11 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
   }
 }
 
-/** The answer uses the chosen effort; title, compaction and memory maintenance use the model's lowest. */
+/** The answer uses the chosen effort; title and compaction use the model's lowest. */
 interface Models {
   main: ModelRuntime;
   low: ModelRuntime;
+  memory: ModelRuntime;
 }
 
 /** A model that is no longer available falls back to the last used one, then to the first available. */
@@ -252,7 +254,7 @@ async function resolveModels(session: Session, conversation: Conversation): Prom
   conversation.settings = settings;
   persist(session);
   await saveSettings(settings);
-  return { main: createRuntime(settings, settings.effort), low: createRuntime(settings, "lowest") };
+  return { main: createRuntime(settings, settings.effort), low: createRuntime(settings, "lowest"), memory: createMemoryRuntime(settings) };
 }
 
 async function answer(
@@ -333,7 +335,7 @@ async function answer(
       if (live()) pushView(session);
     }).catch(() => undefined);
   }
-  void maintainMemory(session, conversation, models.low);
+  void maintainMemory(session, conversation, models.memory);
 }
 
 async function maintainMemory(session: Session, conversation: Conversation, model: ModelRuntime): Promise<void> {
@@ -352,7 +354,7 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
   };
   const result = await streamAnswer(
     model,
-    [...conversation.messages, taggedMessage("memory_update", MEMORY_UPDATE_PROMPT)],
+    [...recentTurns(conversation.messages, MEMORY_TURNS), taggedMessage("memory_update", MEMORY_UPDATE_REQUEST)],
     createTools(runtime),
     runtime.signal,
     {
@@ -365,7 +367,7 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
         progress.messages = finished;
       }
     },
-    SYSTEM_PROMPT
+    MEMORY_SYSTEM_PROMPT
   );
   progress.done = true;
   progress.cacheUsage = result.cacheUsage;

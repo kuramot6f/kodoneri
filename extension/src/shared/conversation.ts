@@ -114,6 +114,20 @@ export function expireToolHistory(conversation: Conversation, now = Date.now()):
   return changed ? { ...conversation, messages } : conversation;
 }
 
+/** The last `count` questions, each with the answer text that followed it; context, reasoning and tool traffic are left out. */
+export function recentTurns(messages: ModelMessage[], count: number): ModelMessage[] {
+  const turns: { question: string; answers: string[] }[] = [];
+  for (const message of messages) {
+    const text = getMessageText(message);
+    if (message.role === "user" && !getMeta(message).kind) turns.push({ question: text, answers: [] });
+    else if (message.role === "assistant" && text) turns.at(-1)?.answers.push(text);
+  }
+  return turns.slice(-count).flatMap(({ question, answers }): ModelMessage[] => [
+    { role: "user", content: question },
+    ...(answers.length > 0 ? [{ role: "assistant" as const, content: answers.join("\n\n") }] : [])
+  ]);
+}
+
 function withMeta<T extends ModelMessage>(message: T, meta: Meta): T {
   const current = message.providerOptions?.chatext;
   return {

@@ -1,0 +1,3 @@
+メモリの更新は基本的にgpt-6-lunaに投げる。reasoningとかtool callとかは全部投げ捨てて、userとassistantだけを投げるようにして。投げるターン数は最大10件に制限して。
+あと、更新時に全部出力するのやめて
+reasoningとかtool callとかを投げるブロックの中に入れて、基本的にユーザーは
