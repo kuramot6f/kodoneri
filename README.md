@@ -1,6 +1,10 @@
-# Chatext
+<p align="center">
+  <img src="Shared%20(App)/Assets.xcassets/AppIcon.appiconset/app-icon-256.png" width="128" alt="Chatext icon">
+</p>
 
-**AI, right in Safari.** A chat panel on any page, on iPhone, iPad, and Mac.
+<h1 align="center">Chatext</h1>
+
+<p align="center"><b>AI, right in Safari.</b> A chat panel on any page, on iPhone, iPad, and Mac.</p>
 
 <p align="center">
   <img src="design/Frame%201.jpg" width="45%" alt="Ask questions, understand pages">
