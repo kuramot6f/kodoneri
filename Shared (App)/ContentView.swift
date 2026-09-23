@@ -193,7 +193,7 @@ private struct GatewaySection: View {
                             if productLoadError == nil {
                                 ProgressView()
                             }
-                            Text(productLoadError ?? "Loading subscriptions…")
+                            Text(productLoadError ?? String(localized: "Loading subscriptions…"))
                                 .foregroundStyle(.secondary)
                         }
                         .task { await loadProducts() }
@@ -310,7 +310,7 @@ private struct GatewaySection: View {
         do {
             products = try await Product.products(for: Self.subscriptionProductIDs)
                 .sorted { Self.subscriptionProductIDs.firstIndex(of: $0.id)! < Self.subscriptionProductIDs.firstIndex(of: $1.id)! }
-            productLoadError = products.isEmpty ? "Subscriptions are currently unavailable." : nil
+            productLoadError = products.isEmpty ? String(localized: "Subscriptions are currently unavailable.") : nil
         } catch {
             productLoadError = error.localizedDescription
         }

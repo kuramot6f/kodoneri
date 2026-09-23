@@ -1,8 +1,17 @@
 import { i18n } from "@lingui/core";
-import { messages as enMessages } from "../locales/en/messages.ts";
-import { messages as jaMessages } from "../locales/ja/messages.ts";
+import { messages as de } from "../locales/de/messages.ts";
+import { messages as en } from "../locales/en/messages.ts";
+import { messages as es } from "../locales/es/messages.ts";
+import { messages as fr } from "../locales/fr/messages.ts";
+import { messages as ja } from "../locales/ja/messages.ts";
+import { messages as ko } from "../locales/ko/messages.ts";
+import { messages as ptBR } from "../locales/pt-BR/messages.ts";
+import { messages as zhHans } from "../locales/zh-Hans/messages.ts";
+import { messages as zhHant } from "../locales/zh-Hant/messages.ts";
 
-type AppLocale = "en" | "ja";
+const catalogs = { en, ja, es, "pt-BR": ptBR, de, fr, ko, "zh-Hans": zhHans, "zh-Hant": zhHant };
+
+type AppLocale = keyof typeof catalogs;
 
 // Source modules can translate errors during tests before the extension entry point runs.
 if (!i18n.locale) {
@@ -11,11 +20,25 @@ if (!i18n.locale) {
 }
 
 export function resolveLocale(language: string): AppLocale {
-  return language.toLowerCase().split(/[-_]/, 1)[0] === "ja" ? "ja" : "en";
+  const [base, ...rest] = language.toLowerCase().split(/[-_]/);
+  switch (base) {
+    case "ja":
+    case "es":
+    case "de":
+    case "fr":
+    case "ko":
+      return base;
+    case "pt":
+      return "pt-BR";
+    case "zh":
+      return rest.some((part) => ["hant", "tw", "hk", "mo"].includes(part)) ? "zh-Hant" : "zh-Hans";
+    default:
+      return "en";
+  }
 }
 
 export function activateLocale(locale: AppLocale): AppLocale {
-  i18n.load({ en: enMessages, ja: jaMessages });
+  i18n.load(catalogs);
   i18n.activate(locale);
   return locale;
 }

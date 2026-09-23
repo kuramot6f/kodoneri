@@ -66,6 +66,7 @@
 				Assets.xcassets,
 				ChatextApp.swift,
 				ContentView.swift,
+				Localizable.xcstrings,
 			);
 			target = 422D2BD7305E3AA1007990AD /* chatext (iOS) */;
 		};
@@ -82,6 +83,7 @@
 				Assets.xcassets,
 				ChatextApp.swift,
 				ContentView.swift,
+				Localizable.xcstrings,
 			);
 			target = 422D2BE9305E3AA1007990AD /* chatext (macOS) */;
 		};
@@ -347,6 +349,14 @@
 			knownRegions = (
 				en,
 				Base,
+				ja,
+				es,
+				"pt-BR",
+				de,
+				fr,
+				ko,
+				"zh-Hans",
+				"zh-Hant",
 			);
 			mainGroup = 422D2BBB305E3AA0007990AD;
 			minimizedProjectReferenceProxies = 1;

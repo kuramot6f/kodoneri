@@ -1,0 +1,361 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-09-23 16:01+0900\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: zh-Hans\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/content/pageSelection.ts:32
+msgid "“{preview}”"
+msgstr "“{preview}”"
+
+#. placeholder {0}: selection.media.length
+#: src/content/pageSelection.ts:35
+msgid "{0, plural, one {# media item} other {# media items}}"
+msgstr "{0} 个媒体项"
+
+#: src/content/ChatView.tsx:243
+msgid "{mediaCount, plural, one {# media item} other {# media items}}"
+msgstr "{mediaCount} 个媒体项"
+
+#: src/content/MemoryListView.tsx:60
+msgid "Add to favorites"
+msgstr "添加到收藏"
+
+#: src/content/MemoryListView.tsx:61
+msgid "Add to favorites (the AI will no longer be able to edit it)"
+msgstr "添加到收藏（AI 将无法再编辑）"
+
+#: src/content/ChatView.tsx:132
+msgid "Ask about this page"
+msgstr "就此页面提问"
+
+#: src/content/App.tsx:159
+#: src/content/App.tsx:159
+msgid "Back to list"
+msgstr "返回列表"
+
+#. placeholder {0}: rate.toFixed(1)
+#. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
+#. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
+#: src/content/ChatView.tsx:331
+msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
+msgstr "缓存命中率：{0}%（{1} / {2} tokens）"
+
+#: src/content/App.tsx:148
+msgid "Chat history"
+msgstr "聊天记录"
+
+#: src/content/App.tsx:142
+msgid "Chats"
+msgstr "聊天"
+
+#: src/content/ModelMenu.tsx:119
+msgid "Clear"
+msgstr "清除"
+
+#: src/content/App.tsx:168
+#: src/content/App.tsx:168
+msgid "Close panel"
+msgstr "关闭面板"
+
+#: src/content/search.tsx:18
+msgid "Close search"
+msgstr "关闭搜索"
+
+#: src/content/ChatView.tsx:100
+msgid "Compacting conversation…"
+msgstr "正在压缩对话…"
+
+#: src/content/MemoryEditor.tsx:29
+#: src/content/MemoryEditor.tsx:30
+msgid "Content"
+msgstr "内容"
+
+#. js-lingui-explicit-id
+#: src/background/session.ts:322
+msgid "errors.compactionFailed"
+msgstr "压缩对话失败。{error}"
+
+#: src/content/ModelMenu.tsx:118
+msgid "Copy diagnostics"
+msgstr "复制诊断信息"
+
+#: src/content/ModelMenu.tsx:75
+msgid "Could not clear diagnostics"
+msgstr "无法清除诊断信息"
+
+#: src/content/ModelMenu.tsx:66
+msgid "Could not copy diagnostics"
+msgstr "无法复制诊断信息"
+
+#: src/content/HistoryView.tsx:47
+#: src/content/HistoryView.tsx:47
+msgid "Delete this conversation"
+msgstr "删除此对话"
+
+#: src/content/MemoryListView.tsx:67
+#: src/content/MemoryListView.tsx:67
+msgid "Delete this memory"
+msgstr "删除此记忆"
+
+#: src/content/ModelMenu.tsx:73
+msgid "Diagnostics cleared"
+msgstr "已清除诊断信息"
+
+#: src/content/ModelMenu.tsx:64
+msgid "Diagnostics copied"
+msgstr "已复制诊断信息"
+
+#: src/content/App.tsx:163
+msgid "Done"
+msgstr "完成"
+
+#. placeholder {0}: memories.editing?.title.trim() || t`memory`
+#: src/content/App.tsx:162
+msgid "Edit {0}"
+msgstr "编辑{0}"
+
+#: src/content/MemoryListView.tsx:53
+msgid "Edit this memory"
+msgstr "编辑此记忆"
+
+#: src/content/App.tsx:146
+msgid "Enlarge"
+msgstr "放大"
+
+#. placeholder {0}: progress.error
+#: src/content/ChatView.tsx:273
+msgid "Error: {0}"
+msgstr "错误：{0}"
+
+#: src/content/ChatView.tsx:208
+msgid "Error: {content}"
+msgstr "错误：{content}"
+
+#: src/content/ChatView.tsx:341
+msgid "Execution was denied."
+msgstr "未执行。"
+
+#: src/content/App.tsx:163
+msgid "Finish editing and return to the list"
+msgstr "完成编辑并返回列表"
+
+#: src/content/ChatView.tsx:99
+msgid "Generating response…"
+msgstr "正在生成回答…"
+
+#: src/content/ChatView.tsx:180
+msgid "Get started for free"
+msgstr "免费开始使用"
+
+#: src/content/ChatView.tsx:342
+msgid "Image or file"
+msgstr "图片或文件"
+
+#: src/content/ChatView.tsx:112
+msgid "Include {selectionSummary}"
+msgstr "包含{selectionSummary}"
+
+#: src/content/App.tsx:162
+msgid "memory"
+msgstr "记忆"
+
+#: src/content/App.tsx:143
+msgid "Memory"
+msgstr "记忆"
+
+#: src/content/ChatView.tsx:266
+msgid "Memory update failed"
+msgstr "记忆更新失败"
+
+#: src/content/ChatView.tsx:267
+msgid "Memory updated"
+msgstr "记忆已更新"
+
+#: src/content/App.tsx:148
+msgid "Menu (chat history and memory)"
+msgstr "菜单（聊天记录和记忆）"
+
+#: src/content/ModelMenu.tsx:86
+msgid "Model"
+msgstr "模型"
+
+#: src/content/ChatView.tsx:120
+#: src/content/ChatView.tsx:121
+#: src/content/ModelMenu.tsx:80
+msgid "Model and reasoning effort"
+msgstr "模型和推理强度"
+
+#: src/content/App.tsx:195
+#: src/content/App.tsx:195
+msgid "New chat"
+msgstr "新聊天"
+
+#: src/content/MemoryListView.tsx:36
+#: src/content/MemoryListView.tsx:37
+#: src/content/MemoryListView.tsx:42
+msgid "New memory"
+msgstr "新建记忆"
+
+#: src/content/ModelMenu.tsx:82
+msgid "No API key is configured. Configure one in the chatext app."
+msgstr "尚未配置 API 密钥。请在 chatext App 中配置。"
+
+#. js-lingui-explicit-id
+#: src/background/provider.ts:93
+#: src/background/session.ts:252
+msgid "errors.apiKeyMissing"
+msgstr "尚未配置 API 密钥。请在 chatext App 中配置。"
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:142
+msgid "errors.noCompaction"
+msgstr "未收到对话压缩结果。"
+
+#: src/content/HistoryView.tsx:37
+msgid "No matching conversations."
+msgstr "没有匹配的对话。"
+
+#: src/content/MemoryListView.tsx:48
+msgid "No matching memories."
+msgstr "没有匹配的记忆。"
+
+#: src/content/ChatView.tsx:267
+msgid "No memory changes"
+msgstr "记忆无变化"
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:104
+msgid "errors.noResponse"
+msgstr "未收到回答。"
+
+#: src/content/HistoryView.tsx:35
+msgid "No saved conversations."
+msgstr "没有已保存的对话。"
+
+#: src/content/MemoryListView.tsx:46
+msgid "No saved memories."
+msgstr "没有已保存的记忆。"
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:128
+msgid "errors.noTitle"
+msgstr "未收到标题。"
+
+#: src/content/ChatView.tsx:182
+msgid "Open Settings"
+msgstr "打开设置"
+
+#: src/content/HistoryView.tsx:43
+msgid "Open this conversation"
+msgstr "打开此对话"
+
+#: src/content/ChatView.tsx:291
+msgid "Reasoning"
+msgstr "推理"
+
+#: src/content/ModelMenu.tsx:103
+msgid "Reasoning effort"
+msgstr "推理强度"
+
+#: src/content/MemoryListView.tsx:60
+#: src/content/MemoryListView.tsx:61
+msgid "Remove from favorites"
+msgstr "从收藏中移除"
+
+#. js-lingui-explicit-id
+#: src/background/agent.ts:99
+#: src/background/agent.ts:111
+msgid "errors.responseCancelled"
+msgstr "已停止生成回答。"
+
+#: src/content/App.tsx:146
+msgid "Restore size"
+msgstr "恢复大小"
+
+#: src/content/ChatView.tsx:309
+msgid "Running…"
+msgstr "正在运行…"
+
+#: src/content/App.tsx:142
+msgid "Saved conversations"
+msgstr "已保存的对话"
+
+#: src/content/HistoryView.tsx:55
+msgid "Search history"
+msgstr "搜索历史记录"
+
+#: src/content/MemoryListView.tsx:74
+msgid "Search memories"
+msgstr "搜索记忆"
+
+#: src/content/ChatView.tsx:64
+msgid "Send"
+msgstr "发送"
+
+#: src/content/ChatView.tsx:64
+msgid "Send and interrupt"
+msgstr "打断并发送"
+
+#: src/content/search.tsx:42
+#: src/content/search.tsx:42
+msgid "Settings"
+msgstr "设置"
+
+#: src/content/App.tsx:147
+msgid "Show in sidebar"
+msgstr "在边栏中显示"
+
+#: src/content/ChatView.tsx:181
+msgid "Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
+msgstr "通过 Apple 登录以使用 chatext 免费方案，或添加你自己的 OpenAI、Anthropic 或 DeepSeek API 密钥。"
+
+#: src/content/ChatView.tsx:64
+msgid "Stop response"
+msgstr "停止回答"
+
+#: src/content/App.tsx:147
+msgid "Switch to floating panel"
+msgstr "切换为浮动面板"
+
+#: src/content/MemoryEditor.tsx:20
+#: src/content/MemoryEditor.tsx:21
+msgid "Title"
+msgstr "标题"
+
+#: src/content/MemoryEditor.tsx:16
+msgid "Title:"
+msgstr "标题："
+
+#: src/content/HistoryView.tsx:24
+msgid "Today"
+msgstr "今天"
+
+#: src/content/MemoryListView.tsx:50
+msgid "Untitled"
+msgstr "无标题"
+
+#: src/content/ChatView.tsx:264
+msgid "Updating memory…"
+msgstr "正在更新记忆…"
+
+#: src/content/App.tsx:143
+msgid "What the AI remembers"
+msgstr "AI 记住的内容"
+
+#: src/content/HistoryView.tsx:24
+msgid "Yesterday"
+msgstr "昨天"
+
+#: src/content/MemoryListView.tsx:37
+msgid "You can save up to {MEMORY_MAX_COUNT} memories"
+msgstr "最多可保存 {MEMORY_MAX_COUNT} 条记忆"
