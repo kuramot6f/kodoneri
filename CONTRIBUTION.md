@@ -1,4 +1,4 @@
-# chatext
+# Kodoneri
 
 Safari 拡張（Web Extension）本体と、それを配布する iOS / macOS アプリ。
 
