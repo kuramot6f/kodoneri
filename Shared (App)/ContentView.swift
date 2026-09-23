@@ -318,7 +318,6 @@ private struct GatewaySection: View {
     var body: some View {
         Section {
             if account.token != nil {
-                Text("Signed in with Apple")
                 if let usage = account.usage {
                     LabeledContent("Plan") {
                         Text(usage.plan.capitalized)
@@ -358,7 +357,7 @@ private struct GatewaySection: View {
                     .foregroundStyle(.red)
             }
         } header: {
-            Text("Kodoneri")
+            Text("Kodoneri Plan")
         } footer: {
             Text(account.token != nil ? "Usage is recorded after each response and may take a moment to appear." : "Kodoneri doesn’t receive your name or email address when you sign in with Apple.")
         }
