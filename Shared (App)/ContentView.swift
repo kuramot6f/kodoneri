@@ -419,8 +419,11 @@ private struct ExtensionSection: View {
                 Button(isEnabled == true ? "Manage in Safari Settings…" : "Enable in Safari Settings…") {
                     Task { await openSettings() }
                 }
+            } else if #available(iOS 18, *) {
+                // Safari can't report the state here, so the directions read the same whether the extension is on or off.
+                Text("If you haven’t turned on chatext yet, go to Settings > Apps > Safari > Extensions.")
             } else {
-                Text("Turn on chatext in Settings > Safari > Extensions > chatext.")
+                Text("If you haven’t turned on chatext yet, go to Settings > Safari > Extensions.")
             }
         } header: {
             Text("Safari Extension")
