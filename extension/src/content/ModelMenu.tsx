@@ -59,7 +59,7 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
   return (
     <div className="model-menu" ref={menuRef} role="dialog" aria-label={t`Model and reasoning effort`}>
       {!view ? null : !view.settings || !model ? (
-        <p className="model-menu-empty"><Trans>No API key is configured. Configure one in the chatext app.</Trans></p>
+        <p className="model-menu-empty"><Trans>No API key is configured. Configure one in the Kodoneri app.</Trans></p>
       ) : (
         <>
           <label className="model-menu-row">
@@ -98,11 +98,11 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
   );
 }
 
-/** Subscription models under "chatext", models on the user's own keys under their provider. */
+/** Subscription models under "Kodoneri", models on the user's own keys under their provider. */
 function groupModels(models: ModelInfo[]): { label: string; models: ModelInfo[] }[] {
   const groups = new Map<string, ModelInfo[]>();
   for (const model of models) {
-    const label = model.access === "chatext" ? "chatext" : PROVIDERS[model.provider].label;
+    const label = model.access === "chatext" ? "Kodoneri" : PROVIDERS[model.provider].label;
     groups.set(label, [...groups.get(label) ?? [], model]);
   }
   return [...groups].map(([label, models]) => ({ label, models }));

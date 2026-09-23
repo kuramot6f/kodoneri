@@ -332,88 +332,6 @@
         }
       }
     },
-    "Chat Button on Web Pages" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chat-Taste auf Webseiten"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Botón de chat en páginas web"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bouton de chat sur les pages web"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tombol obrolan di halaman web"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pulsante chat nelle pagine web"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Webページにチャットボタンを表示"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "웹 페이지에 채팅 버튼 표시"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Botão de chat nas páginas da web"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Кнопка чата на веб-страницах"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Web sayfalarında sohbet düğmesi"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nút trò chuyện trên trang web"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在网页上显示聊天按钮"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在網頁上顯示聊天按鈕"
-          }
-        }
-      }
-    },
     "Check that the Plus and Pro subscriptions are available in App Store Connect for this app." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1739,88 +1657,6 @@
         }
       }
     },
-    "Shows a button at the bottom right of web pages that opens the chat." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeigt unten rechts auf Webseiten eine Taste an, die den Chat öffnet."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Muestra un botón en la esquina inferior derecha de las páginas web que abre el chat."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Affiche en bas à droite des pages web un bouton qui ouvre le chat."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Menampilkan tombol di kanan bawah halaman web untuk membuka obrolan."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mostra in basso a destra nelle pagine web un pulsante che apre la chat."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Webページの右下に、チャットを開くボタンを表示します。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "웹 페이지 오른쪽 아래에 채팅을 여는 버튼을 표시합니다."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mostra um botão no canto inferior direito das páginas da web que abre o chat."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Показывает в правом нижнем углу веб-страниц кнопку, открывающую чат."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Web sayfalarının sağ alt köşesinde sohbeti açan bir düğme gösterir."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hiển thị nút mở trò chuyện ở góc dưới bên phải trang web."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在网页右下角显示一个打开聊天的按钮。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在網頁右下角顯示一個打開聊天的按鈕。"
-          }
-        }
-      }
-    },
     "Sign Out" : {
       "localizations" : {
         "de" : {
@@ -1981,6 +1817,88 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用 Apple 登入以使用 Kodoneri 免費方案，或加入你自己的 OpenAI、Anthropic 或 DeepSeek API 金鑰。"
+          }
+        }
+      }
+    },
+    "Show Chat Button on Web Pages" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chat-Taste auf Webseiten anzeigen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar botón de chat en páginas web"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher le bouton de chat sur les pages web"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tampilkan tombol obrolan di halaman web"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostra pulsante chat nelle pagine web"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webページにチャットボタンを表示"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "웹 페이지에 채팅 버튼 표시"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar botão de chat nas páginas da web"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Показывать кнопку чата на веб-страницах"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web sayfalarında sohbet düğmesini göster"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiện nút trò chuyện trên trang web"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在网页上显示聊天按钮"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在網頁上顯示聊天按鈕"
           }
         }
       }
@@ -2478,330 +2396,248 @@
         }
       }
     },
-    "Copy Debug Logs": {
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "デバッグログをコピー"
+    "Copy Debug Logs" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "デバッグログをコピー"
           }
         },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Debug-Protokolle kopieren"
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug-Protokolle kopieren"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copiar registros de depuración"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiar registros de depuración"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copier les journaux de débogage"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copier les journaux de débogage"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Salin log debug"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salin log debug"
           }
         },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copia i registri di debug"
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia i registri di debug"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "디버그 로그 복사"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "디버그 로그 복사"
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copiar logs de depuração"
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiar logs de depuração"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Скопировать журналы отладки"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Скопировать журналы отладки"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hata ayıklama günlüklerini kopyala"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hata ayıklama günlüklerini kopyala"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sao chép nhật ký gỡ lỗi"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sao chép nhật ký gỡ lỗi"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "复制调试日志"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制调试日志"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "複製除錯記錄"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "複製除錯記錄"
           }
         }
       }
     },
-    "Debug Logs Copied": {
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "デバッグログをコピーしました"
+    "Debug Logs Copied" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "デバッグログをコピーしました"
           }
         },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Debug-Protokolle kopiert"
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug-Protokolle kopiert"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Registros de depuración copiados"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registros de depuración copiados"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Journaux de débogage copiés"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Journaux de débogage copiés"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log debug disalin"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log debug disalin"
           }
         },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Registri di debug copiati"
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registri di debug copiati"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "디버그 로그가 복사됨"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "디버그 로그가 복사됨"
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Logs de depuração copiados"
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logs de depuração copiados"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Журналы отладки скопированы"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Журналы отладки скопированы"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hata ayıklama günlükleri kopyalandı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hata ayıklama günlükleri kopyalandı"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Đã sao chép nhật ký gỡ lỗi"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã sao chép nhật ký gỡ lỗi"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已复制调试日志"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已复制调试日志"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已複製除錯記錄"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已複製除錯記錄"
           }
         }
       }
     },
-    "Could Not Copy Debug Logs": {
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "デバッグログをコピーできませんでした"
+    "Could Not Copy Debug Logs" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "デバッグログをコピーできませんでした"
           }
         },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Debug-Protokolle konnten nicht kopiert werden"
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug-Protokolle konnten nicht kopiert werden"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se pudieron copiar los registros de depuración"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudieron copiar los registros de depuración"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Impossible de copier les journaux de débogage"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de copier les journaux de débogage"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tidak dapat menyalin log debug"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak dapat menyalin log debug"
           }
         },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Impossibile copiare i registri di debug"
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossibile copiare i registri di debug"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "디버그 로그를 복사할 수 없음"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "디버그 로그를 복사할 수 없음"
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Não foi possível copiar os logs de depuração"
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível copiar os logs de depuração"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Не удалось скопировать журналы отладки"
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось скопировать журналы отладки"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hata ayıklama günlükleri kopyalanamadı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hata ayıklama günlükleri kopyalanamadı"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không thể sao chép nhật ký gỡ lỗi"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không thể sao chép nhật ký gỡ lỗi"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法复制调试日志"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法复制调试日志"
           }
         },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "無法複製除錯記錄"
-          }
-        }
-      }
-    },
-    "Diagnostics": {
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "診断"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diagnose"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diagnóstico"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diagnostic"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diagnostik"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diagnostica"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "진단"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diagnóstico"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Диагностика"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tanılama"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Chẩn đoán"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "诊断"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "診斷"
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法複製除錯記錄"
           }
         }
       }

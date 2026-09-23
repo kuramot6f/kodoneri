@@ -247,10 +247,10 @@ interface Models {
   memory: ModelRuntime;
 }
 
-/** A model that is no longer available falls back to the last used one, then to the first available. */
+/** A model that is no longer available falls back to the last used one, then to the default model. */
 async function resolveModels(session: Session, conversation: Conversation): Promise<Models> {
   const settings = resolveSettings(session.settings, await loadSettings());
-  if (!settings) throw new Error(i18n._({ id: "errors.apiKeyMissing", message: "No API key is configured. Configure one in the chatext app." }));
+  if (!settings) throw new Error(i18n._({ id: "errors.apiKeyMissing", message: "No API key is configured. Configure one in the Kodoneri app." }));
   session.settings = settings;
   conversation.settings = settings;
   persist(session);

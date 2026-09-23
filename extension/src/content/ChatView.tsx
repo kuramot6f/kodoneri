@@ -180,7 +180,7 @@ function SetupPrompt() {
   return (
     <div className="setup-prompt">
       <strong><Trans>Get started for free</Trans></strong>
-      <p><Trans>Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key.</Trans></p>
+      <p><Trans>Sign in with Apple to use Kodoneri’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key.</Trans></p>
       <button className="pill" type="button" onClick={openSettings}><Trans>Open Settings</Trans></button>
     </div>
   );

@@ -22,7 +22,7 @@ msgstr "“{preview}”"
 msgid "{0, plural, one {# media item} other {# media items}}"
 msgstr "{0} 个媒体项"
 
-#: src/content/ChatView.tsx:243
+#: src/content/ChatView.tsx:258
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "{mediaCount} 个媒体项"
 
@@ -34,7 +34,7 @@ msgstr "添加到收藏"
 msgid "Add to favorites (the AI will no longer be able to edit it)"
 msgstr "添加到收藏（AI 将无法再编辑）"
 
-#: src/content/ChatView.tsx:132
+#: src/content/ChatView.tsx:134
 msgid "Ask about this page"
 msgstr "就此页面提问"
 
@@ -46,7 +46,7 @@ msgstr "返回列表"
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:331
+#: src/content/ChatView.tsx:350
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "缓存命中率：{0}%（{1} / {2} tokens）"
 
@@ -58,10 +58,6 @@ msgstr "聊天记录"
 msgid "Chats"
 msgstr "聊天"
 
-#: src/content/ModelMenu.tsx:119
-msgid "Clear"
-msgstr "清除"
-
 #: src/content/App.tsx:177
 #: src/content/App.tsx:177
 msgid "Close panel"
@@ -71,7 +67,7 @@ msgstr "关闭面板"
 msgid "Close search"
 msgstr "关闭搜索"
 
-#: src/content/ChatView.tsx:100
+#: src/content/ChatView.tsx:102
 msgid "Compacting conversation…"
 msgstr "正在压缩对话…"
 
@@ -81,21 +77,9 @@ msgid "Content"
 msgstr "内容"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:322
+#: src/background/session.ts:323
 msgid "errors.compactionFailed"
 msgstr "压缩对话失败。{error}"
-
-#: src/content/ModelMenu.tsx:118
-msgid "Copy diagnostics"
-msgstr "复制诊断信息"
-
-#: src/content/ModelMenu.tsx:75
-msgid "Could not clear diagnostics"
-msgstr "无法清除诊断信息"
-
-#: src/content/ModelMenu.tsx:66
-msgid "Could not copy diagnostics"
-msgstr "无法复制诊断信息"
 
 #: src/content/HistoryView.tsx:47
 #: src/content/HistoryView.tsx:47
@@ -106,14 +90,6 @@ msgstr "删除此对话"
 #: src/content/MemoryListView.tsx:67
 msgid "Delete this memory"
 msgstr "删除此记忆"
-
-#: src/content/ModelMenu.tsx:73
-msgid "Diagnostics cleared"
-msgstr "已清除诊断信息"
-
-#: src/content/ModelMenu.tsx:64
-msgid "Diagnostics copied"
-msgstr "已复制诊断信息"
 
 #: src/content/App.tsx:172
 msgid "Done"
@@ -133,15 +109,15 @@ msgid "Enlarge"
 msgstr "放大"
 
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:273
+#: src/content/ChatView.tsx:288
 msgid "Error: {0}"
 msgstr "错误：{0}"
 
-#: src/content/ChatView.tsx:208
+#: src/content/ChatView.tsx:231
 msgid "Error: {content}"
 msgstr "错误：{content}"
 
-#: src/content/ChatView.tsx:341
+#: src/content/ChatView.tsx:360
 msgid "Execution was denied."
 msgstr "未执行。"
 
@@ -149,19 +125,19 @@ msgstr "未执行。"
 msgid "Finish editing and return to the list"
 msgstr "完成编辑并返回列表"
 
-#: src/content/ChatView.tsx:99
+#: src/content/ChatView.tsx:101
 msgid "Generating response…"
 msgstr "正在生成回答…"
 
-#: src/content/ChatView.tsx:180
+#: src/content/ChatView.tsx:182
 msgid "Get started for free"
 msgstr "免费开始使用"
 
-#: src/content/ChatView.tsx:342
+#: src/content/ChatView.tsx:361
 msgid "Image or file"
 msgstr "图片或文件"
 
-#: src/content/ChatView.tsx:112
+#: src/content/ChatView.tsx:114
 msgid "Include {selectionSummary}"
 msgstr "包含{selectionSummary}"
 
@@ -173,11 +149,11 @@ msgstr "记忆"
 msgid "Memory"
 msgstr "记忆"
 
-#: src/content/ChatView.tsx:266
+#: src/content/ChatView.tsx:281
 msgid "Memory update failed"
 msgstr "记忆更新失败"
 
-#: src/content/ChatView.tsx:267
+#: src/content/ChatView.tsx:282
 msgid "Memory updated"
 msgstr "记忆已更新"
 
@@ -185,13 +161,13 @@ msgstr "记忆已更新"
 msgid "Menu (chat history and memory)"
 msgstr "菜单（聊天记录和记忆）"
 
-#: src/content/ModelMenu.tsx:86
+#: src/content/ModelMenu.tsx:66
 msgid "Model"
 msgstr "模型"
 
-#: src/content/ChatView.tsx:120
-#: src/content/ChatView.tsx:121
-#: src/content/ModelMenu.tsx:80
+#: src/content/ChatView.tsx:122
+#: src/content/ChatView.tsx:123
+#: src/content/ModelMenu.tsx:60
 msgid "Model and reasoning effort"
 msgstr "模型和推理强度"
 
@@ -206,15 +182,15 @@ msgstr "新聊天"
 msgid "New memory"
 msgstr "新建记忆"
 
-#: src/content/ModelMenu.tsx:82
-msgid "No API key is configured. Configure one in the chatext app."
-msgstr "尚未配置 API 密钥。请在 chatext App 中配置。"
+#: src/content/ModelMenu.tsx:62
+msgid "No API key is configured. Configure one in the Kodoneri app."
+msgstr "尚未配置 API 密钥。请在 Kodoneri App 中配置。"
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:93
-#: src/background/session.ts:252
+#: src/background/provider.ts:105
+#: src/background/session.ts:253
 msgid "errors.apiKeyMissing"
-msgstr "尚未配置 API 密钥。请在 chatext App 中配置。"
+msgstr "尚未配置 API 密钥。请在 Kodoneri App 中配置。"
 
 #. js-lingui-explicit-id
 #: src/background/agent.ts:142
@@ -229,7 +205,7 @@ msgstr "没有匹配的对话。"
 msgid "No matching memories."
 msgstr "没有匹配的记忆。"
 
-#: src/content/ChatView.tsx:267
+#: src/content/ChatView.tsx:282
 msgid "No memory changes"
 msgstr "记忆无变化"
 
@@ -256,7 +232,7 @@ msgstr "未收到标题。"
 msgid "Open chat"
 msgstr "打开聊天"
 
-#: src/content/ChatView.tsx:182
+#: src/content/ChatView.tsx:184
 msgid "Open Settings"
 msgstr "打开设置"
 
@@ -264,11 +240,12 @@ msgstr "打开设置"
 msgid "Open this conversation"
 msgstr "打开此对话"
 
-#: src/content/ChatView.tsx:291
+#: src/content/ChatView.tsx:246
+#: src/content/ChatView.tsx:306
 msgid "Reasoning"
 msgstr "推理"
 
-#: src/content/ModelMenu.tsx:103
+#: src/content/ModelMenu.tsx:83
 msgid "Reasoning effort"
 msgstr "推理强度"
 
@@ -287,7 +264,7 @@ msgstr "已停止生成回答。"
 msgid "Restore size"
 msgstr "恢复大小"
 
-#: src/content/ChatView.tsx:309
+#: src/content/ChatView.tsx:324
 msgid "Running…"
 msgstr "正在运行…"
 
@@ -303,11 +280,11 @@ msgstr "搜索历史记录"
 msgid "Search memories"
 msgstr "搜索记忆"
 
-#: src/content/ChatView.tsx:64
+#: src/content/ChatView.tsx:66
 msgid "Send"
 msgstr "发送"
 
-#: src/content/ChatView.tsx:64
+#: src/content/ChatView.tsx:66
 msgid "Send and interrupt"
 msgstr "打断并发送"
 
@@ -320,11 +297,11 @@ msgstr "设置"
 msgid "Show in sidebar"
 msgstr "在边栏中显示"
 
-#: src/content/ChatView.tsx:181
-msgid "Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
-msgstr "通过 Apple 登录以使用 chatext 免费方案，或添加你自己的 OpenAI、Anthropic 或 DeepSeek API 密钥。"
+#: src/content/ChatView.tsx:183
+msgid "Sign in with Apple to use Kodoneri’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
+msgstr "通过 Apple 登录以使用 Kodoneri 免费方案，或添加你自己的 OpenAI、Anthropic 或 DeepSeek API 密钥。"
 
-#: src/content/ChatView.tsx:64
+#: src/content/ChatView.tsx:66
 msgid "Stop response"
 msgstr "停止回答"
 
@@ -349,7 +326,7 @@ msgstr "今天"
 msgid "Untitled"
 msgstr "无标题"
 
-#: src/content/ChatView.tsx:264
+#: src/content/ChatView.tsx:279
 msgid "Updating memory…"
 msgstr "正在更新记忆…"
 
