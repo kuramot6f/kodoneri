@@ -373,6 +373,9 @@ summary {
 summary::-webkit-details-marker { display: none; }
 summary svg { flex: none; width: 16px; height: 16px; transition: transform .2s; }
 details[open] summary svg { transform: rotate(180deg); }
+.activity > summary span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.activity-log { margin: 6px 0 0 18px; }
+.activity-log details { margin-bottom: 6px; }
 details pre {
   max-height: 240px;
   margin: 6px 0 0 18px;

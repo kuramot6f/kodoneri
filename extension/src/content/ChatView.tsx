@@ -1,12 +1,14 @@
-import { Fragment, useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, KeyboardEvent, RefObject } from "react";
 import { plural, t } from "@lingui/core/macro";
 import { Trans, useLingui } from "@lingui/react/macro";
 import type {
+  AssistantModelMessage,
   CacheUsage,
   Conversation,
   ModelMessage,
-  ToolResultPart
+  ToolResultPart,
+  UserModelMessage
 } from "../shared/conversation";
 import { getMeta, getMessageText, getToolResults } from "../shared/conversation";
 import type { MemoryProgress, RuntimeMessage, SelectionContext } from "../shared/protocol";
@@ -184,53 +186,66 @@ function SetupPrompt() {
   );
 }
 
+type AssistantPart = Exclude<AssistantModelMessage["content"], string>[number];
+type ActivityPart = Extract<AssistantPart, { type: "reasoning" | "tool-call" }>;
+/** A visible user message, an answer text, or a run of reasoning and tool calls between them. */
+type Block = UserModelMessage | string | ActivityPart[];
+
 function Messages({ messages }: { messages: ModelMessage[] }) {
   const toolResults = useMemo(() => collectToolResults(messages), [messages]);
-  return messages.map((message, index) => <MessageView message={message} toolResults={toolResults} key={index} />);
+  const blocks = useMemo(() => toBlocks(messages), [messages]);
+  return blocks.map((block, index) => {
+    if (typeof block === "string") return <MarkdownMessage key={index} content={block} />;
+    if (Array.isArray(block)) return <Activity key={index} parts={block} toolResults={toolResults} />;
+    return <UserMessage key={index} message={block} />;
+  });
 }
 
-function MessageView({
-  message,
-  toolResults
-}: {
-  message: ModelMessage;
-  toolResults: Map<string, ToolResultPart["output"]>;
-}) {
-  if (message.role === "system" || message.role === "tool") return null;
-  if (message.role === "user") {
-    const { kind } = getMeta(message);
-    if (kind === "runtime_context" || kind === "memory_context" || kind === "browser_context" || kind === "compaction" || kind === "memory_update") return null;
-    if (kind === "selection_context") {
-      const { selection } = getMeta(message);
-      return selection ? <SelectionMessage selection={selection} /> : null;
+function toBlocks(messages: ModelMessage[]): Block[] {
+  const blocks: Block[] = [];
+  for (const message of messages) {
+    if (message.role === "user" && isVisible(message)) blocks.push(message);
+    if (message.role !== "assistant") continue;
+    const parts = typeof message.content === "string" ? [{ type: "text" as const, text: message.content }] : message.content;
+    for (const part of parts) {
+      if (part.type === "text" && part.text) blocks.push(part.text);
+      if (part.type !== "reasoning" && part.type !== "tool-call") continue;
+      const last = blocks.at(-1);
+      if (Array.isArray(last)) last.push(part);
+      else blocks.push([part]);
     }
-    const content = getMessageText(message);
-    if (kind === "runtime_error") return <div className="message error"><Trans>Error: {content}</Trans></div>;
-    if (kind === "runtime_cancelled") return <div className="message error">{content}</div>;
-    return <div className="message user">{content}</div>;
   }
+  return blocks;
+}
 
-  const parts = typeof message.content === "string"
-    ? [{ type: "text" as const, text: message.content }]
-    : message.content;
+function isVisible(message: UserModelMessage): boolean {
+  const { kind, selection } = getMeta(message);
+  if (kind === "selection_context") return Boolean(selection);
+  return kind !== "runtime_context" && kind !== "memory_context" && kind !== "browser_context" && kind !== "compaction" && kind !== "memory_update";
+}
+
+function UserMessage({ message }: { message: UserModelMessage }) {
+  const { kind, selection } = getMeta(message);
+  if (selection) return <SelectionMessage selection={selection} />;
+  const content = getMessageText(message);
+  if (kind === "runtime_error") return <div className="message error"><Trans>Error: {content}</Trans></div>;
+  if (kind === "runtime_cancelled") return <div className="message error">{content}</div>;
+  return <div className="message user">{content}</div>;
+}
+
+// 連続する思考・ツール呼び出しを1つに畳み、見出しには最新の1件を出す
+function Activity({ parts, toolResults }: { parts: ActivityPart[]; toolResults: Map<string, ToolResultPart["output"]> }) {
+  const items = parts.map((part, index) => part.type === "reasoning"
+    ? <Reasoning key={index} content={part.text} />
+    : <ToolCall key={part.toolCallId} name={part.toolName} input={part.input} output={toolResults.get(part.toolCallId)} />
+  );
+  if (items.length === 1) return items[0];
+  const latest = parts.at(-1)!;
   return (
-    <Fragment>
-      {parts.map((part, index) => {
-        if (part.type === "reasoning") return <Reasoning key={index} content={part.text} />;
-        if (part.type === "tool-call") {
-          return (
-            <ToolCall
-              key={part.toolCallId}
-              name={part.toolName}
-              input={part.input}
-              output={toolResults.get(part.toolCallId)}
-            />
-          );
-        }
-        if (part.type === "text" && part.text) return <MarkdownMessage key={index} content={part.text} />;
-        return null;
-      })}
-    </Fragment>
+    <details className="activity">
+      <summary><Icon name="expand" /><span>{latest.type === "reasoning" ? t`Reasoning` : toolLabel(latest.toolName, latest.input)}</span></summary>
+      <div className="activity-log">{items}</div>
+    </details>
   );
 }
 
@@ -305,10 +320,14 @@ function ToolCall({
 }) {
   return (
     <details className="tool-call">
-      <summary><Icon name="expand" />{`${name} ${JSON.stringify(input)}`}</summary>
+      <summary><Icon name="expand" />{toolLabel(name, input)}</summary>
       <pre>{output === undefined ? t`Running…` : formatToolOutput(output)}</pre>
     </details>
   );
+}
+
+function toolLabel(name: string, input: unknown): string {
+  return `${name} ${JSON.stringify(input)}`;
 }
 
 function collectToolResults(messages: ModelMessage[]): Map<string, ToolResultPart["output"]> {
