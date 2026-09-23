@@ -12,9 +12,6 @@ const appleKeys = createRemoteJWKSet(new URL(`${APPLE_ISSUER}/auth/keys`));
 declare global {
   interface Env {
     CLOUDFLARE_API_TOKEN: string;
-    OPENAI_API_KEY: string;
-    ANTHROPIC_API_KEY: string;
-    DEEPSEEK_API_KEY: string;
   }
 }
 
@@ -25,7 +22,6 @@ interface Upstream {
   /** The path whose JSON body names the model; the only one that is metered. */
   generate: string;
   files: RegExp;
-  authorize(headers: Headers, env: Env): void;
   /** Tags the request with the hashed user so the provider can attribute abuse. */
   identify(body: Body, billingId: string): Body;
 }
@@ -34,19 +30,16 @@ const UPSTREAMS: Record<Provider, Upstream> = {
   openai: {
     generate: "/responses",
     files: /^\/files(\/|$)/,
-    authorize: (headers, env) => headers.set("authorization", `Bearer ${env.OPENAI_API_KEY}`),
     identify: (body, billingId) => ({ ...body, safety_identifier: billingId })
   },
   anthropic: {
     generate: "/v1/messages",
     files: /^\/v1\/files(\/|$)/,
-    authorize: (headers, env) => headers.set("x-api-key", env.ANTHROPIC_API_KEY),
     identify: (body, billingId) => ({ ...body, metadata: { ...(body.metadata as Body | undefined), user_id: billingId } })
   },
   deepseek: {
     generate: "/chat/completions",
     files: /^\/files(\/|$)/,
-    authorize: (headers, env) => headers.set("authorization", `Bearer ${env.DEEPSEEK_API_KEY}`),
     identify: (body, billingId) => ({ ...body, user_id: billingId })
   }
 };
@@ -111,7 +104,7 @@ async function signIn(request: Request, env: Env): Promise<Response> {
   return Response.json({ token });
 }
 
-/** Forwards authenticated model and file requests through Cloudflare AI Gateway, with the provider key swapped in. */
+/** Forwards authenticated model and file requests through Cloudflare AI Gateway using its stored provider keys. */
 async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider: Provider, path: string): Promise<Response> {
   const upstream = UPSTREAMS[provider];
   const generating = path === upstream.generate;
@@ -140,7 +133,7 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
   headers.delete("host");
   headers.delete("authorization");
   headers.delete("x-api-key");
-  upstream.authorize(headers, env);
+  headers.delete("cf-aig-byok-alias");
   headers.set("cf-aig-authorization", `Bearer ${env.CLOUDFLARE_API_TOKEN}`);
   headers.set("cf-aig-metadata", JSON.stringify({ user_id: user.billingId }));
   headers.set("cf-aig-collect-log-payload", "false");
