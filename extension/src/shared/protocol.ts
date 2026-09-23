@@ -82,6 +82,8 @@ export interface AskMessage {
 /** Content → Background via runtime.sendMessage. Panel messages come from the top frame and are answered with the tab's view. */
 export type RuntimeMessage =
   | { type: "sync" }
+  /** Sent while a run streams so Safari does not stop the worker mid-run; nothing is answered. */
+  | { type: "keepalive" }
   | AskMessage
   | { type: "cancel" }
   | { type: "open"; conversationId: string | null }

@@ -7,6 +7,8 @@ import { debugEvent } from "./debug";
 
 /** A streaming view that has been silent this long is re-read, in case the background worker was replaced mid-run. */
 const STALE_MS = 5000;
+/** Safari stops the worker about a minute after the last event it received, even with a response still streaming. */
+const KEEPALIVE_MS = 20000;
 
 let view: TabView | null = null;
 let receivedAt = 0;
@@ -60,10 +62,14 @@ export function usePanel() {
     const timer = setInterval(() => {
       if (isStreaming(view) && performance.now() - receivedAt > STALE_MS) sync();
     }, STALE_MS);
+    const keepalive = setInterval(() => {
+      if (isStreaming(view)) void send({ type: "keepalive" });
+    }, KEEPALIVE_MS);
     sync();
     document.addEventListener("visibilitychange", onVisible);
     return () => {
       clearInterval(timer);
+      clearInterval(keepalive);
       document.removeEventListener("visibilitychange", onVisible);
     };
   }, []);

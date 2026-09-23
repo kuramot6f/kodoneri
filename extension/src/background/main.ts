@@ -38,6 +38,7 @@ browser.runtime.onMessage.addListener((message: RuntimeMessage, sender) => {
     }, "content");
     return;
   }
+  if (message.type === "keepalive") return;
   if (message.type === "debug_export") return exportDebugLog();
   if (message.type === "debug_clear") return clearDebugLog();
   if (message.type === "credentials") return refreshApiKeys().catch(() => undefined).then(hasCredentials);

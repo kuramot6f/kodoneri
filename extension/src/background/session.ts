@@ -23,7 +23,7 @@ import type { ModelSettings } from "../shared/models";
 import { loadConversation, loadSettings, saveConversation, saveSettings } from "../shared/store";
 import { compact, generateTitle, MEMORY_SYSTEM_PROMPT, MEMORY_TURNS, MEMORY_UPDATE_REQUEST, streamAnswer } from "./agent";
 import { applyCompaction, planCompaction } from "./compaction";
-import { availableModels, createMemoryRuntime, createRuntime, refreshApiKeys, resolveSettings } from "./provider";
+import { apiKeysLoaded, availableModels, createMemoryRuntime, createRuntime, refreshApiKeys, resolveSettings } from "./provider";
 import type { ModelRuntime } from "./provider";
 import { createTools } from "./tools";
 import { createRuntimeContext, formatMemoryContext, formatSelectionContext, SYSTEM_PROMPT } from "./prompt";
@@ -193,8 +193,9 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
     const now = Date.now();
     const conversation = session.conversation ? expireToolHistory(session.conversation, now) : createConversation(message.text);
     const firstTurn = conversation.messages.length === 0;
-    // Keys live in memory and are re-read from the Keychain only when a conversation starts.
-    if (firstTurn) await refreshApiKeys().catch(() => undefined);
+    // Keys live in memory and are re-read from the Keychain only when a conversation starts; later turns
+    // wait for the lookup a restarted worker began, or they would find no keys.
+    await (firstTurn ? refreshApiKeys() : apiKeysLoaded()).catch(() => undefined);
     // The system prompt never changes; what changes is appended as context only when it differs from the
     // latest one, so the prompt cache and the thinking blocks bound to earlier turns stay valid.
     const runtimeContext = createRuntimeContext(browser.i18n.getUILanguage(), new Date(now));
