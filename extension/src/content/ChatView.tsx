@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useDeferredValue, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, KeyboardEvent, RefObject } from "react";
 import { plural, t } from "@lingui/core/macro";
 import { Trans, useLingui } from "@lingui/react/macro";
@@ -9,7 +9,8 @@ import type {
   ToolResultPart
 } from "../shared/conversation";
 import { getMeta, getMessageText, getToolResults } from "../shared/conversation";
-import type { MemoryProgress, SelectionContext } from "../shared/protocol";
+import type { MemoryProgress, RuntimeMessage, SelectionContext } from "../shared/protocol";
+import { openSettings } from "./device";
 import { Icon } from "./Icon";
 import { markdown } from "./markdown";
 import { ModelMenu } from "./ModelMenu";
@@ -57,6 +58,7 @@ export function ChatView({
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const messages = conversation?.messages ?? [];
+  const needsSetup = useNeedsSetup(conversation === null);
   const canInterrupt = busy && Boolean(question.trim());
   const showStop = busy && !canInterrupt;
   const sendLabel = showStop ? t`Stop response` : canInterrupt ? t`Send and interrupt` : t`Send`;
@@ -92,6 +94,7 @@ export function ChatView({
   return (
     <>
       <div id="messages" aria-live="polite" ref={messagesRef}>
+        {needsSetup && <SetupPrompt />}
         <Messages messages={step ? [...messages, ...step] : messages} />
         {step?.length === 0 && <MarkdownMessage content={t`Generating response…`} />}
         {compacting && <div className="memory-update-label"><Trans>Compacting conversation…</Trans></div>}
@@ -103,7 +106,7 @@ export function ChatView({
             <input
               type="checkbox"
               checked={includeSelection}
-              disabled={busy}
+              disabled={busy || needsSetup}
               onChange={(event) => onIncludeSelectionChange(event.target.checked)}
             />
             <Trans>Include {selectionSummary}</Trans>
@@ -117,6 +120,7 @@ export function ChatView({
               aria-label={t`Model and reasoning effort`}
               title={t`Model and reasoning effort`}
               aria-expanded={menuOpen}
+              disabled={needsSetup}
               onClick={() => setMenuOpen((open) => !open)}
             >
               <Icon name="tune" />
@@ -127,6 +131,7 @@ export function ChatView({
             id="question"
             placeholder={t`Ask about this page`}
             required
+            disabled={needsSetup}
             ref={questionRef}
             value={question}
             onChange={(event) => onQuestionChange(event.target.value)}
@@ -137,7 +142,7 @@ export function ChatView({
             type={showStop ? "button" : "submit"}
             aria-label={sendLabel}
             title={sendLabel}
-            disabled={!busy && !question.trim()}
+            disabled={needsSetup || (!busy && !question.trim())}
             onClick={showStop ? onStop : undefined}
           >
             <Icon name={showStop ? "stop" : "send"} tone="inverse" />
@@ -146,6 +151,36 @@ export function ChatView({
         {cacheUsage && <CacheRate usage={cacheUsage} />}
       </form>
     </>
+  );
+}
+
+/** Asks the background on a new chat, and again whenever the page comes back from the app, whether any key or sign-in exists. */
+function useNeedsSetup(isNewChat: boolean): boolean {
+  const [hasCredentials, setHasCredentials] = useState(true);
+  useEffect(() => {
+    if (!isNewChat) return;
+    const check = () => {
+      if (document.visibilityState !== "visible") return;
+      void browser.runtime.sendMessage({ type: "credentials" } satisfies RuntimeMessage).then((result: boolean) => setHasCredentials(result));
+    };
+    check();
+    document.addEventListener("visibilitychange", check);
+    window.addEventListener("focus", check);
+    return () => {
+      document.removeEventListener("visibilitychange", check);
+      window.removeEventListener("focus", check);
+    };
+  }, [isNewChat]);
+  return isNewChat && !hasCredentials;
+}
+
+function SetupPrompt() {
+  return (
+    <div className="setup-prompt">
+      <strong><Trans>Get started for free</Trans></strong>
+      <p><Trans>Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key.</Trans></p>
+      <button className="pill" type="button" onClick={openSettings}><Trans>Open Settings</Trans></button>
+    </div>
   );
 }
 

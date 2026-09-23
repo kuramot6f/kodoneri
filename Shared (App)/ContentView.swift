@@ -7,43 +7,38 @@
 
 import AuthenticationServices
 import CryptoKit
+import SafariServices
 import StoreKit
 import SwiftUI
 
 /// A grouped form, so the window reads like Settings on both platforms.
 struct ContentView: View {
 
+    /// Everything in the Keychain, the gateway token included; `nil` until the first read finishes.
+    @State private var keys: [String: String]?
+
     var body: some View {
         Form {
-            Section {
-                ExtensionRows()
-            } header: {
-                AppHeader()
+            if keys?.isEmpty == true {
+                Section {
+                    Text("Sign in with Apple to use chatext’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key.")
+                } header: {
+                    Text("Get Started for Free")
+                }
             }
 
-            GatewaySection()
-            ApiKeysSection()
+            ExtensionSection()
+
+            if let keys = Binding($keys) {
+                GatewaySection(keys: keys)
+                ApiKeysSection(keys: keys)
+            }
         }
         .formStyle(.grouped)
-    }
-
-}
-
-private struct AppHeader: View {
-
-    var body: some View {
-        VStack(spacing: 8) {
-            Image("LargeIcon")
-                .resizable()
-                .frame(width: 96, height: 96)
-                .accessibilityHidden(true)
-            Text("chatext")
-                .font(.title2.weight(.semibold))
-                .foregroundStyle(.primary)
+        // Keychain reads can stall on first access, so keep them off the main thread.
+        .task {
+            keys = await Task.detached { ApiKeyStore.all() }.value
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 16)
-        .textCase(nil)
     }
 
 }
@@ -53,7 +48,7 @@ private struct ApiKeysSection: View {
 
     private static let rows = [("openai", "OpenAI"), ("anthropic", "Anthropic"), ("deepseek", "DeepSeek")]
 
-    @State private var keys: [String: String] = [:]
+    @Binding var keys: [String: String]
 
     var body: some View {
         Section {
@@ -61,9 +56,9 @@ private struct ApiKeysSection: View {
                 LabeledContent(label) {
                     HStack {
                         SecureField("", text: binding(provider), prompt: Text("API key"))
-                        if !keys[provider, default: ""].isEmpty {
+                        if keys[provider] != nil {
                             Button {
-                                keys[provider] = ""
+                                keys[provider] = nil
                                 ApiKeyStore.delete(provider)
                             } label: {
                                 Image(systemName: "xmark.circle.fill")
@@ -78,11 +73,7 @@ private struct ApiKeysSection: View {
         } header: {
             Text("API Keys")
         } footer: {
-            Text("Keys are kept in your iCloud Keychain and shared with the extension.")
-        }
-        // Keychain reads can stall on first access, so keep them off the main thread.
-        .task {
-            keys = await Task.detached { ApiKeyStore.all() }.value
+            Text("Keys are encrypted and kept in your iCloud Keychain.")
         }
     }
 
@@ -90,7 +81,7 @@ private struct ApiKeysSection: View {
         Binding(
             get: { keys[provider, default: ""] },
             set: { value in
-                keys[provider] = value
+                keys[provider] = value.isEmpty ? nil : value
                 ApiKeyStore.write(provider, value)
             }
         )
@@ -106,7 +97,7 @@ private struct GatewaySection: View {
         "pro"
     ]
 
-    @State private var isSignedIn = false
+    @Binding var keys: [String: String]
     @State private var nonce: String?
     @State private var usage: GatewayUsage?
     @State private var products: [Product] = []
@@ -116,13 +107,16 @@ private struct GatewaySection: View {
     @State private var purchasingProductID: String?
     @State private var error: String?
 
+    private var token: String? { keys["chatext"] }
+    private var isSignedIn: Bool { token != nil }
+
     var body: some View {
         Section {
             if isSignedIn {
-                LabeledContent("Apple ID") {
+                LabeledContent("Signed in with Apple") {
                     Button("Sign Out") {
                         ApiKeyStore.delete("chatext")
-                        isSignedIn = false
+                        keys["chatext"] = nil
                         usage = nil
                         products = []
                         Task { await prepareNonce() }
@@ -170,10 +164,9 @@ private struct GatewaySection: View {
         } header: {
             Text("chatext")
         } footer: {
-            Text(isSignedIn ? "Usage is recorded after each response and may take a moment to appear." : "Signing in lets you subscribe to the chatext model.")
+            Text(isSignedIn ? "Usage is recorded after each response and may take a moment to appear." : "Your Apple account is used only to identify you. Your name and email address are not collected.")
         }
         .task {
-            isSignedIn = await Task.detached { ApiKeyStore.read("chatext") != nil }.value
             if isSignedIn {
                 await loadAccount()
             } else {
@@ -258,7 +251,7 @@ private struct GatewaySection: View {
                 throw URLError(.badServerResponse)
             }
             ApiKeyStore.write("chatext", token)
-            isSignedIn = true
+            keys["chatext"] = token
             self.nonce = nil
             error = nil
             await loadAccount()
@@ -291,8 +284,7 @@ private struct GatewaySection: View {
     }
 
     private func loadUsage() async {
-        guard !isLoading,
-              let token = await Task.detached(operation: { ApiKeyStore.read("chatext") }).value else { return }
+        guard !isLoading, let token else { return }
         isLoading = true
         defer { isLoading = false }
         do {
@@ -378,9 +370,7 @@ private struct GatewaySection: View {
     }
 
     private func submit(_ signedTransaction: String) async throws {
-        guard let token = await Task.detached(operation: { ApiKeyStore.read("chatext") }).value else {
-            throw URLError(.userAuthenticationRequired)
-        }
+        guard let token else { throw URLError(.userAuthenticationRequired) }
         var request = URLRequest(url: gatewayURL.appending(path: "billing/transaction"))
         request.httpMethod = "POST"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
@@ -409,68 +399,66 @@ private struct GatewayUsage: Decodable {
     let appAccountToken: String
 }
 
-#if os(macOS)
+/// Safari reports the extension's state and opens its settings on macOS and iOS 26.2+; older iOS gets directions instead.
+private struct ExtensionSection: View {
 
-import SafariServices
-
-/// Only macOS can ask Safari whether the extension is on, and jump to where it's toggled.
-private struct ExtensionRows: View {
-
+    @Environment(\.scenePhase) private var scenePhase
     /// `nil` until Safari reports the extension's state, or if it can't be found.
     @State private var isEnabled: Bool?
 
     var body: some View {
-        LabeledContent("Safari Extension") {
-            switch isEnabled {
-            case true: Text("On")
-            case false: Text("Off")
-            case nil: Text("Unknown")
+        Section {
+            if Self.canManage {
+                LabeledContent("Status") {
+                    switch isEnabled {
+                    case true: Text("Enabled")
+                    case false: Text("Disabled")
+                    case nil: Text("Unknown")
+                    }
+                }
+                Button(isEnabled == true ? "Manage in Safari Settings…" : "Enable in Safari Settings…") {
+                    Task { await openSettings() }
+                }
+            } else {
+                Text("Turn on chatext in Settings > Safari > Extensions > chatext.")
             }
+        } header: {
+            Text("Safari Extension")
         }
-        Button("Quit and Open Safari Settings…") {
-            Task { await openSafariExtensionSettings() }
-        }
-        .task {
-            isEnabled = await currentExtensionState()
+        // The toggle lives in Safari's settings, so check again whenever the user comes back.
+        .task(id: scenePhase) {
+            guard Self.canManage, scenePhase == .active else { return }
+            isEnabled = await currentState()
         }
     }
 
-    /// `SFSafariExtensionManager` only vends a completion-handler API, so it is
-    /// bridged here rather than at the call site.
-    private func currentExtensionState() async -> Bool? {
-        await withCheckedContinuation { continuation in
-            SFSafariExtensionManager.getStateOfSafariExtension(withIdentifier: extensionBundleIdentifier) { state, _ in
-                continuation.resume(returning: state?.isEnabled)
-            }
-        }
-    }
-
-    private func openSafariExtensionSettings() async {
-        let didOpen: Bool = await withCheckedContinuation { continuation in
-            SFSafariApplication.showPreferencesForExtension(withIdentifier: extensionBundleIdentifier) { error in
-                continuation.resume(returning: error == nil)
-            }
-        }
-
-        // Safari didn't open; leave the window up so the user can retry.
-        guard didOpen else { return }
-
-        NSApp.terminate(nil)
-    }
-
-}
-
+    private static var canManage: Bool {
+#if os(macOS)
+        true
 #else
+        if #available(iOS 26.2, *) { true } else { false }
+#endif
+    }
 
-private struct ExtensionRows: View {
+    private func currentState() async -> Bool? {
+#if os(macOS)
+        try? await SFSafariExtensionManager.stateOfSafariExtension(withIdentifier: extensionBundleIdentifier).isEnabled
+#else
+        guard #available(iOS 26.2, *) else { return nil }
+        return try? await SFSafariExtensionManager.stateOfExtension(withIdentifier: extensionBundleIdentifier).isEnabled
+#endif
+    }
 
-    var body: some View {
-        Text("Turn on chatext under Extensions in Safari’s settings.")
+    private func openSettings() async {
+#if os(macOS)
+        try? await SFSafariApplication.showPreferencesForExtension(withIdentifier: extensionBundleIdentifier)
+#else
+        guard #available(iOS 26.2, *) else { return }
+        try? await SFSafariSettings.openExtensionsSettings(forIdentifiers: [extensionBundleIdentifier])
+#endif
     }
 
 }
-
-#endif
 
 #Preview {
     ContentView()

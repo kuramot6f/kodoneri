@@ -89,6 +89,8 @@ export type RuntimeMessage =
   | { type: "frame"; ref: string }
   | { type: "fetch"; url: string }
   | { type: "models" }
+  /** Answered with whether the app holds any API key or gateway token. */
+  | { type: "credentials" }
   | { type: "settings"; settings: ModelSettings }
   | { type: "debug"; contextId: string; event: string; data?: DebugData }
   | { type: "debug_export" }
