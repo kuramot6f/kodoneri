@@ -15,7 +15,6 @@ export interface DebugEvent {
 interface DebugStorage {
   get(key: string): Promise<Record<string, unknown>>;
   set(items: Record<string, unknown>): Promise<void>;
-  remove(key: string): Promise<void>;
 }
 
 /** Background-owned serialized ring buffer. Content contexts submit events over runtime messaging. */
@@ -43,18 +42,6 @@ export class DebugLog {
       await this.storage.set({ [DEBUG_LOG_KEY]: events.slice(-DEBUG_LOG_LIMIT) });
       return entry;
     });
-  }
-
-  export(metadata: DebugData): Promise<string> {
-    return this.enqueue(async () => JSON.stringify({
-      generatedAt: this.now().toISOString(),
-      metadata,
-      events: await this.read()
-    }, null, 2));
-  }
-
-  clear(): Promise<void> {
-    return this.enqueue(() => this.storage.remove(DEBUG_LOG_KEY));
   }
 
   private async read(): Promise<DebugEvent[]> {

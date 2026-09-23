@@ -17,7 +17,6 @@ const EFFORT_LABELS: Record<Effort, string> = {
 export function ModelMenu({ onClose }: { onClose: () => void }) {
   const { t } = useLingui();
   const [view, setView] = useState<ModelsView | null>(null);
-  const [diagnosticStatus, setDiagnosticStatus] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -57,15 +56,6 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
   const model = view?.settings && view.models.find(({ key }) => key === view.settings!.model);
   const groups = view ? groupModels(view.models) : [];
 
-  const clearDiagnostics = async () => {
-    try {
-      await browser.runtime.sendMessage({ type: "debug_clear" } satisfies RuntimeMessage);
-      setDiagnosticStatus(t`Diagnostics cleared`);
-    } catch {
-      setDiagnosticStatus(t`Could not clear diagnostics`);
-    }
-  };
-
   return (
     <div className="model-menu" ref={menuRef} role="dialog" aria-label={t`Model and reasoning effort`}>
       {!view ? null : !view.settings || !model ? (
@@ -104,10 +94,6 @@ export function ModelMenu({ onClose }: { onClose: () => void }) {
           )}
         </>
       )}
-      <div className="diagnostic-actions">
-        <button type="button" onClick={() => void clearDiagnostics()}><Trans>Clear</Trans></button>
-      </div>
-      {diagnosticStatus && <p className="diagnostic-status" role="status">{diagnosticStatus}</p>}
     </div>
   );
 }

@@ -95,7 +95,6 @@ export type RuntimeMessage =
   | { type: "credentials" }
   | { type: "settings"; settings: ModelSettings }
   | { type: "debug"; contextId: string; event: string; data?: DebugData }
-  | { type: "debug_clear" }
   | { type: "open_settings" }
   /** Re-reads the app's settings into storage; pages pick them up through storage.onChanged. */
   | { type: "app_settings" };

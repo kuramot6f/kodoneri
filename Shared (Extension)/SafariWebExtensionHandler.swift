@@ -22,9 +22,6 @@ class SafariWebExtensionHandler: NSObject, NSExtensionRequestHandling {
                 SharedDebugLog.record(event, metadata: metadata)
             }
             payload = [:]
-        case "debugClear":
-            SharedDebugLog.clear()
-            payload = [:]
         case "openSettings":
             // iOS extensions cannot launch the app, so the content script opens the chatext:// scheme there instead.
             #if os(macOS)
