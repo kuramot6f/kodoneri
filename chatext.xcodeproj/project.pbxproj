@@ -57,6 +57,7 @@
 		422D2D14305E3AA1007990AD /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
 		422D2D15305E3AA1007990AD /* tsconfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tsconfig.json; sourceTree = "<group>"; };
 		422D2D16305E3AA1007990AD /* vite.config.ts */ = {isa = PBXFileReference; lastKnownFileType = text; path = vite.config.ts; sourceTree = "<group>"; };
+		422D2D17305E3AA1007990AD /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -218,6 +219,7 @@
 				422D2BF9305E3AA1007990AD /* iOS (Extension) */,
 				422D2C03305E3AA1007990AD /* macOS (Extension) */,
 				422D2D13305E3AA1007990AD /* extension */,
+				422D2D17305E3AA1007990AD /* Secrets.xcconfig */,
 				422D2BD9305E3AA1007990AD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -825,6 +827,7 @@
 		};
 		422D2C38305E3AA1007990AD /* Debug configuration for PBXProject "chatext" */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 422D2D17305E3AA1007990AD /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -886,6 +889,7 @@
 		};
 		422D2C39305E3AA1007990AD /* Release configuration for PBXProject "chatext" */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 422D2D17305E3AA1007990AD /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;

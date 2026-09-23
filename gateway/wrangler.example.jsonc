@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "chatext-gateway",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-20",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "vars": {
+    "APPLE_APP_ID": "6814798032",
+    "APPLE_BUNDLE_ID": "kuramot6f.chatext",
+    "CLOUDFLARE_ACCOUNT_ID": "<cloudflare-account-id>",
+    "CLOUDFLARE_AI_GATEWAY_ID": "chatext"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "chatext-gateway",
+      "database_id": "<d1-database-id>"
+    }
+  ]
+}
