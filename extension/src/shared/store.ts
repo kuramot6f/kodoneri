@@ -50,3 +50,14 @@ export async function loadSettings(): Promise<ModelSettings> {
 export async function saveSettings(settings: ModelSettings): Promise<void> {
   await browser.storage.local.set({ [SETTINGS_KEY]: settings });
 }
+
+export const CHAT_BUTTON_KEY = "chatButton";
+
+/** Whether pages show the chat button; the background mirrors it from the app's settings. */
+export async function loadChatButton(): Promise<boolean> {
+  return (await browser.storage.local.get(CHAT_BUTTON_KEY))[CHAT_BUTTON_KEY] === true;
+}
+
+export async function saveChatButton(shown: boolean): Promise<void> {
+  await browser.storage.local.set({ [CHAT_BUTTON_KEY]: shown });
+}

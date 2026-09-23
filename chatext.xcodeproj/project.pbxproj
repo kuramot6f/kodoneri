@@ -98,6 +98,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				ApiKeyStore.swift,
+				AppSettings.swift,
 				SafariWebExtensionHandler.swift,
 			);
 			target = 422D2BF4305E3AA1007990AD /* chatext Extension (iOS) */;
@@ -106,6 +107,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				ApiKeyStore.swift,
+				AppSettings.swift,
 				SafariWebExtensionHandler.swift,
 			);
 			target = 422D2BFE305E3AA1007990AD /* chatext Extension (macOS) */;
@@ -114,6 +116,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				ApiKeyStore.swift,
+				AppSettings.swift,
 			);
 			target = 422D2BD7305E3AA1007990AD /* chatext (iOS) */;
 		};
@@ -121,6 +124,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				ApiKeyStore.swift,
+				AppSettings.swift,
 			);
 			target = 422D2BE9305E3AA1007990AD /* chatext (macOS) */;
 		};

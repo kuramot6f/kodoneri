@@ -38,8 +38,8 @@ msgstr "Favorilere ekle (yapay zekâ artık düzenleyemez)"
 msgid "Ask about this page"
 msgstr "Bu sayfa hakkında soru sorun"
 
-#: src/content/App.tsx:159
-#: src/content/App.tsx:159
+#: src/content/App.tsx:168
+#: src/content/App.tsx:168
 msgid "Back to list"
 msgstr "Listeye dön"
 
@@ -50,11 +50,11 @@ msgstr "Listeye dön"
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Önbellek isabet oranı: %{0} ({1} / {2} token)"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Chat history"
 msgstr "Sohbet geçmişi"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Chats"
 msgstr "Sohbetler"
 
@@ -62,8 +62,8 @@ msgstr "Sohbetler"
 msgid "Clear"
 msgstr "Temizle"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:177
+#: src/content/App.tsx:177
 msgid "Close panel"
 msgstr "Paneli kapat"
 
@@ -115,12 +115,12 @@ msgstr "Tanılama temizlendi"
 msgid "Diagnostics copied"
 msgstr "Tanılama kopyalandı"
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Done"
 msgstr "Bitti"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "Edit {0}"
 msgstr "Düzenle: {0}"
 
@@ -128,7 +128,7 @@ msgstr "Düzenle: {0}"
 msgid "Edit this memory"
 msgstr "Bu anıyı düzenle"
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Enlarge"
 msgstr "Büyüt"
 
@@ -145,7 +145,7 @@ msgstr "Hata: {content}"
 msgid "Execution was denied."
 msgstr "Yürütülmedi."
 
-#: src/content/App.tsx:163
+#: src/content/App.tsx:172
 msgid "Finish editing and return to the list"
 msgstr "Düzenlemeyi bitir ve listeye dön"
 
@@ -165,11 +165,11 @@ msgstr "Görüntü veya dosya"
 msgid "Include {selectionSummary}"
 msgstr "Dahil et: {selectionSummary}"
 
-#: src/content/App.tsx:162
+#: src/content/App.tsx:171
 msgid "memory"
 msgstr "anı"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "Memory"
 msgstr "Bellek"
 
@@ -181,7 +181,7 @@ msgstr "Bellek güncellenemedi"
 msgid "Memory updated"
 msgstr "Bellek güncellendi"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:150
 msgid "Menu (chat history and memory)"
 msgstr "Menü (sohbet geçmişi ve bellek)"
 
@@ -195,8 +195,8 @@ msgstr "Model"
 msgid "Model and reasoning effort"
 msgstr "Model ve akıl yürütme düzeyi"
 
-#: src/content/App.tsx:195
-#: src/content/App.tsx:195
+#: src/content/App.tsx:204
+#: src/content/App.tsx:204
 msgid "New chat"
 msgstr "Yeni sohbet"
 
@@ -251,6 +251,11 @@ msgstr "Kayıtlı anı yok."
 msgid "errors.noTitle"
 msgstr "Başlık alınamadı."
 
+#: src/content/App.tsx:155
+#: src/content/App.tsx:155
+msgid "Open chat"
+msgstr "Sohbeti aç"
+
 #: src/content/ChatView.tsx:182
 msgid "Open Settings"
 msgstr "Ayarlar’ı Aç"
@@ -278,7 +283,7 @@ msgstr "Favorilerden kaldır"
 msgid "errors.responseCancelled"
 msgstr "Yanıt oluşturma iptal edildi."
 
-#: src/content/App.tsx:146
+#: src/content/App.tsx:148
 msgid "Restore size"
 msgstr "Boyutu geri yükle"
 
@@ -286,7 +291,7 @@ msgstr "Boyutu geri yükle"
 msgid "Running…"
 msgstr "Çalışıyor…"
 
-#: src/content/App.tsx:142
+#: src/content/App.tsx:144
 msgid "Saved conversations"
 msgstr "Kayıtlı sohbetler"
 
@@ -311,7 +316,7 @@ msgstr "Kes ve gönder"
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Show in sidebar"
 msgstr "Kenar çubuğunda göster"
 
@@ -323,7 +328,7 @@ msgstr "chatext’in ücretsiz planını kullanmak için Apple ile giriş yapın
 msgid "Stop response"
 msgstr "Yanıtı durdur"
 
-#: src/content/App.tsx:147
+#: src/content/App.tsx:149
 msgid "Switch to floating panel"
 msgstr "Yüzen panele geç"
 
@@ -348,7 +353,7 @@ msgstr "Başlıksız"
 msgid "Updating memory…"
 msgstr "Bellek güncelleniyor…"
 
-#: src/content/App.tsx:143
+#: src/content/App.tsx:145
 msgid "What the AI remembers"
 msgstr "Yapay zekânın hatırladıkları"
 

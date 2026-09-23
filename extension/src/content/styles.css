@@ -81,6 +81,13 @@ button:disabled { cursor: default; opacity: .4; }
   height: 50vh;
 }
 #panel[data-layout="phone-expanded"] { inset: 7.5vh 12px; }
+/* ページ右下の小さな開くボタン。パネル表示中は出さない */
+#chat-button {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  pointer-events: auto;
+}
 .panel-body {
   flex: 1;
   display: flex;
