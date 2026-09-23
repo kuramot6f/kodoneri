@@ -12,13 +12,15 @@ struct ChatextApp: App {
         // A single `Window` scene quits the app once its window closes, and
         // adds no "New Window" command — both of which suit a one-off
         // informational window.
-        Window("chatext", id: "main") {
+        Window("Kodoneri", id: "main") {
             ContentView()
         }
         .defaultSize(width: 440, height: 540)
 #else
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                ContentView()
+            }
         }
 #endif
     }

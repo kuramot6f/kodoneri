@@ -29,24 +29,40 @@ struct ContentView: View {
                 GatewaySection(account: account)
                 ApiKeysSection(account: account)
             }
+
+            if account.token != nil {
+                SignOutSection(account: account)
+            }
         }
         .formStyle(.grouped)
+        .navigationTitle("Kodoneri")
+        .refreshable {
+            guard account.token != nil else { return }
+            await account.perform(account.refreshUsage)
+        }
         // Keychain reads can stall on first access, so keep them off the main thread.
         .task {
             account.keys = await Task.detached { ApiKeyStore.all() }.value
         }
-        // The toggle lives in Safari's settings, so check again whenever the user comes back.
+        // The toggle lives in Safari's settings, and usage grows while the user chats, so check both whenever the user comes back.
         .task(id: scenePhase) {
             guard scenePhase == .active else { return }
             isExtensionEnabled = await SafariExtension.isEnabled()
+            // Skips the first activation, where `run()` loads the account.
+            if account.usage != nil {
+                await account.perform(account.refreshUsage)
+            }
         }
         // Starts once the keys load, and again on sign-in and sign-out.
         .task(id: account.keys.map { $0["chatext"] != nil }) {
             await account.run()
         }
-        .sheet(isPresented: $account.showsSubscriptions) {
+        // Picks up restored purchases, which don't arrive through `onInAppPurchaseCompletion`.
+        .sheet(isPresented: $account.showsSubscriptions, onDismiss: {
+            Task { await account.perform(account.loadAccount) }
+        }) {
             SubscriptionStoreView(productIDs: Account.productIDs)
-                .storeButton(.visible, for: .cancellation)
+                .storeButton(.visible, for: .cancellation, .restorePurchases)
                 .inAppPurchaseOptions { _ in
                     guard let token = account.usage?.appAccountToken else { return [] }
                     return [.appAccountToken(token)]
@@ -212,6 +228,10 @@ private struct ApiKeysSection: View {
                 LabeledContent(label) {
                     HStack {
                         SecureField("", text: binding(provider), prompt: Text("API key"))
+                            .autocorrectionDisabled()
+#if os(iOS)
+                            .textInputAutocapitalization(.never)
+#endif
                         if account.keys?[provider] != nil {
                             Button {
                                 account.setKey(provider, "")
@@ -243,14 +263,13 @@ private struct ApiKeysSection: View {
 
 private struct GatewaySection: View {
 
+    @Environment(\.colorScheme) private var colorScheme
     let account: Account
 
     var body: some View {
         Section {
             if account.token != nil {
-                LabeledContent("Signed in with Apple") {
-                    Button("Sign Out") { account.signOut() }
-                }
+                Text("Signed in with Apple")
                 if let usage = account.usage {
                     LabeledContent("Plan") {
                         Text(usage.plan.capitalized)
@@ -273,14 +292,6 @@ private struct GatewaySection: View {
                     account.showsSubscriptions = true
                 }
                 .disabled(account.isLoading || account.usage == nil)
-                Button("Restore Purchases") {
-                    Task { await account.perform { try await AppStore.sync(); try await account.loadAccount() } }
-                }
-                .disabled(account.isLoading)
-                Button("Refresh Usage") {
-                    Task { await account.perform(account.refreshUsage) }
-                }
-                .disabled(account.isLoading)
             } else {
                 SignInWithAppleButton(.signIn) { request in
                     request.requestedScopes = []
@@ -288,6 +299,7 @@ private struct GatewaySection: View {
                 } onCompletion: { result in
                     Task { await account.perform { try await account.signIn(result) } }
                 }
+                .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
                 .frame(height: 36)
                 .disabled(account.nonce == nil || account.isLoading)
             }
@@ -305,6 +317,25 @@ private struct GatewaySection: View {
 
 }
 
+/// Last on the page, apart from the account it signs out of, as in Settings.
+private struct SignOutSection: View {
+
+    let account: Account
+    @State private var isConfirming = false
+
+    var body: some View {
+        Section {
+            Button("Sign Out", role: .destructive) {
+                isConfirming = true
+            }
+            .confirmationDialog("Are you sure you want to sign out?", isPresented: $isConfirming, titleVisibility: .visible) {
+                Button("Sign Out", role: .destructive) { account.signOut() }
+            }
+        }
+    }
+
+}
+
 private struct ExtensionSection: View {
 
     let isEnabled: Bool?
@@ -314,11 +345,9 @@ private struct ExtensionSection: View {
         Section {
             Toggle("Chat Button on Web Pages", isOn: $chatButton)
             if SafariExtension.canManage {
-                LabeledContent("Status") {
-                    switch isEnabled {
-                    case true: Text("Enabled")
-                    case false: Text("Disabled")
-                    case nil: Text("Unknown")
+                if let isEnabled {
+                    LabeledContent("Status") {
+                        if isEnabled { Text("Enabled") } else { Text("Disabled") }
                     }
                 }
                 Button(isEnabled == true ? "Manage in Safari Settings…" : "Enable in Safari Settings…") {
