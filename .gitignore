@@ -9,8 +9,9 @@ extension/.env.local
 Secrets.xcconfig
 gateway/wrangler.jsonc
 
-# 作業ログはローカルだけに残す。
+# 作業ログとメモはローカルだけに残す。
 worklog/
+memo.md
 
 # Xcode
 xcuserdata/
