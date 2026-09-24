@@ -19,6 +19,7 @@ import type {
   TabMessage,
   TabView
 } from "../shared/protocol";
+import { findModel } from "../shared/models";
 import type { ModelSettings } from "../shared/models";
 import { loadConversation, loadSettings, saveConversation, saveSettings } from "../shared/store";
 import { compact, generateTitle, MEMORY_SYSTEM_PROMPT, MEMORY_TURNS, MEMORY_UPDATE_REQUEST, streamAnswer } from "./agent";
@@ -191,7 +192,7 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
     session.cacheUsage = null;
 
     const now = Date.now();
-    const conversation = session.conversation ? expireToolHistory(session.conversation, now) : createConversation(message.text);
+    const conversation = session.conversation ? expireToolHistory(session.conversation) : createConversation(message.text);
     const firstTurn = conversation.messages.length === 0;
     // Keys live in memory and are re-read from the Keychain only when a conversation starts; later turns
     // wait for the lookup a restarted worker began, or they would find no keys.
@@ -217,17 +218,18 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
     pushView(session);
     await save(conversation);
 
-    let models: Models;
-    try {
-      models = await resolveModels(session, conversation);
-    } catch (error) {
-      append(conversation, [taggedMessage("runtime_error", errorMessage(error))]);
-      session.step = null;
-      await save(conversation);
-      pushView(session);
-      return;
-    }
+    const models = await resolveModels(session, conversation);
     await answer(session, conversation, models, message.requestId, controller.signal, firstTurn ? message.text : null);
+  } catch (error) {
+    // A failure outside the model call (storage, settings) would otherwise leave the panel busy with nothing to stop.
+    if (session.step && session.conversation) {
+      append(session.conversation, [taggedMessage("runtime_error", errorMessage(error))]);
+      session.step = null;
+      session.compacting = false;
+      pushView(session);
+      await save(session.conversation).catch(() => undefined);
+    }
+    throw error;
   } finally {
     debugEvent("request_finished", {
       tabId: session.tabId,
@@ -251,11 +253,21 @@ interface Models {
 async function resolveModels(session: Session, conversation: Conversation): Promise<Models> {
   const settings = resolveSettings(session.settings, await loadSettings());
   if (!settings) throw new Error(i18n._({ id: "errors.apiKeyMissing", message: "No API key is configured. Configure one in the Kodoneri app." }));
+  // Tool images live in the account that uploaded them and reasoning replays only to the provider that wrote it,
+  // so switching the provider or between an own key and the subscription drops both.
+  if (conversation.settings && account(conversation.settings) !== account(settings)) {
+    conversation.messages = expireToolHistory(conversation, Infinity).messages;
+  }
   session.settings = settings;
   conversation.settings = settings;
   persist(session);
   await saveSettings(settings);
   return { main: createRuntime(settings, settings.effort), low: createRuntime(settings, "lowest"), memory: createMemoryRuntime(settings) };
+}
+
+function account(settings: ModelSettings): string | undefined {
+  const info = findModel(settings.model);
+  return info && `${info.access}:${info.provider}`;
 }
 
 async function answer(

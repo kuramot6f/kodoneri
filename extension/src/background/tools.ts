@@ -2,6 +2,7 @@ import { tool, uploadFile } from "ai";
 import type { ToolResultPart, ToolSet } from "ai";
 import type { z } from "zod";
 import { isImageOutput, type ImageOutput, type PageToolName, type PageToolReply, type TabMessage } from "../shared/protocol.ts";
+import { dataUrlToBytes, fitImage } from "../shared/image.ts";
 import { aggregateGrep, type GrepResult } from "../shared/text.ts";
 import { keepNewTabsInBackground } from "./backgroundTabPolicy.ts";
 import { resolveFrame } from "./frames.ts";
@@ -73,11 +74,12 @@ export function createTools(context: ToolContext): ToolSet {
     read: define("read", readInput, (args) => read(context, args)),
     capture_viewport: define("capture_viewport", captureViewportInput, async () => {
       browserOnly();
-      return captureViewport(context.session.tabId);
+      return fitImage(await captureViewport(context.session.tabId));
     }),
     read_image: define("read_image", readImageInput, async (args) => {
       browserOnly();
-      return pageTool(context, "read_image", args, args.ref);
+      const output = await pageTool(context, "read_image", args, args.ref);
+      return isImageOutput(output) ? fitImage(output) : output;
     }),
     list: define("list", listInput, async ({ type }) => {
       if (type === "memory") return listMemories();
@@ -175,8 +177,7 @@ async function captureViewport(tabId: number): Promise<ImageOutput> {
   const tab = await browser.tabs.get(tabId);
   if (!tab.active || tab.windowId === undefined) throw new Error("The target tab is not visible. Show the tab and try again.");
   const dataUrl = await browser.tabs.captureVisibleTab(tab.windowId, { format: "png" });
-  const bytes = dataUrlToBytes(dataUrl);
-  return { type: "image", dataUrl, mimeType: "image/png", byteLength: bytes.byteLength };
+  return { type: "image", dataUrl, mimeType: "image/png", byteLength: dataUrlToBytes(dataUrl).byteLength };
 }
 
 async function toModelOutput(context: ToolContext, output: unknown): Promise<ToolResultPart["output"]> {
@@ -206,10 +207,4 @@ async function uploadImage(context: ToolContext, output: ImageOutput): Promise<T
       }
     ]
   };
-}
-
-function dataUrlToBytes(dataUrl: string): Uint8Array {
-  const separator = dataUrl.indexOf(",");
-  if (!dataUrl.startsWith("data:") || !dataUrl.slice(0, separator).endsWith(";base64")) throw new Error("Invalid image data format.");
-  return Uint8Array.from(atob(dataUrl.slice(separator + 1)), (character) => character.charCodeAt(0));
 }
