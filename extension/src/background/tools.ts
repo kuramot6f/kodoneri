@@ -2,6 +2,7 @@ import { tool, uploadFile } from "ai";
 import type { ToolResultPart, ToolSet } from "ai";
 import type { z } from "zod";
 import { isImageOutput, type ImageOutput, type PageToolName, type PageToolReply, type TabMessage } from "../shared/protocol.ts";
+import { errorMessage } from "../shared/errors.ts";
 import { dataUrlToBytes, fitImage } from "../shared/image.ts";
 import { aggregateGrep, type GrepResult } from "../shared/text.ts";
 import { keepNewTabsInBackground } from "./backgroundTabPolicy.ts";
@@ -181,7 +182,10 @@ async function captureViewport(tabId: number): Promise<ImageOutput> {
 }
 
 async function toModelOutput(context: ToolContext, output: unknown): Promise<ToolResultPart["output"]> {
-  if (isImageOutput(output)) return uploadImage(context, output);
+  // A failed upload is the tool's failure, not the answer's; the model can go on without the image.
+  if (isImageOutput(output)) {
+    return uploadImage(context, output).catch((error) => ({ type: "error-text" as const, value: `Could not attach the image. ${errorMessage(error)}` }));
+  }
   return { type: "text", value: typeof output === "string" ? output : JSON.stringify(output) };
 }
 
