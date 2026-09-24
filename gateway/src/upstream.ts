@@ -48,6 +48,11 @@ export const UPSTREAMS: Record<Provider, Upstream> = {
   }
 };
 
+/** The provider's API on Cloudflare AI Gateway, which adds the stored provider key. */
+export function gatewayUrl(env: Env, provider: Provider): string {
+  return `https://gateway.ai.cloudflare.com/v1/${env.CLOUDFLARE_ACCOUNT_ID}/${env.CLOUDFLARE_AI_GATEWAY_ID}/${provider}`;
+}
+
 /** Returns the body to send, or null when it asks for a provider-hosted tool. */
 export function prepareBody(provider: Provider, body: Body, billingId: string): Body | null {
   const upstream = UPSTREAMS[provider];
