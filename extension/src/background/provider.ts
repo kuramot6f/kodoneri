@@ -88,7 +88,7 @@ export function resolveSettings(...candidates: (ModelSettings | undefined)[]): M
     if (info) return { model: info.key, effort: clampEffort(info, candidate.effort) };
   }
   const info = models.find((model) => model.id === DEFAULT_MODEL_ID) ?? models[0];
-  return info ? { model: info.key, effort: clampEffort(info, settings[0]?.effort ?? "medium") } : null;
+  return info ? { model: info.key, effort: clampEffort(info, settings[0]?.effort ?? "low") } : null;
 }
 
 /** Memory maintenance runs on GPT-6 Luna reached the same way as the chosen model; without it, on the chosen model's lowest effort. */

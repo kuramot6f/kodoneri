@@ -22,10 +22,11 @@ test("findModel reads the access from the key", () => {
   assert.equal(findModel("byok:gpt-5.6-sol"), undefined);
 });
 
-test("clampEffort keeps levels the model offers and falls back to its lowest", () => {
+test("clampEffort steps down to the nearest level the model offers, else its lowest", () => {
   const flash = findModel("byok:deepseek-flash")!;
   assert.equal(clampEffort(flash, "high"), "high");
-  assert.equal(clampEffort(flash, "medium"), "none");
+  assert.equal(clampEffort(flash, "medium"), "low");
+  assert.equal(clampEffort(flash, "xhigh"), "high");
   const opus = findModel("chatext:claude-opus-5-5")!;
   assert.equal(clampEffort(opus, "none"), "low");
   assert.equal(lowestEffort(findModel("byok:gpt-6-astra")!), "low");

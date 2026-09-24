@@ -3,8 +3,9 @@ import catalog from "./models.json" with { type: "json" };
 /** An API family; the extension and the gateway each keep one adapter per provider. */
 export type Provider = keyof typeof catalog.providers;
 export type Plan = keyof typeof catalog.plans;
-/** "none" turns thinking off; an empty list means the model has no thinking control. */
-export type Effort = "none" | "low" | "medium" | "high" | "xhigh" | "max";
+/** Ascending. "none" turns thinking off; an empty list means the model has no thinking control. */
+const EFFORTS = ["none", "low", "medium", "high", "xhigh", "max"] as const;
+export type Effort = (typeof EFFORTS)[number];
 /** Who pays: the user's own key, or the chatext subscription through the gateway. */
 export type Access = "byok" | "chatext";
 
@@ -69,9 +70,10 @@ export function isPlan(value: unknown): value is Plan {
   return typeof value === "string" && Object.hasOwn(PLANS, value);
 }
 
-/** Keeps the effort inside the model's range; the lowest level is the fallback. */
+/** The model's highest level not above the effort; the lowest level when none is. */
 export function clampEffort(model: ModelInfo, effort: Effort): Effort {
-  return model.efforts.includes(effort) ? effort : lowestEffort(model);
+  const rank = EFFORTS.indexOf(effort);
+  return model.efforts.findLast((level) => EFFORTS.indexOf(level) <= rank) ?? lowestEffort(model);
 }
 
 export function lowestEffort(model: ModelInfo): Effort {
