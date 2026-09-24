@@ -1,11 +1,14 @@
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { findCatalogModel, PLANS, type Provider } from "../../extension/src/shared/models.ts";
 import { effectivePlan, ensureBilling, syncTransaction, verifyNotification, type BillingRow } from "./billing";
-import { UPSTREAMS, clientResponse, prepareBody, requestHeaders, type Body } from "./upstream";
+import { deleteExpiredFiles } from "./files";
+import { UPSTREAMS, clientResponse, gatewayUrl, prepareBody, requestHeaders, type Body } from "./upstream";
 import { costMicrousd, extractUsage, readUsage, totalInput } from "./usage";
 
 const APPLE_ISSUER = "https://appleid.apple.com";
 const NONCE_TTL_MINUTES = 10;
+/** The extension sends images of at most 4 MiB; the rest is room for the multipart form. */
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 
 const appleKeys = createRemoteJWKSet(new URL(`${APPLE_ISSUER}/auth/keys`));
 
@@ -31,6 +34,10 @@ export default {
     const [, provider, rest = ""] = pathname.match(/^\/([^/]+)(\/.*)?$/) ?? [];
     if (provider && Object.hasOwn(UPSTREAMS, provider)) return proxy(request, env, ctx, provider as Provider, rest);
     return status(404);
+  },
+
+  async scheduled(_controller, env, ctx): Promise<void> {
+    ctx.waitUntil(deleteExpiredFiles(env));
   }
 } satisfies ExportedHandler<Env>;
 
@@ -105,7 +112,13 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
     if (!prepared) return errorResponse(400, "tool_not_allowed", "Only function tools are available through chatext.");
     body = JSON.stringify(prepared);
   } else {
-    body = await request.arrayBuffer();
+    // Uploads are not metered, so their count and size are capped instead.
+    if (!(await env.UPLOAD_LIMIT.limit({ key: user.userId })).success) {
+      return errorResponse(429, "rate_limited", "Too many file uploads. Try again in a minute.");
+    }
+    const upload = await request.arrayBuffer();
+    if (upload.byteLength > MAX_UPLOAD_BYTES) return errorResponse(413, "file_too_large", "Files larger than 5 MiB cannot be uploaded.");
+    body = upload;
   }
   ctx.waitUntil(env.DB.prepare("UPDATE tokens SET last_used_at = datetime('now') WHERE token_hash = ?").bind(user.tokenHash).run());
 
@@ -114,8 +127,7 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
   headers.set("cf-aig-metadata", JSON.stringify({ user_id: user.billingId }));
   headers.set("cf-aig-collect-log-payload", "false");
 
-  const base = `https://gateway.ai.cloudflare.com/v1/${env.CLOUDFLARE_ACCOUNT_ID}/${env.CLOUDFLARE_AI_GATEWAY_ID}/${provider}`;
-  const response = await fetch(`${base}${path}`, { method: "POST", headers, body });
+  const response = await fetch(`${gatewayUrl(env, provider)}${path}`, { method: "POST", headers, body });
   if (!model || !response.ok || !response.body || !billing.period_start) return clientResponse(response.body, response);
 
   const [clientBody, meterBody] = response.body.tee();
