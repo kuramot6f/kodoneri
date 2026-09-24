@@ -19,13 +19,16 @@ nonisolated enum ApiKeyStore {
         return String(data: data, encoding: .utf8)
     }
 
-    /// An empty key removes the entry.
+    /// An empty key removes the entry. An unchanged key is not written, so iCloud has nothing to sync.
     static func write(_ provider: String, _ key: String) {
-        delete(provider)
         let trimmed = key.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
+        guard trimmed != read(provider) ?? "" else { return }
+        guard !trimmed.isEmpty else { return delete(provider) }
+        // Updated in place, so the extension never reads the key missing mid-write.
+        let data = Data(trimmed.utf8)
+        guard SecItemUpdate(baseQuery(provider) as CFDictionary, [kSecValueData as String: data] as CFDictionary) == errSecItemNotFound else { return }
         var attributes = baseQuery(provider)
-        attributes[kSecValueData as String] = Data(trimmed.utf8)
+        attributes[kSecValueData as String] = data
         attributes[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
         SecItemAdd(attributes as CFDictionary, nil)
     }

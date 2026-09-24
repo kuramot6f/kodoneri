@@ -300,6 +300,12 @@ private struct ApiKeysSection: View {
                         }
                     }
                 }
+                // Typing only changes `keys`; the Keychain gets the key once typing pauses, since each write syncs to iCloud.
+                .task(id: account.keys?[provider]) {
+                    guard (try? await Task.sleep(for: .milliseconds(500))) != nil else { return }
+                    let key = account.keys?[provider] ?? ""
+                    await Task.detached { ApiKeyStore.write(provider, key) }.value
+                }
             }
         } header: {
             Text("API Keys")
@@ -311,7 +317,7 @@ private struct ApiKeysSection: View {
     private func binding(_ provider: String) -> Binding<String> {
         Binding(
             get: { account.keys?[provider] ?? "" },
-            set: { account.setKey(provider, $0) }
+            set: { account.keys?[provider] = $0.isEmpty ? nil : $0 }
         )
     }
 
