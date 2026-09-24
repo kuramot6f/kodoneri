@@ -40,8 +40,7 @@ struct ContentView: View {
         .formStyle(.grouped)
         .navigationTitle("Kodoneri")
         .refreshable {
-            guard account.token != nil else { return }
-            await account.perform(account.refreshUsage)
+            await account.reload()
         }
         // Keychain reads can stall on first access, so keep them off the main thread.
         .task {
@@ -51,10 +50,7 @@ struct ContentView: View {
         .task(id: scenePhase) {
             guard scenePhase == .active else { return }
             isExtensionEnabled = await SafariExtension.isEnabled()
-            // Skips the first activation, where `run()` loads the account.
-            if account.usage != nil {
-                await account.perform(account.refreshUsage)
-            }
+            await account.reload()
         }
         // Starts once the keys load, and again on sign-in and sign-out.
         .task(id: account.keys.map { $0["chatext"] != nil }) {
@@ -158,6 +154,17 @@ final class Account {
         await perform(loadAccount)
         for await verification in Transaction.updates {
             await perform { try await submit(verification) }
+        }
+    }
+
+    /// Retries whatever `run()` left missing after a failure, or else refreshes usage. Skipped before the keys load and while
+    /// something is loading, so the first activation leaves the work to `run()`.
+    func reload() async {
+        guard keys != nil, !isLoading else { return }
+        if token == nil {
+            if nonce == nil { await perform(prepareNonce) }
+        } else {
+            await perform(usage == nil ? loadAccount : refreshUsage)
         }
     }
 

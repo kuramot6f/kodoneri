@@ -21,6 +21,10 @@ export async function loadConversation(id: string): Promise<Conversation | null>
 
 export async function saveConversation(conversation: Conversation): Promise<void> {
   await browser.storage.local.set({ [PREFIX + conversation.id]: conversation });
+}
+
+/** Reads every conversation, so it runs only when one is added; saves of an existing one never raise the count. */
+export async function pruneConversations(): Promise<void> {
   const overflow = (await loadConversations()).slice(CONVERSATION_MAX_COUNT);
   if (overflow.length) await browser.storage.local.remove(overflow.map(({ id }) => PREFIX + id));
 }

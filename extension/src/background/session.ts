@@ -21,7 +21,7 @@ import type {
 } from "../shared/protocol";
 import { findModel } from "../shared/models";
 import type { ModelSettings } from "../shared/models";
-import { loadConversation, loadSettings, saveConversation, saveSettings } from "../shared/store";
+import { loadConversation, loadSettings, pruneConversations, saveConversation, saveSettings } from "../shared/store";
 import { compact, generateTitle, MEMORY_SYSTEM_PROMPT, MEMORY_TURNS, MEMORY_UPDATE_REQUEST, streamAnswer } from "./agent";
 import { applyCompaction, planCompaction } from "./compaction";
 import { apiKeysLoaded, availableModels, createMemoryRuntime, createRuntime, refreshApiKeys, resolveSettings } from "./provider";
@@ -217,6 +217,7 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
     persist(session);
     pushView(session);
     await save(conversation);
+    if (firstTurn) void pruneConversations().catch(() => undefined);
 
     const models = await resolveModels(session, conversation);
     await answer(session, conversation, models, message.requestId, controller.signal, firstTurn ? message.text : null);
