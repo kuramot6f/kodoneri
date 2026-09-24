@@ -1,5 +1,6 @@
 import type { ImageOutput } from "../shared/protocol";
 import { fetchBytes, resolveUrl } from "../shared/fetch";
+import { toDataUrl } from "../shared/image";
 import type { PageResourceEntry } from "./pageSnapshot";
 
 const MAX_IMAGE_BYTES = 32 * 1024 * 1024;
@@ -96,7 +97,7 @@ async function imageOutputFromBuffer(buffer: ArrayBuffer, mimeType: string): Pro
   if (buffer.byteLength > MAX_IMAGE_BYTES) throw new Error("The image exceeds 32 MiB.");
   return {
     type: "image",
-    dataUrl: await toDataUrl(buffer, mimeType),
+    dataUrl: await toDataUrl(new Blob([buffer], { type: mimeType })),
     mimeType,
     byteLength: buffer.byteLength
   };
@@ -125,18 +126,4 @@ function detectImageMimeType(bytes: Uint8Array): string | null {
 
 function startsWith(bytes: Uint8Array, signature: number[]): boolean {
   return signature.every((value, index) => bytes[index] === value);
-}
-
-function toDataUrl(buffer: ArrayBuffer, mimeType: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      if (typeof reader.result === "string") resolve(reader.result);
-      else reject(new Error("Could not convert the image to a data URL."));
-    }, { once: true });
-    reader.addEventListener("error", () => {
-      reject(reader.error ?? new Error("Could not convert the image to a data URL."));
-    }, { once: true });
-    reader.readAsDataURL(new Blob([buffer], { type: mimeType }));
-  });
 }

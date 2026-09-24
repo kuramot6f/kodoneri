@@ -93,9 +93,8 @@ export function getToolResults(message: ToolModelMessage): ToolResultPart[] {
   return message.content.filter((part): part is ToolResultPart => part.type === "tool-result");
 }
 
-/** Keeps questions and answers; drops tool traffic and reasoning older than the TTL. */
-export function expireToolHistory(conversation: Conversation, now = Date.now()): Conversation {
-  const cutoff = now - TOOL_HISTORY_TTL_MS;
+/** Keeps questions and answers; drops tool traffic and reasoning from before the cutoff (by default, older than the TTL). */
+export function expireToolHistory(conversation: Conversation, cutoff = Date.now() - TOOL_HISTORY_TTL_MS): Conversation {
   let changed = false;
   const messages = conversation.messages.flatMap((message): ModelMessage[] => {
     const at = getMeta(message).at ?? conversation.createdAt;

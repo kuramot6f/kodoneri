@@ -115,7 +115,9 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
         model: openai(info.id),
         files: openai.files(),
         providerOptions: {
-          openai: { reasoningEffort: level } satisfies OpenAILanguageModelResponsesOptions
+          // Stored responses make the SDK replay history as item references, which fail once the items expire
+          // or the account changes; unstored, it sends the text and encrypted reasoning itself.
+          openai: { reasoningEffort: level, store: false } satisfies OpenAILanguageModelResponsesOptions
         },
         fileOptions: { openai: { purpose: "user_data", expiresAfter } satisfies OpenAIFilesOptions }
       };
