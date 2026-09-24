@@ -116,6 +116,8 @@ async function refreshSubscription(env: Env, userId: string, originalTransaction
   const periodStart = new Date(purchaseDate).toISOString();
   // A refunded or revoked subscription ends when it was revoked, not when it would have expired.
   const periodEnd = new Date(transaction.revocationDate ?? expiresDate).toISOString();
+  // A subscription that already ended changes nothing; storing its period would restart the current free month's usage.
+  if (new Date(periodEnd) <= new Date()) return;
   await env.DB.batch([
     env.DB.prepare(`
       INSERT OR IGNORE INTO storekit_transactions
