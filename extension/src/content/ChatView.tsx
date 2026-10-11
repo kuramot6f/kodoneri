@@ -243,7 +243,7 @@ function Activity({ parts, toolResults }: { parts: ActivityPart[]; toolResults: 
   const latest = parts.at(-1)!;
   return (
     <details className="activity">
-      <summary><Icon name="expand" /><span>{latest.type === "reasoning" ? t`Reasoning` : toolLabel(latest.toolName, latest.input)}</span></summary>
+      <summary><Icon name="expand" /><span>{latest.type === "reasoning" ? t`Reasoning` : toolLabel(latest.toolName, latest.input, toolResults.get(latest.toolCallId))}</span></summary>
       <div className="activity-log">{items}</div>
     </details>
   );
@@ -320,20 +320,23 @@ function ToolCall({
 }) {
   return (
     <details className="tool-call">
-      <summary><Icon name="expand" />{toolLabel(name, input)}</summary>
+      <summary><Icon name="expand" />{toolLabel(name, input, output)}</summary>
       <pre>{output === undefined ? t`Running…` : formatToolOutput(output)}</pre>
     </details>
   );
 }
 
-function toolLabel(name: string, input: unknown): string {
-  return `${name} ${JSON.stringify(input)}`;
+// OpenAI の web 検索は呼び出しの input が空で、検索語などは結果の action に入る
+function toolLabel(name: string, input: unknown, output?: ToolResultPart["output"]): string {
+  const value = output?.type === "json" ? output.value : null;
+  const action = value && typeof value === "object" && "action" in value ? value.action : undefined;
+  return `${name} ${JSON.stringify(action ?? input)}`;
 }
 
 function collectToolResults(messages: ModelMessage[]): Map<string, ToolResultPart["output"]> {
   const results = new Map<string, ToolResultPart["output"]>();
   for (const message of messages) {
-    if (message.role !== "tool") continue;
+    if (message.role !== "tool" && message.role !== "assistant") continue;
     for (const result of getToolResults(message)) results.set(result.toolCallId, result.output);
   }
   return results;
@@ -355,7 +358,8 @@ function CacheRate({ usage }: { usage: CacheUsage }) {
 function formatToolOutput(output: ToolResultPart["output"]): string {
   if (output.type === "text" || output.type === "error-text") return formatJson(output.value);
   if (output.type === "json" || output.type === "error-json") {
-    return JSON.stringify(output.value, null, 2);
+    // Anthropic の web 検索結果に付く暗号化本文は読めないので出さない
+    return JSON.stringify(output.value, (key, value) => key === "encryptedContent" ? undefined : value, 2);
   }
   if (output.type === "execution-denied") return output.reason ?? t`Execution was denied.`;
   return t`Image or file`;

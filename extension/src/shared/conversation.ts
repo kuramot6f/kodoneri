@@ -85,26 +85,26 @@ export function getMessageText(message: ModelMessage): string {
   return prefix && text.startsWith(prefix) ? text.slice(prefix.length) : text;
 }
 
-function getToolCalls(message: AssistantModelMessage) {
-  return typeof message.content === "string" ? [] : message.content.filter((part) => part.type === "tool-call");
+/** Tool results of a tool message, or of tools the provider ran (web search) inside an assistant message. */
+export function getToolResults(message: ToolModelMessage | AssistantModelMessage): ToolResultPart[] {
+  return typeof message.content === "string" ? [] : message.content.filter((part): part is ToolResultPart => part.type === "tool-result");
 }
 
-export function getToolResults(message: ToolModelMessage): ToolResultPart[] {
-  return message.content.filter((part): part is ToolResultPart => part.type === "tool-result");
-}
-
-/** Keeps questions and answers; drops tool traffic and reasoning from before the cutoff (by default, older than the TTL). */
+/**
+ * Keeps questions and answers; drops tool traffic and reasoning from before the cutoff (by default, older than the TTL).
+ * An answer can share its message with web searches, so assistant messages keep their text instead of being dropped whole.
+ */
 export function expireToolHistory(conversation: Conversation, cutoff = Date.now() - TOOL_HISTORY_TTL_MS): Conversation {
   let changed = false;
   const messages = conversation.messages.flatMap((message): ModelMessage[] => {
     const at = getMeta(message).at ?? conversation.createdAt;
     if (at > cutoff) return [message];
-    if (message.role === "tool" || (message.role === "assistant" && getToolCalls(message).length > 0)) {
+    if (message.role === "tool") {
       changed = true;
       return [];
     }
     if (message.role !== "assistant" || typeof message.content === "string") return [message];
-    const content = message.content.filter((part) => part.type !== "reasoning");
+    const content = message.content.filter((part) => part.type === "text");
     if (content.length === message.content.length) return [message];
     changed = true;
     const next = { ...message, content };

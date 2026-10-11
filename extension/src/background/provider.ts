@@ -5,7 +5,7 @@ import { createDeepSeek } from "@ai-sdk/deepseek";
 import type { DeepSeekFilesOptions, DeepSeekLanguageModelOptions } from "@ai-sdk/deepseek";
 import { createOpenAI } from "@ai-sdk/openai";
 import type { OpenAIFilesOptions, OpenAILanguageModelResponsesOptions } from "@ai-sdk/openai";
-import type { LanguageModel, streamText, uploadFile } from "ai";
+import type { LanguageModel, streamText, ToolSet, uploadFile } from "ai";
 import { CATALOG, DEFAULT_MODEL_ID, PLANS, clampEffort, findModel, isPlan, lowestEffort, modelKey } from "../shared/models";
 import type { Effort, ModelInfo, ModelSettings, Plan, Provider } from "../shared/models";
 import { TOOL_HISTORY_TTL_MS } from "../shared/conversation";
@@ -31,6 +31,8 @@ export interface ModelRuntime {
   files: FilesApi;
   providerOptions: ProviderOptions;
   fileOptions: ProviderOptions;
+  /** Tools the provider runs itself, such as web search; given to answers only. */
+  tools: ToolSet;
 }
 
 /** Provider keys, plus the gateway token under "chatext". */
@@ -119,7 +121,8 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
           // or the account changes; unstored, it sends the text and encrypted reasoning itself.
           openai: { reasoningEffort: level, store: false } satisfies OpenAILanguageModelResponsesOptions
         },
-        fileOptions: { openai: { purpose: "user_data", expiresAfter } satisfies OpenAIFilesOptions }
+        fileOptions: { openai: { purpose: "user_data", expiresAfter } satisfies OpenAIFilesOptions },
+        tools: info.webSearch ? { web_search: openai.tools.webSearch() } : {}
       };
     }
     case "anthropic": {
@@ -143,7 +146,9 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
         model: anthropic(info.id),
         files: anthropic.files(),
         providerOptions: { anthropic: options satisfies AnthropicLanguageModelOptions },
-        fileOptions: {}
+        fileOptions: {},
+        // The basic version searches directly; later ones filter results through code execution.
+        tools: info.webSearch ? { web_search: anthropic.tools.webSearch_20250305() } : {}
       };
     }
     case "deepseek": {
@@ -156,7 +161,8 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
         model: deepSeek(info.id),
         files: deepSeek.files(),
         providerOptions: { deepseek: options },
-        fileOptions: { deepseek: { expiresAfter } satisfies DeepSeekFilesOptions }
+        fileOptions: { deepseek: { expiresAfter } satisfies DeepSeekFilesOptions },
+        tools: {}
       };
     }
   }

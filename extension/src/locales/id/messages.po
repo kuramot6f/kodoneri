@@ -38,28 +38,28 @@ msgstr "Tambahkan ke favorit (AI tidak dapat mengeditnya lagi)"
 msgid "Ask about this page"
 msgstr "Tanyakan tentang halaman ini"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:179
+#: src/content/App.tsx:179
 msgid "Back to list"
 msgstr "Kembali ke daftar"
 
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:350
+#: src/content/ChatView.tsx:353
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Tingkat hit cache: {0}% ({1} / {2} token)"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Chat history"
 msgstr "Riwayat obrolan"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:151
 msgid "Chats"
 msgstr "Obrolan"
 
-#: src/content/App.tsx:177
-#: src/content/App.tsx:177
+#: src/content/App.tsx:188
+#: src/content/App.tsx:188
 msgid "Close panel"
 msgstr "Tutup panel"
 
@@ -77,7 +77,7 @@ msgid "Content"
 msgstr "Isi"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:323
+#: src/background/session.ts:341
 msgid "errors.compactionFailed"
 msgstr "Gagal memadatkan percakapan. {error}"
 
@@ -91,12 +91,12 @@ msgstr "Hapus percakapan ini"
 msgid "Delete this memory"
 msgstr "Hapus memori ini"
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Done"
 msgstr "Selesai"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "Edit {0}"
 msgstr "Edit {0}"
 
@@ -104,7 +104,7 @@ msgstr "Edit {0}"
 msgid "Edit this memory"
 msgstr "Edit memori ini"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Enlarge"
 msgstr "Perbesar"
 
@@ -117,11 +117,11 @@ msgstr "Kesalahan: {0}"
 msgid "Error: {content}"
 msgstr "Kesalahan: {content}"
 
-#: src/content/ChatView.tsx:360
+#: src/content/ChatView.tsx:364
 msgid "Execution was denied."
 msgstr "Tidak dijalankan."
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Finish editing and return to the list"
 msgstr "Selesai mengedit dan kembali ke daftar"
 
@@ -133,7 +133,7 @@ msgstr "Membuat respons…"
 msgid "Get started for free"
 msgstr "Mulai gratis"
 
-#: src/content/ChatView.tsx:361
+#: src/content/ChatView.tsx:365
 msgid "Image or file"
 msgstr "Gambar atau file"
 
@@ -141,11 +141,11 @@ msgstr "Gambar atau file"
 msgid "Include {selectionSummary}"
 msgstr "Sertakan {selectionSummary}"
 
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "memory"
 msgstr "memori"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "Memory"
 msgstr "Memori"
 
@@ -157,7 +157,7 @@ msgstr "Gagal memperbarui memori"
 msgid "Memory updated"
 msgstr "Memori diperbarui"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Menu (chat history and memory)"
 msgstr "Menu (riwayat obrolan dan memori)"
 
@@ -171,8 +171,8 @@ msgstr "Model"
 msgid "Model and reasoning effort"
 msgstr "Model dan tingkat penalaran"
 
-#: src/content/App.tsx:204
-#: src/content/App.tsx:204
+#: src/content/App.tsx:215
+#: src/content/App.tsx:215
 msgid "New chat"
 msgstr "Obrolan baru"
 
@@ -187,13 +187,13 @@ msgid "No API key is configured. Configure one in the Kodoneri app."
 msgstr "Belum ada kunci API yang dikonfigurasi. Konfigurasikan di app Kodoneri."
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:105
-#: src/background/session.ts:253
+#: src/background/provider.ts:107
+#: src/background/session.ts:261
 msgid "errors.apiKeyMissing"
 msgstr "Belum ada kunci API yang dikonfigurasi. Konfigurasikan di app Kodoneri."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:142
+#: src/background/agent.ts:154
 msgid "errors.noCompaction"
 msgstr "Hasil pemadatan percakapan tidak diterima."
 
@@ -210,7 +210,7 @@ msgid "No memory changes"
 msgstr "Tidak ada perubahan memori"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:104
+#: src/background/agent.ts:115
 msgid "errors.noResponse"
 msgstr "Tidak ada respons yang diterima."
 
@@ -223,12 +223,12 @@ msgid "No saved memories."
 msgstr "Tidak ada memori tersimpan."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:128
+#: src/background/agent.ts:140
 msgid "errors.noTitle"
 msgstr "Tidak ada judul yang diterima."
 
-#: src/content/App.tsx:155
-#: src/content/App.tsx:155
+#: src/content/App.tsx:166
+#: src/content/App.tsx:166
 msgid "Open chat"
 msgstr "Buka obrolan"
 
@@ -255,12 +255,12 @@ msgid "Remove from favorites"
 msgstr "Hapus dari favorit"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:99
-#: src/background/agent.ts:111
+#: src/background/agent.ts:109
+#: src/background/agent.ts:123
 msgid "errors.responseCancelled"
 msgstr "Pembuatan respons dibatalkan."
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Restore size"
 msgstr "Kembalikan ukuran"
 
@@ -268,7 +268,11 @@ msgstr "Kembalikan ukuran"
 msgid "Running…"
 msgstr "Menjalankan…"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:164
+msgid "Safari has lost its connection to the extension. Quit Safari and open it again."
+msgstr "Safari kehilangan koneksi ke ekstensi. Tutup Safari, lalu buka lagi."
+
+#: src/content/App.tsx:151
 msgid "Saved conversations"
 msgstr "Percakapan tersimpan"
 
@@ -293,7 +297,7 @@ msgstr "Sela dan kirim"
 msgid "Settings"
 msgstr "Pengaturan"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Show in sidebar"
 msgstr "Tampilkan di bar samping"
 
@@ -305,7 +309,7 @@ msgstr "Masuk dengan Apple untuk menggunakan paket gratis Kodoneri, atau tambahk
 msgid "Stop response"
 msgstr "Hentikan respons"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Switch to floating panel"
 msgstr "Beralih ke panel mengambang"
 
@@ -330,7 +334,7 @@ msgstr "Tanpa judul"
 msgid "Updating memory…"
 msgstr "Memperbarui memori…"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "What the AI remembers"
 msgstr "Yang diingat AI"
 

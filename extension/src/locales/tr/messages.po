@@ -38,28 +38,28 @@ msgstr "Favorilere ekle (yapay zekâ artık düzenleyemez)"
 msgid "Ask about this page"
 msgstr "Bu sayfa hakkında soru sorun"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:179
+#: src/content/App.tsx:179
 msgid "Back to list"
 msgstr "Listeye dön"
 
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:350
+#: src/content/ChatView.tsx:353
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Önbellek isabet oranı: %{0} ({1} / {2} token)"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Chat history"
 msgstr "Sohbet geçmişi"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:151
 msgid "Chats"
 msgstr "Sohbetler"
 
-#: src/content/App.tsx:177
-#: src/content/App.tsx:177
+#: src/content/App.tsx:188
+#: src/content/App.tsx:188
 msgid "Close panel"
 msgstr "Paneli kapat"
 
@@ -77,7 +77,7 @@ msgid "Content"
 msgstr "İçerik"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:323
+#: src/background/session.ts:341
 msgid "errors.compactionFailed"
 msgstr "Sohbet sıkıştırılamadı. {error}"
 
@@ -91,12 +91,12 @@ msgstr "Bu sohbeti sil"
 msgid "Delete this memory"
 msgstr "Bu anıyı sil"
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Done"
 msgstr "Bitti"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "Edit {0}"
 msgstr "Düzenle: {0}"
 
@@ -104,7 +104,7 @@ msgstr "Düzenle: {0}"
 msgid "Edit this memory"
 msgstr "Bu anıyı düzenle"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Enlarge"
 msgstr "Büyüt"
 
@@ -117,11 +117,11 @@ msgstr "Hata: {0}"
 msgid "Error: {content}"
 msgstr "Hata: {content}"
 
-#: src/content/ChatView.tsx:360
+#: src/content/ChatView.tsx:364
 msgid "Execution was denied."
 msgstr "Yürütülmedi."
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Finish editing and return to the list"
 msgstr "Düzenlemeyi bitir ve listeye dön"
 
@@ -133,7 +133,7 @@ msgstr "Yanıt oluşturuluyor…"
 msgid "Get started for free"
 msgstr "Ücretsiz başlayın"
 
-#: src/content/ChatView.tsx:361
+#: src/content/ChatView.tsx:365
 msgid "Image or file"
 msgstr "Görüntü veya dosya"
 
@@ -141,11 +141,11 @@ msgstr "Görüntü veya dosya"
 msgid "Include {selectionSummary}"
 msgstr "Dahil et: {selectionSummary}"
 
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "memory"
 msgstr "anı"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "Memory"
 msgstr "Bellek"
 
@@ -157,7 +157,7 @@ msgstr "Bellek güncellenemedi"
 msgid "Memory updated"
 msgstr "Bellek güncellendi"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Menu (chat history and memory)"
 msgstr "Menü (sohbet geçmişi ve bellek)"
 
@@ -171,8 +171,8 @@ msgstr "Model"
 msgid "Model and reasoning effort"
 msgstr "Model ve akıl yürütme düzeyi"
 
-#: src/content/App.tsx:204
-#: src/content/App.tsx:204
+#: src/content/App.tsx:215
+#: src/content/App.tsx:215
 msgid "New chat"
 msgstr "Yeni sohbet"
 
@@ -187,13 +187,13 @@ msgid "No API key is configured. Configure one in the Kodoneri app."
 msgstr "Yapılandırılmış API anahtarı yok. Kodoneri uygulamasında bir tane yapılandırın."
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:105
-#: src/background/session.ts:253
+#: src/background/provider.ts:107
+#: src/background/session.ts:261
 msgid "errors.apiKeyMissing"
 msgstr "Yapılandırılmış API anahtarı yok. Kodoneri uygulamasında bir tane yapılandırın."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:142
+#: src/background/agent.ts:154
 msgid "errors.noCompaction"
 msgstr "Sohbet sıkıştırma sonucu alınamadı."
 
@@ -210,7 +210,7 @@ msgid "No memory changes"
 msgstr "Bellekte değişiklik yok"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:104
+#: src/background/agent.ts:115
 msgid "errors.noResponse"
 msgstr "Yanıt alınamadı."
 
@@ -223,12 +223,12 @@ msgid "No saved memories."
 msgstr "Kayıtlı anı yok."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:128
+#: src/background/agent.ts:140
 msgid "errors.noTitle"
 msgstr "Başlık alınamadı."
 
-#: src/content/App.tsx:155
-#: src/content/App.tsx:155
+#: src/content/App.tsx:166
+#: src/content/App.tsx:166
 msgid "Open chat"
 msgstr "Sohbeti aç"
 
@@ -255,12 +255,12 @@ msgid "Remove from favorites"
 msgstr "Favorilerden kaldır"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:99
-#: src/background/agent.ts:111
+#: src/background/agent.ts:109
+#: src/background/agent.ts:123
 msgid "errors.responseCancelled"
 msgstr "Yanıt oluşturma iptal edildi."
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Restore size"
 msgstr "Boyutu geri yükle"
 
@@ -268,7 +268,11 @@ msgstr "Boyutu geri yükle"
 msgid "Running…"
 msgstr "Çalışıyor…"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:164
+msgid "Safari has lost its connection to the extension. Quit Safari and open it again."
+msgstr "Safari'nin uzantıyla bağlantısı kesildi. Safari'den çıkıp yeniden açın."
+
+#: src/content/App.tsx:151
 msgid "Saved conversations"
 msgstr "Kayıtlı sohbetler"
 
@@ -293,7 +297,7 @@ msgstr "Kes ve gönder"
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Show in sidebar"
 msgstr "Kenar çubuğunda göster"
 
@@ -305,7 +309,7 @@ msgstr "Kodoneri’in ücretsiz planını kullanmak için Apple ile giriş yapı
 msgid "Stop response"
 msgstr "Yanıtı durdur"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Switch to floating panel"
 msgstr "Yüzen panele geç"
 
@@ -330,7 +334,7 @@ msgstr "Başlıksız"
 msgid "Updating memory…"
 msgstr "Bellek güncelleniyor…"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "What the AI remembers"
 msgstr "Yapay zekânın hatırladıkları"
 

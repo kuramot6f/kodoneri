@@ -38,28 +38,28 @@ msgstr "お気に入りに追加（AIは編集できなくなる）"
 msgid "Ask about this page"
 msgstr "このページについて質問"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:179
+#: src/content/App.tsx:179
 msgid "Back to list"
 msgstr "一覧に戻る"
 
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:350
+#: src/content/ChatView.tsx:353
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "キャッシュ率: {0}%（{1} / {2} tokens）"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Chat history"
 msgstr "チャット履歴"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:151
 msgid "Chats"
 msgstr "チャット"
 
-#: src/content/App.tsx:177
-#: src/content/App.tsx:177
+#: src/content/App.tsx:188
+#: src/content/App.tsx:188
 msgid "Close panel"
 msgstr "パネルを閉じる"
 
@@ -77,7 +77,7 @@ msgid "Content"
 msgstr "内容"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:323
+#: src/background/session.ts:341
 msgid "errors.compactionFailed"
 msgstr "会話の圧縮に失敗しました。{error}"
 
@@ -91,12 +91,12 @@ msgstr "この会話を削除"
 msgid "Delete this memory"
 msgstr "このメモリを削除"
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Done"
 msgstr "完了"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "Edit {0}"
 msgstr "{0}を編集"
 
@@ -104,7 +104,7 @@ msgstr "{0}を編集"
 msgid "Edit this memory"
 msgstr "このメモリを編集"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Enlarge"
 msgstr "大きく表示"
 
@@ -117,11 +117,11 @@ msgstr "エラー: {0}"
 msgid "Error: {content}"
 msgstr "エラー: {content}"
 
-#: src/content/ChatView.tsx:360
+#: src/content/ChatView.tsx:364
 msgid "Execution was denied."
 msgstr "実行されませんでした。"
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Finish editing and return to the list"
 msgstr "編集を終えて一覧に戻る"
 
@@ -133,7 +133,7 @@ msgstr "回答を生成中…"
 msgid "Get started for free"
 msgstr "無料ではじめる"
 
-#: src/content/ChatView.tsx:361
+#: src/content/ChatView.tsx:365
 msgid "Image or file"
 msgstr "画像またはファイル"
 
@@ -141,11 +141,11 @@ msgstr "画像またはファイル"
 msgid "Include {selectionSummary}"
 msgstr "{selectionSummary}を含める"
 
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "memory"
 msgstr "メモリ"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "Memory"
 msgstr "メモリ"
 
@@ -157,7 +157,7 @@ msgstr "メモリ更新に失敗"
 msgid "Memory updated"
 msgstr "メモリ更新あり"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Menu (chat history and memory)"
 msgstr "メニュー（チャット履歴・メモリ）"
 
@@ -171,8 +171,8 @@ msgstr "モデル"
 msgid "Model and reasoning effort"
 msgstr "モデルと思考量"
 
-#: src/content/App.tsx:204
-#: src/content/App.tsx:204
+#: src/content/App.tsx:215
+#: src/content/App.tsx:215
 msgid "New chat"
 msgstr "新規チャット"
 
@@ -187,13 +187,13 @@ msgid "No API key is configured. Configure one in the Kodoneri app."
 msgstr "APIキーが設定されていません。コドネリアプリで設定してください。"
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:105
-#: src/background/session.ts:253
+#: src/background/provider.ts:107
+#: src/background/session.ts:261
 msgid "errors.apiKeyMissing"
 msgstr "APIキーが設定されていません。コドネリアプリでAPIキーを設定してください。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:142
+#: src/background/agent.ts:154
 msgid "errors.noCompaction"
 msgstr "会話の圧縮結果を取得できませんでした。"
 
@@ -210,7 +210,7 @@ msgid "No memory changes"
 msgstr "メモリ更新なし"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:104
+#: src/background/agent.ts:115
 msgid "errors.noResponse"
 msgstr "回答を取得できませんでした。"
 
@@ -223,12 +223,12 @@ msgid "No saved memories."
 msgstr "保存されたメモリはありません。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:128
+#: src/background/agent.ts:140
 msgid "errors.noTitle"
 msgstr "タイトルを取得できませんでした。"
 
-#: src/content/App.tsx:155
-#: src/content/App.tsx:155
+#: src/content/App.tsx:166
+#: src/content/App.tsx:166
 msgid "Open chat"
 msgstr "チャットを開く"
 
@@ -255,12 +255,12 @@ msgid "Remove from favorites"
 msgstr "お気に入りを解除"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:99
-#: src/background/agent.ts:111
+#: src/background/agent.ts:109
+#: src/background/agent.ts:123
 msgid "errors.responseCancelled"
 msgstr "回答の生成を中止しました。"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Restore size"
 msgstr "元の大きさに戻す"
 
@@ -268,7 +268,11 @@ msgstr "元の大きさに戻す"
 msgid "Running…"
 msgstr "実行中…"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:164
+msgid "Safari has lost its connection to the extension. Quit Safari and open it again."
+msgstr "Safari と拡張機能の接続が切れました。Safari を終了してから開き直してください。"
+
+#: src/content/App.tsx:151
 msgid "Saved conversations"
 msgstr "保存した会話の一覧"
 
@@ -293,7 +297,7 @@ msgstr "割り込み送信"
 msgid "Settings"
 msgstr "設定"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Show in sidebar"
 msgstr "サイドバーに表示"
 
@@ -305,7 +309,7 @@ msgstr "Appleでサインインしてコドネリの無料プランを使うか�
 msgid "Stop response"
 msgstr "回答を停止"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Switch to floating panel"
 msgstr "フローティングに戻す"
 
@@ -330,7 +334,7 @@ msgstr "無題"
 msgid "Updating memory…"
 msgstr "メモリ更新中…"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "What the AI remembers"
 msgstr "AIが覚えている内容の一覧"
 

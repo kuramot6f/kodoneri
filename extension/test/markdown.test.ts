@@ -10,6 +10,14 @@ test("markdown shows raw HTML as text", () => {
   assert.doesNotMatch(render("```text\n<img src=x onerror=1>\n```"), /<img/);
 });
 
+test("markdown renders TeX as MathML", () => {
+  assert.match(render("Euler: $e^{i\\pi} = -1$."), /<math[^>]*><semantics>.*<annotation encoding="application\/x-tex">e\^\{i\\pi\} = -1<\/annotation>/);
+  assert.match(render("$$\n\\int_0^1 x\\,dx\n$$"), /<math[^>]*display="block"/);
+  assert.doesNotMatch(render("costs $5 and $10"), /<math/);
+  assert.doesNotMatch(render("`$x$`"), /<math/);
+  assert.doesNotMatch(render("$\\href{javascript:alert(1)}{x}$"), /href=/);
+});
+
 test("markdown links keep only safe protocols", () => {
   assert.equal(render("[x](https://example.com/?a=1&b=2)"), '<p><a href="https://example.com/?a=1&#38;b=2">x</a></p>\n');
   assert.equal(render("[x](/path)"), '<p><a href="/path">x</a></p>\n');

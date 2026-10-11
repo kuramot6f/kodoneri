@@ -55,9 +55,10 @@ export function useMemories() {
     return persist().catch(refresh);
   };
 
-  // Favorites are excluded from the model's automatic updates; toggling is not a content edit.
+  // Favorites are excluded from the model's automatic updates. The list keeps its order, but the new
+  // updatedAt lets iCloud sync carry the toggle to other devices.
   const toggleFavorite = (memory: Memory) => {
-    const toggled = { ...memory, favorite: !memory.favorite };
+    const toggled = { ...memory, favorite: !memory.favorite, updatedAt: Date.now() };
     return applyLocally(
       (current) => current.map((item) => (item.id === memory.id ? toggled : item)),
       () => saveMemory(toggled)

@@ -8,8 +8,44 @@
   z-index: 2147483647 !important;
   font: 14px -apple-system, system-ui, sans-serif !important;
   color: var(--text) !important;
+  color-scheme: light dark !important;
   --text: #000;
   --text-secondary: #3c3c4399;
+  --accent: #08f;
+  --error: #c0392b;
+  --favorite: #f5a623;
+  --panel-bg: rgba(255,255,255,0.43);
+  --panel-border: #fff9;
+  --glass-bg: #f2f2f28d;
+  --glass-ring: #e8e8e8;
+  --menu-bg: #f2f2f2f2;
+  --thumb-bg: linear-gradient(#fff9, #fff5), #fffc;
+  --fill: #0000000d;
+  --bubble: #ccc;
+  --separator: #0000001f;
+  --code-bg: #f6f6f7;
+  --code-border: #00000012;
+}
+/* ダークは Apple のシステムカラー(ダーク)に置き換える。透明度はライトと同じ */
+@media (prefers-color-scheme: dark) {
+  :host {
+    --text: #fff;
+    --text-secondary: #ebebf599;
+    --accent: #0091ff;
+    --error: #ff4245;
+    --favorite: #ff9230;
+    --panel-bg: rgba(28,28,30,0.43);
+    --panel-border: #54545899;
+    --glass-bg: #2c2c2e8d;
+    --glass-ring: #38383a;
+    --menu-bg: #2c2c2ef2;
+    --thumb-bg: linear-gradient(#63636699, #63636655), #636366cc;
+    --fill: #ffffff0d;
+    --bubble: #3a3a3c;
+    --separator: #ffffff1f;
+    --code-bg: #1c1c1e;
+    --code-border: #ffffff12;
+  }
 }
 
 * { box-sizing: border-box; }
@@ -36,9 +72,9 @@ button:disabled { cursor: default; opacity: .4; }
 .composer-row textarea, .search-input, .round, .pill, .selection-option, .segmented {
   border: 0;
   border-radius: 1000px;
-  background: linear-gradient(#fff2, #fff0 58%, #00000009), #f2f2f28d;
+  background: linear-gradient(#fff2, #fff0 58%, #00000009), var(--glass-bg);
   box-shadow:
-    0 0 0 .5px #e8e8e8, 0 8px 15px #00000005,
+    0 0 0 .5px var(--glass-ring), 0 8px 15px #00000005,
     inset 0 1px 0 #fff5, inset 0 -1px 0 #0000000f,
     inset 0 40px 30px -40px #0000001a;
   backdrop-filter: blur(4px) saturate(.84);
@@ -51,9 +87,9 @@ button:disabled { cursor: default; opacity: .4; }
   z-index: 0;
   display: flex;
   pointer-events: auto;
-  border: 1px solid #fff9;
+  border: 1px solid var(--panel-border);
   border-radius: 28px;
-  background: rgba(255,255,255,0.43);
+  background: var(--panel-bg);
   box-shadow: 0 8px 32px #0003;
 }
 /* フローティング: 右下に浮かぶ。ドラッグ後はインラインstyleのleft/topが優先される */
@@ -116,28 +152,21 @@ button:disabled { cursor: default; opacity: .4; }
   height: 40px;
   padding: 0;
 }
-/* fill + shadow → #08F の plus-darker レイヤー → glass effect → 白いアイコン */
+/* アクセント色 → glass effect → 白いアイコン */
 .accent-action {
   position: relative;
   isolation: isolate;
-  background: #f2f2f28d;
+  background: var(--accent);
   color: #fff;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
-.accent-action::before, .accent-action::after {
+.accent-action::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-}
-.accent-action::before {
-  z-index: 0;
-  background: #08f;
-  mix-blend-mode: plus-darker;
-}
-.accent-action::after {
   z-index: 1;
   background: linear-gradient(#fff3, #fff0 58%, #0001);
   box-shadow: inset 0 1px 0 #fff7, inset 0 -1px 0 #0002;
@@ -224,7 +253,7 @@ header::after, .bottom-bar::after {
   left: 3px;
   width: calc((100% - 6px) / var(--tab-count));
   border-radius: 1000px;
-  background: linear-gradient(#fff9, #fff5), #fffc;
+  background: var(--thumb-bg);
   box-shadow: 0 1px 3px #0000001f, inset 0 1px 0 #fff;
   transform: translateX(calc(100% * var(--tab-index)));
   transition: transform .25s cubic-bezier(.3, 1.2, .4, 1);
@@ -250,7 +279,7 @@ header::after, .bottom-bar::after {
   background: none;
   text-align: left;
 }
-.history-item:hover { background: #0000000d; }
+.history-item:hover { background: var(--fill); }
 /* メモリ一覧の先頭に右寄せで置く新規作成ボタン。リストと一緒にスクロールする */
 .add-row { display: flex; justify-content: flex-end; padding: 0 4px 8px; }
 .add-memory { display: inline-flex; align-items: center; gap: 6px; }
@@ -269,8 +298,8 @@ header::after, .bottom-bar::after {
   background: none;
   color: var(--text-secondary);
 }
-.icon-button:hover { background: #0000000d; color: var(--text); }
-.icon-button.favorite { color: #f5a623; }
+.icon-button:hover { background: var(--fill); color: var(--text); }
+.icon-button.favorite { color: var(--favorite); }
 .history-title { display: block; font-weight: 600; overflow-wrap: anywhere; }
 .history-preview {
   display: -webkit-box;
@@ -315,18 +344,18 @@ header::after, .bottom-bar::after {
   margin-left: auto;
   padding: 8px 14px;
   border-radius: 18px;
-  background: #ccc;
+  background: var(--bubble);
 }
 .selection {
   margin-bottom: 6px;
   max-height: 160px;
   overflow-y: auto;
-  border: 1px solid #ccc;
+  border: 1px solid var(--bubble);
   background: none;
   color: var(--text-secondary);
 }
 .selection-media { margin-top: 4px; font-size: 12px; }
-.error { color: #c0392b; }
+.error { color: var(--error); }
 
 .markdown { white-space: normal; }
 .markdown > :first-child { margin-top: 0; }
@@ -335,13 +364,13 @@ header::after, .bottom-bar::after {
 .markdown ul, .markdown ol { padding-left: 1.5em; }
 .markdown pre {
   overflow-x: auto;
-  border: 1px solid #00000012;
+  border: 1px solid var(--code-border);
   border-radius: 10px;
-  background: #f6f6f7;
+  background: var(--code-bg);
   white-space: pre;
 }
 .markdown :is(h1, h2, h3, h4, h5, h6) { margin: 1em 0 .5em; font-size: 1.1em; }
-.markdown a { color: #007aff; }
+.markdown a { color: var(--accent); }
 .markdown code { font-family: ui-monospace, monospace; }
 .markdown pre code { display: block; padding: 10px 12px; }
 .markdown .hljs-comment, .markdown .hljs-quote { color: #6e7781; font-style: italic; }
@@ -353,6 +382,17 @@ header::after, .bottom-bar::after {
 .markdown .hljs-meta, .markdown .hljs-selector-id, .markdown .hljs-selector-class { color: #116329; }
 .markdown .hljs-deletion { color: #82071e; background: #ffebe9; }
 .markdown .hljs-addition { background: #dafbe1; }
+@media (prefers-color-scheme: dark) {
+  .markdown .hljs-comment, .markdown .hljs-quote { color: #8b949e; }
+  .markdown .hljs-keyword, .markdown .hljs-selector-tag, .markdown .hljs-literal, .markdown .hljs-type { color: #ff7b72; }
+  .markdown .hljs-string, .markdown .hljs-regexp, .markdown .hljs-addition { color: #7ee787; }
+  .markdown .hljs-number, .markdown .hljs-symbol, .markdown .hljs-bullet { color: #79c0ff; }
+  .markdown .hljs-title, .markdown .hljs-section, .markdown .hljs-built_in, .markdown .hljs-name { color: #d2a8ff; }
+  .markdown .hljs-attr, .markdown .hljs-attribute, .markdown .hljs-variable, .markdown .hljs-template-variable, .markdown .hljs-property { color: #ffa657; }
+  .markdown .hljs-meta, .markdown .hljs-selector-id, .markdown .hljs-selector-class { color: #56d364; }
+  .markdown .hljs-deletion { color: #ffdcd7; background: #67060c; }
+  .markdown .hljs-addition { background: #033a16; }
+}
 .markdown .hljs-emphasis { font-style: italic; }
 .markdown .hljs-strong { font-weight: 600; }
 
@@ -414,7 +454,7 @@ textarea::placeholder { color: var(--text-secondary); }
   font-size: 12px;
   cursor: pointer;
 }
-.selection-option input { margin: 0; accent-color: #007aff; }
+.selection-option input { margin: 0; accent-color: var(--accent); }
 
 .cache-rate {
   color: var(--text-secondary);
@@ -434,15 +474,15 @@ textarea::placeholder { color: var(--text-secondary); }
   gap: 10px;
   width: 260px;
   padding: 12px 14px;
-  border: 1px solid #fff9;
+  border: 1px solid var(--panel-border);
   border-radius: 16px;
-  background: #f2f2f2f2;
-  box-shadow: 0 8px 32px #0003, 0 0 0 .5px #e8e8e8;
+  background: var(--menu-bg);
+  box-shadow: 0 8px 32px #0003, 0 0 0 .5px var(--glass-ring);
 }
 .model-menu-row { display: flex; align-items: center; gap: 10px; }
 .model-menu-row > span { flex: none; width: 44px; color: var(--text-secondary); font-size: 12px; }
-.model-menu-row select { flex: 1; min-width: 0; height: 28px; border: 0; border-radius: 8px; background: #0000000d; padding: 0 8px; }
-.model-menu-row input[type="range"] { flex: 1; min-width: 0; margin: 0; accent-color: #007aff; }
+.model-menu-row select { flex: 1; min-width: 0; height: 28px; border: 0; border-radius: 8px; background: var(--fill); padding: 0 8px; }
+.model-menu-row input[type="range"] { flex: 1; min-width: 0; margin: 0; accent-color: var(--accent); }
 .model-menu-row output { flex: none; width: 48px; text-align: right; font-size: 12px; font-variant-numeric: tabular-nums; }
 .model-menu-empty { margin: 0; color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
 
@@ -465,7 +505,7 @@ textarea::placeholder { color: var(--text-secondary); }
   align-items: baseline;
   gap: 6px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #0000001f;
+  border-bottom: 1px solid var(--separator);
 }
 .memory-title-label { flex: none; color: var(--text-secondary); }
 .memory-title { flex: 1; min-width: 0; font-weight: 600; }

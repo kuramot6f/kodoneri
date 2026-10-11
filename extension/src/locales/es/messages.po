@@ -38,28 +38,28 @@ msgstr "Añadir a favoritos (la IA ya no podrá editarla)"
 msgid "Ask about this page"
 msgstr "Pregunta sobre esta página"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:179
+#: src/content/App.tsx:179
 msgid "Back to list"
 msgstr "Volver a la lista"
 
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:350
+#: src/content/ChatView.tsx:353
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Tasa de aciertos de caché: {0} % ({1} / {2} tokens)"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Chat history"
 msgstr "Historial de chats"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:151
 msgid "Chats"
 msgstr "Chats"
 
-#: src/content/App.tsx:177
-#: src/content/App.tsx:177
+#: src/content/App.tsx:188
+#: src/content/App.tsx:188
 msgid "Close panel"
 msgstr "Cerrar panel"
 
@@ -77,7 +77,7 @@ msgid "Content"
 msgstr "Contenido"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:323
+#: src/background/session.ts:341
 msgid "errors.compactionFailed"
 msgstr "No se pudo compactar la conversación. {error}"
 
@@ -91,12 +91,12 @@ msgstr "Eliminar esta conversación"
 msgid "Delete this memory"
 msgstr "Eliminar esta memoria"
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Done"
 msgstr "Listo"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "Edit {0}"
 msgstr "Editar {0}"
 
@@ -104,7 +104,7 @@ msgstr "Editar {0}"
 msgid "Edit this memory"
 msgstr "Editar esta memoria"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Enlarge"
 msgstr "Ampliar"
 
@@ -117,11 +117,11 @@ msgstr "Error: {0}"
 msgid "Error: {content}"
 msgstr "Error: {content}"
 
-#: src/content/ChatView.tsx:360
+#: src/content/ChatView.tsx:364
 msgid "Execution was denied."
 msgstr "No se ejecutó."
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Finish editing and return to the list"
 msgstr "Terminar de editar y volver a la lista"
 
@@ -133,7 +133,7 @@ msgstr "Generando respuesta…"
 msgid "Get started for free"
 msgstr "Empieza gratis"
 
-#: src/content/ChatView.tsx:361
+#: src/content/ChatView.tsx:365
 msgid "Image or file"
 msgstr "Imagen o archivo"
 
@@ -141,11 +141,11 @@ msgstr "Imagen o archivo"
 msgid "Include {selectionSummary}"
 msgstr "Incluir {selectionSummary}"
 
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "memory"
 msgstr "memoria"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "Memory"
 msgstr "Memoria"
 
@@ -157,7 +157,7 @@ msgstr "Error al actualizar la memoria"
 msgid "Memory updated"
 msgstr "Memoria actualizada"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Menu (chat history and memory)"
 msgstr "Menú (historial de chats y memoria)"
 
@@ -171,8 +171,8 @@ msgstr "Modelo"
 msgid "Model and reasoning effort"
 msgstr "Modelo y nivel de razonamiento"
 
-#: src/content/App.tsx:204
-#: src/content/App.tsx:204
+#: src/content/App.tsx:215
+#: src/content/App.tsx:215
 msgid "New chat"
 msgstr "Nuevo chat"
 
@@ -187,13 +187,13 @@ msgid "No API key is configured. Configure one in the Kodoneri app."
 msgstr "No hay ninguna clave de API configurada. Configúrala en la app Kodoneri."
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:105
-#: src/background/session.ts:253
+#: src/background/provider.ts:107
+#: src/background/session.ts:261
 msgid "errors.apiKeyMissing"
 msgstr "No hay ninguna clave de API configurada. Configúrala en la app Kodoneri."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:142
+#: src/background/agent.ts:154
 msgid "errors.noCompaction"
 msgstr "No se recibió el resultado de la compactación de la conversación."
 
@@ -210,7 +210,7 @@ msgid "No memory changes"
 msgstr "Sin cambios en la memoria"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:104
+#: src/background/agent.ts:115
 msgid "errors.noResponse"
 msgstr "No se recibió ninguna respuesta."
 
@@ -223,12 +223,12 @@ msgid "No saved memories."
 msgstr "No hay memorias guardadas."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:128
+#: src/background/agent.ts:140
 msgid "errors.noTitle"
 msgstr "No se recibió ningún título."
 
-#: src/content/App.tsx:155
-#: src/content/App.tsx:155
+#: src/content/App.tsx:166
+#: src/content/App.tsx:166
 msgid "Open chat"
 msgstr "Abrir chat"
 
@@ -255,12 +255,12 @@ msgid "Remove from favorites"
 msgstr "Quitar de favoritos"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:99
-#: src/background/agent.ts:111
+#: src/background/agent.ts:109
+#: src/background/agent.ts:123
 msgid "errors.responseCancelled"
 msgstr "Se canceló la generación de la respuesta."
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Restore size"
 msgstr "Restaurar tamaño"
 
@@ -268,7 +268,11 @@ msgstr "Restaurar tamaño"
 msgid "Running…"
 msgstr "Ejecutando…"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:164
+msgid "Safari has lost its connection to the extension. Quit Safari and open it again."
+msgstr "Safari ha perdido la conexión con la extensión. Cierra Safari y vuelve a abrirlo."
+
+#: src/content/App.tsx:151
 msgid "Saved conversations"
 msgstr "Conversaciones guardadas"
 
@@ -293,7 +297,7 @@ msgstr "Interrumpir y enviar"
 msgid "Settings"
 msgstr "Ajustes"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Show in sidebar"
 msgstr "Mostrar en la barra lateral"
 
@@ -305,7 +309,7 @@ msgstr "Inicia sesión con Apple para usar el plan gratuito de Kodoneri o añade
 msgid "Stop response"
 msgstr "Detener respuesta"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Switch to floating panel"
 msgstr "Cambiar a panel flotante"
 
@@ -330,7 +334,7 @@ msgstr "Sin título"
 msgid "Updating memory…"
 msgstr "Actualizando la memoria…"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "What the AI remembers"
 msgstr "Lo que recuerda la IA"
 

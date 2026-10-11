@@ -2,6 +2,7 @@ import type { RuntimeMessage } from "../shared/protocol";
 import { activateBrowserLocale } from "../shared/i18n.ts";
 import { errorMessage } from "../shared/errors";
 import { fetchText } from "../shared/fetch";
+import { syncWithCloud } from "./cloud";
 import { clearFrames, registerFrame } from "./frames";
 import { debugEvent } from "./debug";
 import { hasCredentials, refreshApiKeys } from "./provider";
@@ -41,6 +42,7 @@ browser.runtime.onMessage.addListener((message: RuntimeMessage, sender) => {
   if (message.type === "keepalive") return;
   if (message.type === "credentials") return refreshApiKeys().catch(() => undefined).then(hasCredentials);
   if (message.type === "app_settings") return refreshAppSettings().catch(() => undefined);
+  if (message.type === "cloud_sync") return syncWithCloud();
   if (message.type === "open_settings") return browser.runtime.sendNativeMessage("application.id", { type: "openSettings" });
   if (message.type === "sync" || message.type === "ask" || message.type === "cancel" || message.type === "open" || message.type === "panel") {
     if (sender.tab?.id === undefined || sender.frameId !== 0) return;

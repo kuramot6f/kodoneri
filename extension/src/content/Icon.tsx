@@ -39,24 +39,34 @@ const baseStyle = {
   background: "transparent"
 } satisfies CSSProperties;
 
+// PNG は light/ が黒、dark/ が白(message だけ青)。inverse はアクセント色の上に置くので常に白
+const pngURL = (appearance: "light" | "dark", file: string) => browser.runtime.getURL(`images/ui-icons/${appearance}/${file}`);
+
 export function Icon({ name, tone = "default" }: { name: IconName; tone?: IconTone }) {
   const style = {
     ...baseStyle,
-    filter: tone === "inverse" ? "brightness(0) invert(1)" : undefined,
+    color: tone === "inverse" ? "#fff" : undefined,
     opacity: tone === "secondary" ? .6 : undefined
   } satisfies CSSProperties;
 
   if (name in PNGS) {
     const file = PNGS[name as keyof typeof PNGS];
-    return (
+    const img = (
       <img
         className="ui-icon"
-        src={browser.runtime.getURL(`images/ui-icons/${file}`)}
+        src={pngURL(tone === "inverse" ? "dark" : "light", file)}
         alt=""
         aria-hidden="true"
         draggable={false}
         style={{ ...style, objectFit: "contain" }}
       />
+    );
+    if (tone === "inverse") return img;
+    return (
+      <picture style={{ display: "contents" }}>
+        <source media="(prefers-color-scheme: dark)" srcSet={pngURL("dark", file)} />
+        {img}
+      </picture>
     );
   }
 

@@ -38,28 +38,28 @@ msgstr "Ajouter aux favoris (l’IA ne pourra plus la modifier)"
 msgid "Ask about this page"
 msgstr "Posez une question sur cette page"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:179
+#: src/content/App.tsx:179
 msgid "Back to list"
 msgstr "Retour à la liste"
 
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:350
+#: src/content/ChatView.tsx:353
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Taux de succès du cache : {0} % ({1} / {2} tokens)"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Chat history"
 msgstr "Historique des discussions"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:151
 msgid "Chats"
 msgstr "Discussions"
 
-#: src/content/App.tsx:177
-#: src/content/App.tsx:177
+#: src/content/App.tsx:188
+#: src/content/App.tsx:188
 msgid "Close panel"
 msgstr "Fermer le panneau"
 
@@ -77,7 +77,7 @@ msgid "Content"
 msgstr "Contenu"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:323
+#: src/background/session.ts:341
 msgid "errors.compactionFailed"
 msgstr "Impossible de compacter la conversation. {error}"
 
@@ -91,12 +91,12 @@ msgstr "Supprimer cette conversation"
 msgid "Delete this memory"
 msgstr "Supprimer cette mémoire"
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Done"
 msgstr "OK"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "Edit {0}"
 msgstr "Modifier {0}"
 
@@ -104,7 +104,7 @@ msgstr "Modifier {0}"
 msgid "Edit this memory"
 msgstr "Modifier cette mémoire"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Enlarge"
 msgstr "Agrandir"
 
@@ -117,11 +117,11 @@ msgstr "Erreur : {0}"
 msgid "Error: {content}"
 msgstr "Erreur : {content}"
 
-#: src/content/ChatView.tsx:360
+#: src/content/ChatView.tsx:364
 msgid "Execution was denied."
 msgstr "Non exécuté."
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Finish editing and return to the list"
 msgstr "Terminer la modification et revenir à la liste"
 
@@ -133,7 +133,7 @@ msgstr "Génération de la réponse…"
 msgid "Get started for free"
 msgstr "Commencer gratuitement"
 
-#: src/content/ChatView.tsx:361
+#: src/content/ChatView.tsx:365
 msgid "Image or file"
 msgstr "Image ou fichier"
 
@@ -141,11 +141,11 @@ msgstr "Image ou fichier"
 msgid "Include {selectionSummary}"
 msgstr "Inclure {selectionSummary}"
 
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "memory"
 msgstr "mémoire"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "Memory"
 msgstr "Mémoire"
 
@@ -157,7 +157,7 @@ msgstr "Échec de la mise à jour de la mémoire"
 msgid "Memory updated"
 msgstr "Mémoire mise à jour"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Menu (chat history and memory)"
 msgstr "Menu (historique des discussions et mémoire)"
 
@@ -171,8 +171,8 @@ msgstr "Modèle"
 msgid "Model and reasoning effort"
 msgstr "Modèle et niveau de réflexion"
 
-#: src/content/App.tsx:204
-#: src/content/App.tsx:204
+#: src/content/App.tsx:215
+#: src/content/App.tsx:215
 msgid "New chat"
 msgstr "Nouvelle discussion"
 
@@ -187,13 +187,13 @@ msgid "No API key is configured. Configure one in the Kodoneri app."
 msgstr "Aucune clé API n’est configurée. Configurez-en une dans l’app Kodoneri."
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:105
-#: src/background/session.ts:253
+#: src/background/provider.ts:107
+#: src/background/session.ts:261
 msgid "errors.apiKeyMissing"
 msgstr "Aucune clé API n’est configurée. Configurez-en une dans l’app Kodoneri."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:142
+#: src/background/agent.ts:154
 msgid "errors.noCompaction"
 msgstr "Aucun résultat de compactage de la conversation n’a été reçu."
 
@@ -210,7 +210,7 @@ msgid "No memory changes"
 msgstr "Aucune modification de la mémoire"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:104
+#: src/background/agent.ts:115
 msgid "errors.noResponse"
 msgstr "Aucune réponse n’a été reçue."
 
@@ -223,12 +223,12 @@ msgid "No saved memories."
 msgstr "Aucune mémoire enregistrée."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:128
+#: src/background/agent.ts:140
 msgid "errors.noTitle"
 msgstr "Aucun titre n’a été reçu."
 
-#: src/content/App.tsx:155
-#: src/content/App.tsx:155
+#: src/content/App.tsx:166
+#: src/content/App.tsx:166
 msgid "Open chat"
 msgstr "Ouvrir le chat"
 
@@ -255,12 +255,12 @@ msgid "Remove from favorites"
 msgstr "Retirer des favoris"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:99
-#: src/background/agent.ts:111
+#: src/background/agent.ts:109
+#: src/background/agent.ts:123
 msgid "errors.responseCancelled"
 msgstr "Génération de la réponse annulée."
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Restore size"
 msgstr "Rétablir la taille"
 
@@ -268,7 +268,11 @@ msgstr "Rétablir la taille"
 msgid "Running…"
 msgstr "Exécution…"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:164
+msgid "Safari has lost its connection to the extension. Quit Safari and open it again."
+msgstr "Safari a perdu la connexion avec l’extension. Quittez Safari, puis rouvrez-le."
+
+#: src/content/App.tsx:151
 msgid "Saved conversations"
 msgstr "Conversations enregistrées"
 
@@ -293,7 +297,7 @@ msgstr "Interrompre et envoyer"
 msgid "Settings"
 msgstr "Réglages"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Show in sidebar"
 msgstr "Afficher dans la barre latérale"
 
@@ -305,7 +309,7 @@ msgstr "Connectez-vous avec Apple pour utiliser l’offre gratuite de Kodoneri, 
 msgid "Stop response"
 msgstr "Arrêter la réponse"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Switch to floating panel"
 msgstr "Passer en panneau flottant"
 
@@ -330,7 +334,7 @@ msgstr "Sans titre"
 msgid "Updating memory…"
 msgstr "Mise à jour de la mémoire…"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "What the AI remembers"
 msgstr "Ce dont l’IA se souvient"
 

@@ -31,6 +31,8 @@ export interface CatalogModel {
   label: string;
   efforts: Effort[];
   contextWindow: number;
+  /** The provider runs web searches for the model. */
+  webSearch?: boolean;
   pricing: Pricing;
 }
 

@@ -38,28 +38,28 @@ msgstr "添加到收藏（AI 将无法再编辑）"
 msgid "Ask about this page"
 msgstr "就此页面提问"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:179
+#: src/content/App.tsx:179
 msgid "Back to list"
 msgstr "返回列表"
 
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:350
+#: src/content/ChatView.tsx:353
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "缓存命中率：{0}%（{1} / {2} tokens）"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Chat history"
 msgstr "聊天记录"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:151
 msgid "Chats"
 msgstr "聊天"
 
-#: src/content/App.tsx:177
-#: src/content/App.tsx:177
+#: src/content/App.tsx:188
+#: src/content/App.tsx:188
 msgid "Close panel"
 msgstr "关闭面板"
 
@@ -77,7 +77,7 @@ msgid "Content"
 msgstr "内容"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:323
+#: src/background/session.ts:341
 msgid "errors.compactionFailed"
 msgstr "压缩对话失败。{error}"
 
@@ -91,12 +91,12 @@ msgstr "删除此对话"
 msgid "Delete this memory"
 msgstr "删除此记忆"
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Done"
 msgstr "完成"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "Edit {0}"
 msgstr "编辑{0}"
 
@@ -104,7 +104,7 @@ msgstr "编辑{0}"
 msgid "Edit this memory"
 msgstr "编辑此记忆"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Enlarge"
 msgstr "放大"
 
@@ -117,11 +117,11 @@ msgstr "错误：{0}"
 msgid "Error: {content}"
 msgstr "错误：{content}"
 
-#: src/content/ChatView.tsx:360
+#: src/content/ChatView.tsx:364
 msgid "Execution was denied."
 msgstr "未执行。"
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Finish editing and return to the list"
 msgstr "完成编辑并返回列表"
 
@@ -133,7 +133,7 @@ msgstr "正在生成回答…"
 msgid "Get started for free"
 msgstr "免费开始使用"
 
-#: src/content/ChatView.tsx:361
+#: src/content/ChatView.tsx:365
 msgid "Image or file"
 msgstr "图片或文件"
 
@@ -141,11 +141,11 @@ msgstr "图片或文件"
 msgid "Include {selectionSummary}"
 msgstr "包含{selectionSummary}"
 
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "memory"
 msgstr "记忆"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "Memory"
 msgstr "记忆"
 
@@ -157,7 +157,7 @@ msgstr "记忆更新失败"
 msgid "Memory updated"
 msgstr "记忆已更新"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Menu (chat history and memory)"
 msgstr "菜单（聊天记录和记忆）"
 
@@ -171,8 +171,8 @@ msgstr "模型"
 msgid "Model and reasoning effort"
 msgstr "模型和推理强度"
 
-#: src/content/App.tsx:204
-#: src/content/App.tsx:204
+#: src/content/App.tsx:215
+#: src/content/App.tsx:215
 msgid "New chat"
 msgstr "新聊天"
 
@@ -187,13 +187,13 @@ msgid "No API key is configured. Configure one in the Kodoneri app."
 msgstr "尚未配置 API 密钥。请在 Kodoneri App 中配置。"
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:105
-#: src/background/session.ts:253
+#: src/background/provider.ts:107
+#: src/background/session.ts:261
 msgid "errors.apiKeyMissing"
 msgstr "尚未配置 API 密钥。请在 Kodoneri App 中配置。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:142
+#: src/background/agent.ts:154
 msgid "errors.noCompaction"
 msgstr "未收到对话压缩结果。"
 
@@ -210,7 +210,7 @@ msgid "No memory changes"
 msgstr "记忆无变化"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:104
+#: src/background/agent.ts:115
 msgid "errors.noResponse"
 msgstr "未收到回答。"
 
@@ -223,12 +223,12 @@ msgid "No saved memories."
 msgstr "没有已保存的记忆。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:128
+#: src/background/agent.ts:140
 msgid "errors.noTitle"
 msgstr "未收到标题。"
 
-#: src/content/App.tsx:155
-#: src/content/App.tsx:155
+#: src/content/App.tsx:166
+#: src/content/App.tsx:166
 msgid "Open chat"
 msgstr "打开聊天"
 
@@ -255,12 +255,12 @@ msgid "Remove from favorites"
 msgstr "从收藏中移除"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:99
-#: src/background/agent.ts:111
+#: src/background/agent.ts:109
+#: src/background/agent.ts:123
 msgid "errors.responseCancelled"
 msgstr "已停止生成回答。"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Restore size"
 msgstr "恢复大小"
 
@@ -268,7 +268,11 @@ msgstr "恢复大小"
 msgid "Running…"
 msgstr "正在运行…"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:164
+msgid "Safari has lost its connection to the extension. Quit Safari and open it again."
+msgstr "Safari 与扩展的连接已断开。请退出 Safari 后重新打开。"
+
+#: src/content/App.tsx:151
 msgid "Saved conversations"
 msgstr "已保存的对话"
 
@@ -293,7 +297,7 @@ msgstr "打断并发送"
 msgid "Settings"
 msgstr "设置"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Show in sidebar"
 msgstr "在边栏中显示"
 
@@ -305,7 +309,7 @@ msgstr "通过 Apple 登录以使用 Kodoneri 免费方案，或添加你自己�
 msgid "Stop response"
 msgstr "停止回答"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Switch to floating panel"
 msgstr "切换为浮动面板"
 
@@ -330,7 +334,7 @@ msgstr "无标题"
 msgid "Updating memory…"
 msgstr "正在更新记忆…"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "What the AI remembers"
 msgstr "AI 记住的内容"
 

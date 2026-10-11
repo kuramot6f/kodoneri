@@ -1,5 +1,5 @@
 import { generateText, isLoopFinished, streamText } from "ai";
-import type { AssistantModelMessage, LanguageModelUsage, ModelMessage, ToolResultPart, ToolSet } from "ai";
+import type { AssistantModelMessage, JSONValue, LanguageModelUsage, ModelMessage, ToolResultPart, ToolSet } from "ai";
 import type { CacheUsage } from "../shared/conversation";
 import { i18n } from "../shared/i18n.ts";
 import { taggedMessage } from "../shared/conversation.ts";
@@ -55,54 +55,66 @@ export async function streamAnswer(
     else parts = [...parts, { type, text }];
     callbacks.onUpdate(step());
   };
-  const appendResult = (part: { toolCallId: string; toolName: string }, output: ToolResultPart["output"]) => {
-    results = [...results, { type: "tool-result", toolCallId: part.toolCallId, toolName: part.toolName, output }];
+  const appendResult = (part: { toolCallId: string; toolName: string; providerExecuted?: boolean }, output: ToolResultPart["output"]) => {
+    const result: ToolResultPart = { type: "tool-result", toolCallId: part.toolCallId, toolName: part.toolName, output };
+    // A tool the provider ran, such as web search, has its result saved in the assistant message.
+    if (part.providerExecuted) parts = [...parts, result];
+    else results = [...results, result];
     callbacks.onUpdate(step());
   };
 
   try {
-    const result = streamText({
-      model: runtime.model,
-      instructions,
-      messages,
-      tools,
-      // The SDK stops after one step by default; the stop button is the only limit here.
-      stopWhen: isLoopFinished(),
-      abortSignal: signal,
-      providerOptions: runtime.providerOptions,
-      onStepEnd: (finished) => {
-        cacheUsage = sumCacheUsage(cacheUsage, readCacheUsage(finished.usage));
-        contextTokens = finished.usage.totalTokens ?? null;
-        parts = [];
-        results = [];
-        callbacks.onStep(finished.response.messages);
-      }
-    });
+    let history = messages;
+    // Anthropic pauses a long server-side search with pause_turn, which the SDK reports as a finished answer;
+    // sending the paused turn back resumes it.
+    while (true) {
+      const result = streamText({
+        model: runtime.model,
+        instructions,
+        messages: history,
+        tools,
+        // The SDK stops after one step by default; the stop button is the only limit here.
+        stopWhen: isLoopFinished(),
+        abortSignal: signal,
+        providerOptions: runtime.providerOptions,
+        onStepEnd: (finished) => {
+          cacheUsage = sumCacheUsage(cacheUsage, readCacheUsage(finished.usage));
+          contextTokens = finished.usage.totalTokens ?? null;
+          parts = [];
+          results = [];
+          history = [...history, ...finished.response.messages];
+          callbacks.onStep(finished.response.messages);
+        }
+      });
 
-    for await (const part of result.stream) {
-      if (part.type === "text-delta") {
-        appendText("text", part.text);
-      } else if (part.type === "reasoning-delta") {
-        appendText("reasoning", part.text);
-      } else if (part.type === "tool-call") {
-        parts = [...parts, { type: "tool-call", toolCallId: part.toolCallId, toolName: part.toolName, input: part.input }];
-        callbacks.onUpdate(step());
-      } else if (part.type === "tool-result") {
-        appendResult(part, { type: "text", value: formatToolResult(part.output) });
-      } else if (part.type === "tool-error") {
-        callbacks.onToolError?.(part.toolName, errorMessage(part.error));
-        // The same text the SDK saves for a failed tool.
-        appendResult(part, { type: "error-text", value: String(part.error) });
-      } else if (part.type === "error") {
-        throw part.error;
-      } else if (part.type === "abort") {
-        throw new DOMException(i18n._({ id: "errors.responseCancelled", message: "Response generation was cancelled." }), "AbortError");
+      for await (const part of result.stream) {
+        if (part.type === "text-delta") {
+          appendText("text", part.text);
+        } else if (part.type === "reasoning-delta") {
+          appendText("reasoning", part.text);
+        } else if (part.type === "tool-call") {
+          parts = [...parts, { type: "tool-call", toolCallId: part.toolCallId, toolName: part.toolName, input: part.input }];
+          callbacks.onUpdate(step());
+        } else if (part.type === "tool-result") {
+          appendResult(part, part.providerExecuted
+            ? { type: "json", value: part.output as JSONValue }
+            : { type: "text", value: formatToolResult(part.output) });
+        } else if (part.type === "tool-error") {
+          callbacks.onToolError?.(part.toolName, errorMessage(part.error));
+          // The same text the SDK saves for a failed tool.
+          appendResult(part, { type: "error-text", value: String(part.error) });
+        } else if (part.type === "error") {
+          throw part.error;
+        } else if (part.type === "abort") {
+          throw new DOMException(i18n._({ id: "errors.responseCancelled", message: "Response generation was cancelled." }), "AbortError");
+        }
       }
+
+      const last = (await result.steps).at(-1);
+      if (last?.rawFinishReason === "pause_turn") continue;
+      if (!last?.text) throw new Error(i18n._({ id: "errors.noResponse", message: "No response was received." }));
+      return { partial: null, cacheUsage, contextTokens };
     }
-
-    const steps = await result.steps;
-    if (!steps.at(-1)?.text) throw new Error(i18n._({ id: "errors.noResponse", message: "No response was received." }));
-    return { partial: null, cacheUsage, contextTokens };
   } catch (error) {
     const cancelled = isAbortError(error);
     // Tool calls of the cut-off step have no results, so only its text is kept.

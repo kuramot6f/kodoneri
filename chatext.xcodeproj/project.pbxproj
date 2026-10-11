@@ -102,6 +102,7 @@
 			membershipExceptions = (
 				ApiKeyStore.swift,
 				AppSettings.swift,
+				CloudStore.swift,
 				SafariWebExtensionHandler.swift,
 			);
 			target = 422D2BF4305E3AA1007990AD /* chatext Extension (iOS) */;
@@ -111,6 +112,7 @@
 			membershipExceptions = (
 				ApiKeyStore.swift,
 				AppSettings.swift,
+				CloudStore.swift,
 				SafariWebExtensionHandler.swift,
 			);
 			target = 422D2BFE305E3AA1007990AD /* chatext Extension (macOS) */;

@@ -2,9 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { jsonSchema, tool } from "ai";
 import { MockLanguageModelV3, simulateReadableStream } from "ai/test";
+import { anthropic } from "@ai-sdk/anthropic";
 import { streamAnswer } from "../src/background/agent.ts";
 import { formatMemoryContext, SYSTEM_PROMPT } from "../src/background/prompt.ts";
-import { latestContext, taggedMessage } from "../src/shared/conversation.ts";
+import { getMessageText, latestContext, taggedMessage } from "../src/shared/conversation.ts";
 import type { ModelMessage } from "ai";
 
 const usage = {
@@ -114,6 +115,69 @@ test("streamAnswer reports cancellation and keeps the partial text as a message"
   }, "instructions");
   assert.equal(result.cancelled, true);
   assert.deepEqual(result.partial, { role: "assistant", content: [{ type: "text", text: "par" }] });
+});
+
+test("streamAnswer resumes a turn paused with pause_turn by sending it back", async () => {
+  const model = new MockLanguageModelV3({
+    doStream: [
+      {
+        stream: simulateReadableStream({
+          chunks: [
+            { type: "stream-start" as const, warnings: [] },
+            { type: "text-start" as const, id: "t" },
+            { type: "text-delta" as const, id: "t", delta: "par" },
+            { type: "text-end" as const, id: "t" },
+            { type: "finish" as const, usage, finishReason: { unified: "stop" as const, raw: "pause_turn" } }
+          ]
+        })
+      },
+      textStep("tial")
+    ]
+  });
+  const steps: ModelMessage[][] = [];
+  const result = await streamAnswer({ model, providerOptions: {} }, [{ role: "user", content: "q" }], {}, new AbortController().signal, {
+    onUpdate: () => {},
+    onStep: (messages) => steps.push(messages)
+  }, "instructions");
+
+  assert.equal(result.error, undefined);
+  assert.deepEqual(steps.map((messages) => messages.map(getMessageText)), [["par"], ["tial"]]);
+  const prompt = model.doStreamCalls[1]!.prompt;
+  assert.deepEqual(prompt.at(-1)?.role, "assistant");
+});
+
+test("streamAnswer keeps the result of a provider-run tool in the assistant message", async () => {
+  const model = new MockLanguageModelV3({
+    doStream: [{
+      stream: simulateReadableStream({
+        chunks: [
+          { type: "stream-start" as const, warnings: [] },
+          { type: "tool-call" as const, toolCallId: "s1", toolName: "web_search", input: '{"query":"news"}', providerExecuted: true },
+          { type: "tool-result" as const, toolCallId: "s1", toolName: "web_search", result: [{ url: "https://example.com" }] },
+          { type: "text-start" as const, id: "t" },
+          { type: "text-delta" as const, id: "t", delta: "answer" },
+          { type: "text-end" as const, id: "t" },
+          { type: "finish" as const, usage, finishReason: { unified: "stop" as const, raw: "end_turn" } }
+        ]
+      })
+    }]
+  });
+  const webSearch = anthropic.tools.webSearch_20250305();
+  let live: ModelMessage[] = [];
+  const saved: ModelMessage[][] = [];
+  await streamAnswer({ model, providerOptions: {} }, [{ role: "user", content: "q" }], { web_search: webSearch }, new AbortController().signal, {
+    onUpdate: (step) => { live = step; },
+    onStep: (messages) => saved.push(messages)
+  }, "instructions");
+
+  const result = { type: "tool-result", toolCallId: "s1", toolName: "web_search", output: { type: "json", value: [{ url: "https://example.com" }] } };
+  assert.deepEqual(live, [{
+    role: "assistant",
+    content: [{ type: "tool-call", toolCallId: "s1", toolName: "web_search", input: { query: "news" } }, result, { type: "text", text: "answer" }]
+  }]);
+  assert.equal(saved.length, 1);
+  assert.equal(saved[0]!.length, 1);
+  assert.deepEqual((saved[0]![0]!.content as { type: string }[]).map((part) => part.type), ["tool-call", "tool-result", "text"]);
 });
 
 test("the memory list is reference data outside the fixed system prompt", () => {

@@ -20,7 +20,7 @@ import {
 import type { PageSelection } from "./pageSelection";
 import type { Conversation } from "../shared/conversation";
 import type { Memory } from "../shared/memory";
-import type { PanelFrame } from "../shared/protocol";
+import type { PanelFrame, RuntimeMessage } from "../shared/protocol";
 import { deleteConversation, loadConversations } from "../shared/store";
 
 type View = "chat" | "history" | "memory";
@@ -112,11 +112,18 @@ export function App() {
     panel.open(null);
   };
 
+  const loadHistory = async () => {
+    const [stored] = await Promise.all([loadConversations(), memories.refresh()]);
+    setConversations(stored);
+  };
+
+  // The local copy shows at once; iCloud's changes replace it when they arrive.
   const showHistory = async () => {
     setHistoryTab("chat");
     setView("history");
-    const [stored] = await Promise.all([loadConversations(), memories.refresh()]);
-    setConversations(stored);
+    await loadHistory();
+    const changed = await browser.runtime.sendMessage({ type: "cloud_sync" } satisfies RuntimeMessage).catch(() => false) as boolean;
+    if (changed) await loadHistory();
   };
 
   const removeConversation = async (conversation: Conversation) => {
@@ -149,10 +156,14 @@ export function App() {
     : (expanded ? t`Switch to floating panel` : t`Show in sidebar`);
   const historyLabel = phone ? t`Menu (chat history and memory)` : t`Chat history`;
 
-  if (!state) return null;
-  if (!open) {
+  // Without the background the button stays, so the user learns that only restarting Safari brings the panel back.
+  if (!state && !panel.disconnected) return null;
+  if (!state || !open) {
+    const openChat = state
+      ? () => panel.setPanel({ open: true })
+      : () => alert(t`Safari has lost its connection to the extension. Quit Safari and open it again.`);
     return chatButton ? (
-      <button id="chat-button" className="round" type="button" aria-label={t`Open chat`} title={t`Open chat`} onClick={() => panel.setPanel({ open: true })}>
+      <button id="chat-button" className="round" type="button" aria-label={t`Open chat`} title={t`Open chat`} onClick={openChat}>
         <Icon name="chat" />
       </button>
     ) : null;

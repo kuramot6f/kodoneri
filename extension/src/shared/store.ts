@@ -2,35 +2,40 @@ import type { Conversation } from "./conversation.ts";
 import { DEFAULT_SETTINGS } from "./models.ts";
 import type { ModelSettings } from "./models.ts";
 
-const PREFIX = "conversation:";
+export const CONVERSATION_PREFIX = "conversation:";
 export const CONVERSATION_MAX_COUNT = 100;
+
+/** A deletion stays as a dated marker so iCloud sync can tell it from a record another device has not seen. */
+export function tombstone() {
+  return { deleted: true, updatedAt: Date.now() };
+}
 
 export async function loadConversations(): Promise<Conversation[]> {
   const stored = await browser.storage.local.get(null);
   return Object.entries(stored)
-    .filter(([key, value]) => key.startsWith(PREFIX) && isConversation(value))
+    .filter(([key, value]) => key.startsWith(CONVERSATION_PREFIX) && isConversation(value))
     .map(([, value]) => value as Conversation)
     .sort((a, b) => b.updatedAt - a.updatedAt);
 }
 
 export async function loadConversation(id: string): Promise<Conversation | null> {
-  const stored = await browser.storage.local.get(PREFIX + id);
-  const value = stored[PREFIX + id];
+  const stored = await browser.storage.local.get(CONVERSATION_PREFIX + id);
+  const value = stored[CONVERSATION_PREFIX + id];
   return isConversation(value) ? value : null;
 }
 
 export async function saveConversation(conversation: Conversation): Promise<void> {
-  await browser.storage.local.set({ [PREFIX + conversation.id]: conversation });
+  await browser.storage.local.set({ [CONVERSATION_PREFIX + conversation.id]: conversation });
 }
 
 /** Reads every conversation, so it runs only when one is added; saves of an existing one never raise the count. */
 export async function pruneConversations(): Promise<void> {
   const overflow = (await loadConversations()).slice(CONVERSATION_MAX_COUNT);
-  if (overflow.length) await browser.storage.local.remove(overflow.map(({ id }) => PREFIX + id));
+  if (overflow.length) await browser.storage.local.set(Object.fromEntries(overflow.map(({ id }) => [CONVERSATION_PREFIX + id, tombstone()])));
 }
 
 export async function deleteConversation(id: string): Promise<void> {
-  await browser.storage.local.remove(PREFIX + id);
+  await browser.storage.local.set({ [CONVERSATION_PREFIX + id]: tombstone() });
 }
 
 function isConversation(value: unknown): value is Conversation {

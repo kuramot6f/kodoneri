@@ -19,6 +19,26 @@ test("expireToolHistory drops tool traffic and reasoning before the cutoff", () 
   ]);
 });
 
+test("expireToolHistory keeps an answer that shares its message with a web search", () => {
+  const conversation = createConversation("question");
+  conversation.messages = [
+    stamp({ role: "user", content: "question" }, 1),
+    stamp({
+      role: "assistant",
+      content: [
+        { type: "tool-call", toolCallId: "s1", toolName: "web_search", input: { query: "q" }, providerExecuted: true },
+        { type: "tool-result", toolCallId: "s1", toolName: "web_search", output: { type: "json", value: [{ url: "https://example.com", encryptedContent: "x" }] } },
+        { type: "text", text: "answer" }
+      ]
+    }, 1)
+  ];
+
+  assert.deepEqual(expireToolHistory(conversation, Infinity).messages, [
+    conversation.messages[0],
+    { ...conversation.messages[1], content: [{ type: "text", text: "answer" }] }
+  ]);
+});
+
 test("recentTurns keeps question and answer text only", () => {
   const messages: ModelMessage[] = [
     taggedMessage("runtime_context", "date"),

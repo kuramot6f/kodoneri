@@ -12,12 +12,19 @@ const KEEPALIVE_MS = 20000;
 
 let view: TabView | null = null;
 let receivedAt = 0;
+/** Safari can stop delivering a page's messages to the background until it is restarted; it then answers them with undefined. */
+let unreachable = false;
 const listeners = new Set<() => void>();
+
+function notify(): void {
+  for (const listener of listeners) listener();
+}
 
 function setView(next: TabView): void {
   view = next;
   receivedAt = performance.now();
-  for (const listener of listeners) listener();
+  unreachable = false;
+  notify();
 }
 
 function applyView(next: TabView | undefined): void {
@@ -32,10 +39,15 @@ export function receivePanelMessage(message: Extract<TabMessage, { type: "view" 
   }
 }
 
-/** Every panel message is answered with the tab's current view; there is no long-lived connection to keep alive. */
+/** Every panel message but keepalive is answered with the tab's current view; there is no long-lived connection to keep alive. */
 async function send(message: RuntimeMessage): Promise<void> {
   try {
-    applyView(await browser.runtime.sendMessage(message) as TabView | undefined);
+    const reply = await browser.runtime.sendMessage(message) as TabView | undefined;
+    if (reply) return applyView(reply);
+    if (message.type !== "keepalive" && !unreachable) {
+      unreachable = true;
+      notify();
+    }
   } catch (error) {
     debugEvent("panel_send_failed", { messageType: message.type, ...errorData(error) });
   }
@@ -53,6 +65,7 @@ function isStreaming(current: TabView | null): boolean {
 /** The background owns the conversation; this hook mirrors its view of the tab and sends user actions. */
 export function usePanel() {
   const state = useSyncExternalStore(subscribe, () => view);
+  const disconnected = useSyncExternalStore(subscribe, () => unreachable);
 
   useEffect(() => {
     const sync = () => void send({ type: "sync" });
@@ -98,6 +111,7 @@ export function usePanel() {
 
   return {
     state,
+    disconnected,
     ask,
     cancel: () => void send({ type: "cancel" }),
     open: (conversationId: string | null) => void send({ type: "open", conversationId }),

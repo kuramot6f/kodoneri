@@ -1,6 +1,7 @@
 import hljs from "highlight.js/lib/common";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
+import markedKatex from "marked-katex-extension";
 
 const plainTextLanguages = new Set(["nohighlight", "plaintext", "text", "txt"]);
 const safeProtocols = new Set(["http:", "https:", "mailto:"]);
@@ -20,6 +21,10 @@ export const markdown = new Marked(markedHighlight({
     }
     return hljs.highlightAuto(code).value;
   }
+}), markedKatex({
+  // Safari renders MathML natively, so KaTeX needs neither its fonts nor its stylesheet.
+  output: "mathml",
+  throwOnError: false
 }), {
   renderer: {
     html: ({ text }) => escapeHtml(text),

@@ -7,32 +7,32 @@
   "models": [
     {
       "id": "gpt-6-astra", "provider": "openai", "label": "GPT-6 Astra",
-      "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 922000,
+      "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 922000, "webSearch": true,
       "pricing": { "input": 10, "cacheRead": 1, "output": 50, "longContext": { "above": 272000, "input": 20, "cacheRead": 2, "output": 75 } }
     },
     {
       "id": "gpt-6-sol", "provider": "openai", "label": "GPT-6 Sol",
-      "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 922000,
+      "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 922000, "webSearch": true,
       "pricing": { "input": 2, "cacheRead": 0.2, "output": 10, "longContext": { "above": 272000, "input": 4, "cacheRead": 0.4, "output": 15 } }
     },
     {
       "id": "gpt-6-luna", "provider": "openai", "label": "GPT-6 Luna",
-      "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 922000,
+      "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 922000, "webSearch": true,
       "pricing": { "input": 0.1, "cacheRead": 0.01, "output": 0.5, "longContext": { "above": 272000, "input": 0.2, "cacheRead": 0.02, "output": 0.75 } }
     },
     {
       "id": "claude-fable-5-1", "provider": "anthropic", "label": "Claude Fable 5.1",
-      "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000,
+      "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000, "webSearch": true,
       "pricing": { "input": 10, "cacheRead": 0.25, "cacheWrite": 12.5, "output": 50 }
     },
     {
       "id": "claude-opus-5-5", "provider": "anthropic", "label": "Claude Opus 5.5",
-      "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000,
+      "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000, "webSearch": true,
       "pricing": { "input": 4, "cacheRead": 0.2, "cacheWrite": 5, "output": 20 }
     },
     {
       "id": "claude-sonnet-5", "provider": "anthropic", "label": "Claude Sonnet 5",
-      "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000,
+      "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000, "webSearch": true,
       "pricing": { "input": 2, "cacheRead": 0.2, "cacheWrite": 2.5, "output": 10 }
     },
     {

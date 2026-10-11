@@ -97,7 +97,9 @@ export type RuntimeMessage =
   | { type: "debug"; contextId: string; event: string; data?: DebugData }
   | { type: "open_settings" }
   /** Re-reads the app's settings into storage; pages pick them up through storage.onChanged. */
-  | { type: "app_settings" };
+  | { type: "app_settings" }
+  /** Answered with whether iCloud brought any change into storage. */
+  | { type: "cloud_sync" };
 
 /** Models the subscription or a key allows, and the tab's selection resolved against them; settings is null without any. */
 export interface ModelsView {

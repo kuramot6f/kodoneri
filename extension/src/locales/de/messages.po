@@ -38,28 +38,28 @@ msgstr "Zu Favoriten hinzufügen (die KI kann sie dann nicht mehr bearbeiten)"
 msgid "Ask about this page"
 msgstr "Frag etwas zu dieser Seite"
 
-#: src/content/App.tsx:168
-#: src/content/App.tsx:168
+#: src/content/App.tsx:179
+#: src/content/App.tsx:179
 msgid "Back to list"
 msgstr "Zurück zur Liste"
 
 #. placeholder {0}: rate.toFixed(1)
 #. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
 #. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:350
+#: src/content/ChatView.tsx:353
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Cache-Trefferquote: {0} % ({1} / {2} Tokens)"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Chat history"
 msgstr "Chatverlauf"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:151
 msgid "Chats"
 msgstr "Chats"
 
-#: src/content/App.tsx:177
-#: src/content/App.tsx:177
+#: src/content/App.tsx:188
+#: src/content/App.tsx:188
 msgid "Close panel"
 msgstr "Bereich schließen"
 
@@ -77,7 +77,7 @@ msgid "Content"
 msgstr "Inhalt"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:323
+#: src/background/session.ts:341
 msgid "errors.compactionFailed"
 msgstr "Die Unterhaltung konnte nicht komprimiert werden. {error}"
 
@@ -91,12 +91,12 @@ msgstr "Diese Unterhaltung löschen"
 msgid "Delete this memory"
 msgstr "Diese Erinnerung löschen"
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Done"
 msgstr "Fertig"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "Edit {0}"
 msgstr "{0} bearbeiten"
 
@@ -104,7 +104,7 @@ msgstr "{0} bearbeiten"
 msgid "Edit this memory"
 msgstr "Diese Erinnerung bearbeiten"
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Enlarge"
 msgstr "Vergrößern"
 
@@ -117,11 +117,11 @@ msgstr "Fehler: {0}"
 msgid "Error: {content}"
 msgstr "Fehler: {content}"
 
-#: src/content/ChatView.tsx:360
+#: src/content/ChatView.tsx:364
 msgid "Execution was denied."
 msgstr "Nicht ausgeführt."
 
-#: src/content/App.tsx:172
+#: src/content/App.tsx:183
 msgid "Finish editing and return to the list"
 msgstr "Bearbeitung beenden und zur Liste zurückkehren"
 
@@ -133,7 +133,7 @@ msgstr "Antwort wird erstellt…"
 msgid "Get started for free"
 msgstr "Kostenlos loslegen"
 
-#: src/content/ChatView.tsx:361
+#: src/content/ChatView.tsx:365
 msgid "Image or file"
 msgstr "Bild oder Datei"
 
@@ -141,11 +141,11 @@ msgstr "Bild oder Datei"
 msgid "Include {selectionSummary}"
 msgstr "{selectionSummary} einbeziehen"
 
-#: src/content/App.tsx:171
+#: src/content/App.tsx:182
 msgid "memory"
 msgstr "Erinnerung"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "Memory"
 msgstr "Erinnerungen"
 
@@ -157,7 +157,7 @@ msgstr "Erinnerungen konnten nicht aktualisiert werden"
 msgid "Memory updated"
 msgstr "Erinnerungen aktualisiert"
 
-#: src/content/App.tsx:150
+#: src/content/App.tsx:157
 msgid "Menu (chat history and memory)"
 msgstr "Menü (Chatverlauf und Erinnerungen)"
 
@@ -171,8 +171,8 @@ msgstr "Modell"
 msgid "Model and reasoning effort"
 msgstr "Modell und Denkaufwand"
 
-#: src/content/App.tsx:204
-#: src/content/App.tsx:204
+#: src/content/App.tsx:215
+#: src/content/App.tsx:215
 msgid "New chat"
 msgstr "Neuer Chat"
 
@@ -187,13 +187,13 @@ msgid "No API key is configured. Configure one in the Kodoneri app."
 msgstr "Kein API-Schlüssel konfiguriert. Richte einen in der Kodoneri-App ein."
 
 #. js-lingui-explicit-id
-#: src/background/provider.ts:105
-#: src/background/session.ts:253
+#: src/background/provider.ts:107
+#: src/background/session.ts:261
 msgid "errors.apiKeyMissing"
 msgstr "Kein API-Schlüssel konfiguriert. Richte einen in der Kodoneri-App ein."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:142
+#: src/background/agent.ts:154
 msgid "errors.noCompaction"
 msgstr "Kein Ergebnis der Komprimierung erhalten."
 
@@ -210,7 +210,7 @@ msgid "No memory changes"
 msgstr "Keine Änderungen an Erinnerungen"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:104
+#: src/background/agent.ts:115
 msgid "errors.noResponse"
 msgstr "Keine Antwort erhalten."
 
@@ -223,12 +223,12 @@ msgid "No saved memories."
 msgstr "Keine gespeicherten Erinnerungen."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:128
+#: src/background/agent.ts:140
 msgid "errors.noTitle"
 msgstr "Kein Titel erhalten."
 
-#: src/content/App.tsx:155
-#: src/content/App.tsx:155
+#: src/content/App.tsx:166
+#: src/content/App.tsx:166
 msgid "Open chat"
 msgstr "Chat öffnen"
 
@@ -255,12 +255,12 @@ msgid "Remove from favorites"
 msgstr "Aus Favoriten entfernen"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:99
-#: src/background/agent.ts:111
+#: src/background/agent.ts:109
+#: src/background/agent.ts:123
 msgid "errors.responseCancelled"
 msgstr "Antworterstellung abgebrochen."
 
-#: src/content/App.tsx:148
+#: src/content/App.tsx:155
 msgid "Restore size"
 msgstr "Originalgröße"
 
@@ -268,7 +268,11 @@ msgstr "Originalgröße"
 msgid "Running…"
 msgstr "Wird ausgeführt…"
 
-#: src/content/App.tsx:144
+#: src/content/App.tsx:164
+msgid "Safari has lost its connection to the extension. Quit Safari and open it again."
+msgstr "Safari hat die Verbindung zur Erweiterung verloren. Beende Safari und öffne es erneut."
+
+#: src/content/App.tsx:151
 msgid "Saved conversations"
 msgstr "Gespeicherte Unterhaltungen"
 
@@ -293,7 +297,7 @@ msgstr "Unterbrechen und senden"
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Show in sidebar"
 msgstr "In der Seitenleiste anzeigen"
 
@@ -305,7 +309,7 @@ msgstr "Melde dich mit Apple an, um den kostenlosen Plan von Kodoneri zu nutzen,
 msgid "Stop response"
 msgstr "Antwort stoppen"
 
-#: src/content/App.tsx:149
+#: src/content/App.tsx:156
 msgid "Switch to floating panel"
 msgstr "Zu schwebendem Bereich wechseln"
 
@@ -330,7 +334,7 @@ msgstr "Ohne Titel"
 msgid "Updating memory…"
 msgstr "Erinnerungen werden aktualisiert…"
 
-#: src/content/App.tsx:145
+#: src/content/App.tsx:152
 msgid "What the AI remembers"
 msgstr "Was sich die KI merkt"
 

@@ -1,3 +1,5 @@
+import { tombstone } from "./store.ts";
+
 export interface Memory {
   id: string;
   title: string;
@@ -17,7 +19,7 @@ export const MEMORY_MAX_COUNT = 10;
 export const MEMORY_CONTENT_MAX_LENGTH = 1000;
 export const MEMORY_TITLE_MAX_LENGTH = 50;
 
-const MEMORY_PREFIX = "webPageChatMemory:";
+export const MEMORY_PREFIX = "webPageChatMemory:";
 const MEMORY_PREVIEW_LENGTH = 100;
 
 /** Tool ref for a memory. The id is the creation timestamp, so refs follow the `session_<createdAt>` pattern. */
@@ -86,7 +88,7 @@ export async function saveMemory(memory: Memory): Promise<void> {
 }
 
 export async function deleteMemory(id: string): Promise<void> {
-  await browser.storage.local.remove(`${MEMORY_PREFIX}${id}`);
+  await browser.storage.local.set({ [`${MEMORY_PREFIX}${id}`]: tombstone() });
 }
 
 function isMemory(value: unknown): value is Memory {

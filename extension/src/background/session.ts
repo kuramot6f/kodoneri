@@ -24,6 +24,7 @@ import type { ModelSettings } from "../shared/models";
 import { loadConversation, loadSettings, pruneConversations, saveConversation, saveSettings } from "../shared/store";
 import { compact, generateTitle, MEMORY_SYSTEM_PROMPT, MEMORY_TURNS, MEMORY_UPDATE_REQUEST, streamAnswer } from "./agent";
 import { applyCompaction, planCompaction } from "./compaction";
+import { syncWithCloud } from "./cloud";
 import { apiKeysLoaded, availableModels, createMemoryRuntime, createRuntime, refreshApiKeys, resolveSettings } from "./provider";
 import type { ModelRuntime } from "./provider";
 import { createTools } from "./tools";
@@ -196,7 +197,11 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
     const firstTurn = conversation.messages.length === 0;
     // Keys live in memory and are re-read from the Keychain only when a conversation starts; later turns
     // wait for the lookup a restarted worker began, or they would find no keys.
-    await (firstTurn ? refreshApiKeys() : apiKeysLoaded()).catch(() => undefined);
+    // A new conversation also pulls memories other devices changed.
+    await Promise.all([
+      (firstTurn ? refreshApiKeys() : apiKeysLoaded()).catch(() => undefined),
+      firstTurn && syncWithCloud()
+    ]);
     // The system prompt never changes; what changes is appended as context only when it differs from the
     // latest one, so the prompt cache and the thinking blocks bound to earlier turns stay valid.
     const runtimeContext = createRuntimeContext(browser.i18n.getUILanguage(), new Date(now));
@@ -288,7 +293,7 @@ async function answer(
     moveSession: (tabId: number) => moveSession(session, tabId)
   };
   const live = () => session.conversation === conversation;
-  const result = await streamAnswer(models.main, conversation.messages, createTools(runtime), signal, {
+  const result = await streamAnswer(models.main, conversation.messages, { ...createTools(runtime), ...models.main.tools }, signal, {
     onUpdate: (step) => {
       if (!live() || !session.step) return;
       session.step = step;
@@ -393,6 +398,8 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
     contextTokens: result.contextTokens
   });
   if (live()) pushView(session);
+  // The answer and any memory edits are settled, so this is when other devices get them.
+  void syncWithCloud();
 }
 
 function append(conversation: Conversation, messages: ModelMessage[]): void {
