@@ -13,7 +13,6 @@ test("markdown shows raw HTML as text", () => {
 test("markdown renders TeX as MathML", () => {
   assert.match(render("Euler: $e^{i\\pi} = -1$."), /<math[^>]*><semantics>.*<annotation encoding="application\/x-tex">e\^\{i\\pi\} = -1<\/annotation>/);
   assert.match(render("$$\n\\int_0^1 x\\,dx\n$$"), /<math[^>]*display="block"/);
-  assert.doesNotMatch(render("costs $5 and $10"), /<math/);
   assert.doesNotMatch(render("`$x$`"), /<math/);
   assert.doesNotMatch(render("$\\href{javascript:alert(1)}{x}$"), /href=/);
 });

@@ -24,7 +24,9 @@ export const markdown = new Marked(markedHighlight({
 }), markedKatex({
   // Safari renders MathML natively, so KaTeX needs neither its fonts nor its stylesheet.
   output: "mathml",
-  throwOnError: false
+  throwOnError: false,
+  // The standard rule wants spaces around `$`, which Japanese text rarely has (`、$x$（`).
+  nonStandard: true
 }), {
   renderer: {
     html: ({ text }) => escapeHtml(text),
