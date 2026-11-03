@@ -16,7 +16,7 @@ Safari 拡張（Web Extension）本体と、それを配布する iOS / macOS �
 
 ```sh
 mise install
-cd extension && npm ci
+cd extension && corepack pnpm install --frozen-lockfile
 ```
 
 サーバーの URL と ID はコミットしないので、example をコピーして埋める:
@@ -30,16 +30,27 @@ cp gateway/wrangler.example.jsonc gateway/wrangler.jsonc
 ## ビルド
 
 Xcode でビルドすれば、拡張ターゲットの **Build Web Extension** フェーズが
-`npm run build` を実行し、`extension/dist/` の生成物を appex へコピーします。
+`corepack pnpm build` を実行し、`extension/dist/` の生成物を appex へコピーします。
 拡張だけビルドしたいときは:
 
 ```sh
-cd extension && npm run build
+cd extension && corepack pnpm build
 ```
 
 `extension/dist/` は生成物なので git 管理外です。Xcode の同期グループ
 （`Shared (Extension)`）には置きません — フォルダが一瞬でも存在しないと
 Xcode が pbxproj からメンバーシップを剥がしてしまうためです。
+
+## Xcode Cloud
+
+ワークフローの Environment に `GATEWAY_HOST` を設定します。
+値はローカルの `Secrets.xcconfig` と同じホスト名だけ（`https://` やパスなし）。
+iOS / macOS の両ワークフローで設定してください。
+
+`ci_scripts/ci_post_clone.sh` が `Secrets.xcconfig` と `extension/.env.local` を生成し、
+Node.js 24・Corepack と pnpm の依存関係をインストールします。
+生成された設定ファイルは Git 管理外のままです。
+スクリプトを含むコミットをリモートへ push してから、そのコミットでビルドを開始します。
 
 ## API キー
 
@@ -50,5 +61,5 @@ OpenAI / Anthropic / DeepSeek のキーはアプリの画面から入力する�
 ## テスト
 
 ```sh
-cd extension && npm test
+cd extension && corepack pnpm test
 ```
