@@ -12,7 +12,7 @@ gateway/wrangler.jsonc
 # 作業ログとメモはローカルだけに残す。
 worklog/
 memo.md
-
+design/
 # Xcode
 xcuserdata/
 build/
