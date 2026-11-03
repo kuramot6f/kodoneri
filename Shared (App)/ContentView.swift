@@ -62,6 +62,9 @@ struct ContentView: View {
         }) {
             SubscriptionStoreView(productIDs: Account.productIDs)
                 .storeButton(.visible, for: .cancellation, .restorePurchases)
+                // App Review requires both links in the purchase flow.
+                .subscriptionStorePolicyDestination(url: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!, for: .termsOfService)
+                .subscriptionStorePolicyDestination(url: URL(string: "https://github.com/kuramot6f/kodoneri/blob/main/Privacy.md")!, for: .privacyPolicy)
                 .inAppPurchaseOptions { _ in
                     guard let token = account.usage?.appAccountToken else { return [] }
                     return [.appAccountToken(token)]
