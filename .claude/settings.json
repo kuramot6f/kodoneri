@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --input-type=module -e ' *)",
+      "Bash(pnpm deploy *)",
+      "Bash(pnpm run *)",
+      "Bash(xcodebuild -project chatext.xcodeproj -scheme \"chatext \\(macOS\\)\" -configuration Debug -derivedDataPath /private/tmp/claude-501/-Users-daichi-Documents-chatext/9c120146-c5e9-40fb-8f69-f1fb8d0efd29/scratchpad/dd CODE_SIGNING_ALLOWED=NO build)",
+      "Bash(cd /Users/daichi/Documents/chatext/extension && grep -n \"TOOL_HISTORY_TTL\\\\|expireToolHistory\" -A25 src/shared/conversation.ts | head -80; ls patches 2>/dev/null; ls ../patches 2>/dev/null)",
+      "Read(//Users/daichi/Documents/**)",
+      "Bash(pnpm typecheck *)",
+      "Bash(pnpm test *)",
+      "Bash(npx tsc *)",
+      "Bash(git diff *)",
+      "Bash(corepack pnpm *)",
+      "Bash(xcodebuild -scheme \"chatext \\(macOS\\)\" -configuration Debug CODE_SIGNING_ALLOWED=NO build)",
+      "Bash(xcodebuild -scheme \"chatext \\(iOS\\)\" -configuration Debug -destination \"generic/platform=iOS Simulator\" CODE_SIGNING_ALLOWED=NO build)",
+      "Bash(pnpm exec *)",
+      "Bash(git clone *)",
+      "Bash(git rm *)"
+    ]
+  }
+}

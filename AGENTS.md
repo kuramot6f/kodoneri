@@ -1,7 +1,5 @@
-- 作業内容は作業内容単位でworklog以下に残し（worklog は git 管理外）、作業完了時にgitにコミットする
-- わからないことは聞く
-- ソースコードはモダン・シンプルに・デザインは最小限に
-- 実装前にユーザーに確認を求めること
-- 実装中に他のセッションでも参考になりそうな内容がもしあれば、最小限をmemo.mdに追記する。
-- memo.mdも確認する
-- 互換性は無視していいのでシンプルに
+- Worklog: Keep work content in the worklog directory (worklog is not managed by git), and commit to git when the work is completed.
+- Source code: Keep it modern, simple, and with minimal design.
+- Compatibility: Ignore compatibility and keep it simple.
+
+When a step doesn't need my input, keep going. Put status notes in the same message as your next action.
