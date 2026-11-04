@@ -112,7 +112,7 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
       return errorResponse(403, "model_not_allowed", `${model ?? "This model"} is not included in the ${plan} plan.`);
     }
     const prepared = prepareBody(provider, input, user.billingId);
-    if (!prepared) return errorResponse(400, "tool_not_allowed", "Only function tools are available through chatext.");
+    if (!prepared) return errorResponse(400, "tool_not_allowed", "Only function tools and web search are available through chatext.");
     body = JSON.stringify(prepared);
   } else if (toolCost !== null) {
     body = await request.arrayBuffer();

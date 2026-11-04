@@ -17,7 +17,7 @@ interface Upstream {
   files: string;
   /** Paid tool endpoints and the microUSD each successful request costs. */
   toolPaths: Record<string, number>;
-  /** Tool types that run on the client; provider-hosted tools bill outside the token usage. */
+  /** Tool types allowed: client-side ones, and hosted web search and fetch, which the usage reader meters. */
   toolTypes: unknown[];
   /** Body fields that bill outside the token usage, run unmetered, or switch to another model. */
   drop: string[];
@@ -32,7 +32,7 @@ export const UPSTREAMS: Record<Provider, Upstream> = {
     generate: "/responses",
     files: "/files",
     toolPaths: {},
-    toolTypes: ["function"],
+    toolTypes: ["function", "web_search"],
     drop: ["background", "service_tier", "prompt", "conversation"],
     identify: (body, billingId) => ({ ...body, safety_identifier: billingId })
   },
@@ -42,7 +42,7 @@ export const UPSTREAMS: Record<Provider, Upstream> = {
     generate: "/v1/messages",
     files: "/v1/files",
     toolPaths: {},
-    toolTypes: [undefined, "custom"],
+    toolTypes: [undefined, "custom", "web_search_20250305", "web_fetch_20250910"],
     drop: ["service_tier", "speed", "inference_geo", "fallbacks", "mcp_servers", "container"],
     identify: (body, billingId) => ({ ...body, metadata: { ...(body.metadata as Body | undefined), user_id: billingId } })
   },
@@ -64,7 +64,7 @@ export const UPSTREAMS: Record<Provider, Upstream> = {
   }
 };
 
-/** Returns the body to send, or null when it asks for a provider-hosted tool. */
+/** Returns the body to send, or null when it asks for a tool that is not allowed. */
 export function prepareBody(provider: Provider, body: Body, billingId: string): Body | null {
   const upstream = UPSTREAMS[provider];
   const tools = body.tools ?? [];
@@ -74,7 +74,7 @@ export function prepareBody(provider: Provider, body: Body, billingId: string): 
 }
 
 /** Betas the extension's SDK sends; others can switch on pricier features. */
-const ANTHROPIC_BETAS = new Set(["files-api-2025-04-14", "thinking-binding-controls-2026-08-01"]);
+const ANTHROPIC_BETAS = new Set(["files-api-2025-04-14", "thinking-binding-controls-2026-08-01", "web-fetch-2025-09-10"]);
 
 /** Only what the provider APIs need; the client's credentials and anything else stay behind. */
 export function requestHeaders(source: Headers): Headers {

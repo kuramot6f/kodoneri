@@ -13,11 +13,12 @@ test("drops fields that bill outside the token usage and tags the user", () => {
   );
 });
 
-test("only client-side tools pass", () => {
-  assert.ok(prepareBody("openai", { tools: [{ type: "function", name: "f" }] }, "hash"));
-  assert.equal(prepareBody("openai", { tools: [{ type: "function" }, { type: "web_search" }] }, "hash"), null);
+test("only client-side tools and metered web search pass", () => {
+  assert.ok(prepareBody("openai", { tools: [{ type: "function", name: "f" }, { type: "web_search" }] }, "hash"));
+  assert.equal(prepareBody("openai", { tools: [{ type: "function" }, { type: "code_interpreter" }] }, "hash"), null);
   assert.ok(prepareBody("anthropic", { tools: [{ name: "f", input_schema: {} }, { type: "custom", name: "g" }] }, "hash"));
-  assert.equal(prepareBody("anthropic", { tools: [{ type: "web_search_20250305", name: "web_search" }] }, "hash"), null);
+  assert.ok(prepareBody("anthropic", { tools: [{ type: "web_search_20250305", name: "web_search" }, { type: "web_fetch_20250910", name: "web_fetch" }] }, "hash"));
+  assert.equal(prepareBody("anthropic", { tools: [{ type: "web_search_20260209", name: "web_search" }] }, "hash"), null);
   assert.equal(prepareBody("deepseek", { tools: {} }, "hash"), null);
 });
 

@@ -111,9 +111,6 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
   const baseURL = info.access === "chatext" ? GATEWAY_BASE[info.provider] : undefined;
   const level = effort === "lowest" ? lowestEffort(info) : clampEffort(info, effort);
   const expiresAfter = TOOL_HISTORY_TTL_MS / 1000;
-  // Provider-hosted search bills outside the token usage, so through the gateway every model searches with
-  // DeepSeek's Search and Fetch APIs, which the gateway meters per request.
-  const gatewaySearch = baseURL ? deepSeekSearchTools(apiKey, GATEWAY_BASE.deepseek) : null;
 
   switch (info.provider) {
     case "openai": {
@@ -129,7 +126,7 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
         },
         fileOptions: { openai: { purpose: "user_data", expiresAfter } satisfies OpenAIFilesOptions },
         // Its web search opens pages itself, so no separate fetch tool is needed.
-        tools: gatewaySearch ?? { web_search: openai.tools.webSearch() }
+        tools: { web_search: openai.tools.webSearch() }
       };
     }
     case "anthropic": {
@@ -155,7 +152,7 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
         providerOptions: { anthropic: options satisfies AnthropicLanguageModelOptions },
         fileOptions: {},
         // The basic versions run directly; later ones filter results through code execution.
-        tools: gatewaySearch ?? {
+        tools: {
           web_search: anthropic.tools.webSearch_20250305(),
           web_fetch: anthropic.tools.webFetch_20250910({ maxContentTokens: WEB_FETCH_MAX_TOKENS })
         }
@@ -172,6 +169,7 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
         files: deepSeek.files(),
         providerOptions: { deepseek: options },
         fileOptions: { deepseek: { expiresAfter } satisfies DeepSeekFilesOptions },
+        // DeepSeek's search is a pair of plain APIs, called from function tools.
         tools: deepSeekSearchTools(apiKey, baseURL)
       };
     }
