@@ -22,6 +22,10 @@ msgstr "«{preview}»"
 msgid "{0, plural, one {# media item} other {# media items}}"
 msgstr "{0, plural, one {# elemento multimediale} other {# elementi multimediali}}"
 
+#: src/content/PromptListView.tsx:32
+msgid "{label} (edited)"
+msgstr "{label} (modificato)"
+
 #: src/content/ChatView.tsx:258
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "{mediaCount, plural, one {# elemento multimediale} other {# elementi multimediali}}"
@@ -38,8 +42,10 @@ msgstr "Aggiungi ai preferiti (l’IA non potrà più modificarla)"
 msgid "Ask about this page"
 msgstr "Chiedi qualcosa su questa pagina"
 
-#: src/content/App.tsx:179
-#: src/content/App.tsx:179
+#: src/content/App.tsx:196
+#: src/content/App.tsx:196
+#: src/content/App.tsx:204
+#: src/content/App.tsx:204
 msgid "Back to list"
 msgstr "Torna all’elenco"
 
@@ -50,16 +56,20 @@ msgstr "Torna all’elenco"
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Percentuale di cache hit: {0}% ({1} / {2} token)"
 
-#: src/content/App.tsx:157
+#: src/content/App.tsx:169
+msgid "Capabilities"
+msgstr "Funzionalità"
+
+#: src/content/App.tsx:174
 msgid "Chat history"
 msgstr "Cronologia chat"
 
-#: src/content/App.tsx:151
+#: src/content/App.tsx:167
 msgid "Chats"
 msgstr "Chat"
 
-#: src/content/App.tsx:188
-#: src/content/App.tsx:188
+#: src/content/App.tsx:213
+#: src/content/App.tsx:213
 msgid "Close panel"
 msgstr "Chiudi pannello"
 
@@ -76,8 +86,12 @@ msgstr "Compattazione della conversazione…"
 msgid "Content"
 msgstr "Contenuto"
 
+#: src/content/PromptListView.tsx:15
+msgid "Conversation compaction"
+msgstr "Compattazione della conversazione"
+
 #. js-lingui-explicit-id
-#: src/background/session.ts:341
+#: src/background/session.ts:342
 msgid "errors.compactionFailed"
 msgstr "Impossibile compattare la conversazione. {error}"
 
@@ -91,12 +105,15 @@ msgstr "Elimina questa conversazione"
 msgid "Delete this memory"
 msgstr "Elimina questa memoria"
 
-#: src/content/App.tsx:183
+#: src/content/App.tsx:200
+#: src/content/App.tsx:208
 msgid "Done"
 msgstr "Fine"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:182
+#. placeholder {0}: prompts.editing ? promptLabels[prompts.editing.id] : t`prompt`
+#: src/content/App.tsx:199
+#: src/content/App.tsx:207
 msgid "Edit {0}"
 msgstr "Modifica {0}"
 
@@ -104,7 +121,11 @@ msgstr "Modifica {0}"
 msgid "Edit this memory"
 msgstr "Modifica questa memoria"
 
-#: src/content/App.tsx:155
+#: src/content/PromptListView.tsx:31
+msgid "Edit this prompt"
+msgstr "Modifica questo prompt"
+
+#: src/content/App.tsx:172
 msgid "Enlarge"
 msgstr "Ingrandisci"
 
@@ -121,7 +142,8 @@ msgstr "Errore: {content}"
 msgid "Execution was denied."
 msgstr "Non eseguito."
 
-#: src/content/App.tsx:183
+#: src/content/App.tsx:200
+#: src/content/App.tsx:208
 msgid "Finish editing and return to the list"
 msgstr "Termina la modifica e torna all’elenco"
 
@@ -141,23 +163,31 @@ msgstr "Immagine o file"
 msgid "Include {selectionSummary}"
 msgstr "Includi {selectionSummary}"
 
-#: src/content/App.tsx:182
+#: src/content/App.tsx:199
 msgid "memory"
 msgstr "memoria"
 
-#: src/content/App.tsx:152
+#: src/content/App.tsx:168
 msgid "Memory"
 msgstr "Memoria"
+
+#: src/content/PromptListView.tsx:16
+msgid "Memory maintenance"
+msgstr "Manutenzione della memoria"
 
 #: src/content/ChatView.tsx:281
 msgid "Memory update failed"
 msgstr "Aggiornamento della memoria non riuscito"
 
+#: src/content/PromptListView.tsx:17
+msgid "Memory update request"
+msgstr "Richiesta di aggiornamento della memoria"
+
 #: src/content/ChatView.tsx:282
 msgid "Memory updated"
 msgstr "Memoria aggiornata"
 
-#: src/content/App.tsx:157
+#: src/content/App.tsx:174
 msgid "Menu (chat history and memory)"
 msgstr "Menu (cronologia chat e memoria)"
 
@@ -171,8 +201,8 @@ msgstr "Modello"
 msgid "Model and reasoning effort"
 msgstr "Modello e livello di ragionamento"
 
-#: src/content/App.tsx:215
-#: src/content/App.tsx:215
+#: src/content/App.tsx:240
+#: src/content/App.tsx:240
 msgid "New chat"
 msgstr "Nuova chat"
 
@@ -188,12 +218,12 @@ msgstr "Nessuna chiave API configurata. Configurane una nell’app Kodoneri."
 
 #. js-lingui-explicit-id
 #: src/background/provider.ts:107
-#: src/background/session.ts:261
+#: src/background/session.ts:262
 msgid "errors.apiKeyMissing"
 msgstr "Nessuna chiave API configurata. Configurane una nell’app Kodoneri."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:154
+#: src/background/agent.ts:149
 msgid "errors.noCompaction"
 msgstr "Nessun risultato della compattazione ricevuto."
 
@@ -210,7 +240,7 @@ msgid "No memory changes"
 msgstr "Nessuna modifica alla memoria"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:115
+#: src/background/agent.ts:110
 msgid "errors.noResponse"
 msgstr "Nessuna risposta ricevuta."
 
@@ -223,12 +253,12 @@ msgid "No saved memories."
 msgstr "Nessuna memoria salvata."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:140
+#: src/background/agent.ts:135
 msgid "errors.noTitle"
 msgstr "Nessun titolo ricevuto."
 
-#: src/content/App.tsx:166
-#: src/content/App.tsx:166
+#: src/content/App.tsx:183
+#: src/content/App.tsx:183
 msgid "Open chat"
 msgstr "Apri chat"
 
@@ -239,6 +269,18 @@ msgstr "Apri Impostazioni"
 #: src/content/HistoryView.tsx:43
 msgid "Open this conversation"
 msgstr "Apri questa conversazione"
+
+#: src/content/App.tsx:207
+msgid "prompt"
+msgstr "prompt"
+
+#: src/content/PromptEditor.tsx:19
+msgid "Prompt"
+msgstr "Prompt"
+
+#: src/content/App.tsx:169
+msgid "Prompts that steer the AI"
+msgstr "Prompt che guidano l’IA"
 
 #: src/content/ChatView.tsx:246
 #: src/content/ChatView.tsx:306
@@ -254,13 +296,18 @@ msgstr "Livello di ragionamento"
 msgid "Remove from favorites"
 msgstr "Rimuovi dai preferiti"
 
+#: src/content/PromptListView.tsx:36
+#: src/content/PromptListView.tsx:36
+msgid "Reset to default"
+msgstr "Ripristina predefinito"
+
 #. js-lingui-explicit-id
-#: src/background/agent.ts:109
-#: src/background/agent.ts:123
+#: src/background/agent.ts:104
+#: src/background/agent.ts:118
 msgid "errors.responseCancelled"
 msgstr "Generazione della risposta annullata."
 
-#: src/content/App.tsx:155
+#: src/content/App.tsx:172
 msgid "Restore size"
 msgstr "Ripristina dimensioni"
 
@@ -268,11 +315,11 @@ msgstr "Ripristina dimensioni"
 msgid "Running…"
 msgstr "In esecuzione…"
 
-#: src/content/App.tsx:164
+#: src/content/App.tsx:181
 msgid "Safari has lost its connection to the extension. Quit Safari and open it again."
 msgstr "Safari ha perso la connessione con l’estensione. Chiudi Safari e riaprilo."
 
-#: src/content/App.tsx:151
+#: src/content/App.tsx:167
 msgid "Saved conversations"
 msgstr "Conversazioni salvate"
 
@@ -297,7 +344,7 @@ msgstr "Interrompi e invia"
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: src/content/App.tsx:156
+#: src/content/App.tsx:173
 msgid "Show in sidebar"
 msgstr "Mostra nella barra laterale"
 
@@ -309,14 +356,22 @@ msgstr "Accedi con Apple per usare il piano gratuito di Kodoneri o aggiungi la t
 msgid "Stop response"
 msgstr "Interrompi risposta"
 
-#: src/content/App.tsx:156
+#: src/content/App.tsx:173
 msgid "Switch to floating panel"
 msgstr "Passa al pannello mobile"
+
+#: src/content/PromptListView.tsx:14
+msgid "System prompt"
+msgstr "Prompt di sistema"
 
 #: src/content/MemoryEditor.tsx:20
 #: src/content/MemoryEditor.tsx:21
 msgid "Title"
 msgstr "Titolo"
+
+#: src/content/PromptListView.tsx:18
+msgid "Title generation"
+msgstr "Generazione del titolo"
 
 #: src/content/MemoryEditor.tsx:16
 msgid "Title:"
@@ -334,7 +389,7 @@ msgstr "Senza titolo"
 msgid "Updating memory…"
 msgstr "Aggiornamento della memoria…"
 
-#: src/content/App.tsx:152
+#: src/content/App.tsx:168
 msgid "What the AI remembers"
 msgstr "Cosa ricorda l’IA"
 

@@ -22,6 +22,10 @@ msgstr "「{preview}」"
 msgid "{0, plural, one {# media item} other {# media items}}"
 msgstr "メディア{0}件"
 
+#: src/content/PromptListView.tsx:32
+msgid "{label} (edited)"
+msgstr "{label}（編集済み）"
+
 #: src/content/ChatView.tsx:258
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "メディア{mediaCount}件"
@@ -38,8 +42,10 @@ msgstr "お気に入りに追加（AIは編集できなくなる）"
 msgid "Ask about this page"
 msgstr "このページについて質問"
 
-#: src/content/App.tsx:179
-#: src/content/App.tsx:179
+#: src/content/App.tsx:196
+#: src/content/App.tsx:196
+#: src/content/App.tsx:204
+#: src/content/App.tsx:204
 msgid "Back to list"
 msgstr "一覧に戻る"
 
@@ -50,16 +56,20 @@ msgstr "一覧に戻る"
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "キャッシュ率: {0}%（{1} / {2} tokens）"
 
-#: src/content/App.tsx:157
+#: src/content/App.tsx:169
+msgid "Capabilities"
+msgstr "機能"
+
+#: src/content/App.tsx:174
 msgid "Chat history"
 msgstr "チャット履歴"
 
-#: src/content/App.tsx:151
+#: src/content/App.tsx:167
 msgid "Chats"
 msgstr "チャット"
 
-#: src/content/App.tsx:188
-#: src/content/App.tsx:188
+#: src/content/App.tsx:213
+#: src/content/App.tsx:213
 msgid "Close panel"
 msgstr "パネルを閉じる"
 
@@ -76,8 +86,12 @@ msgstr "会話を圧縮中…"
 msgid "Content"
 msgstr "内容"
 
+#: src/content/PromptListView.tsx:15
+msgid "Conversation compaction"
+msgstr "会話の圧縮"
+
 #. js-lingui-explicit-id
-#: src/background/session.ts:341
+#: src/background/session.ts:342
 msgid "errors.compactionFailed"
 msgstr "会話の圧縮に失敗しました。{error}"
 
@@ -91,12 +105,15 @@ msgstr "この会話を削除"
 msgid "Delete this memory"
 msgstr "このメモリを削除"
 
-#: src/content/App.tsx:183
+#: src/content/App.tsx:200
+#: src/content/App.tsx:208
 msgid "Done"
 msgstr "完了"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:182
+#. placeholder {0}: prompts.editing ? promptLabels[prompts.editing.id] : t`prompt`
+#: src/content/App.tsx:199
+#: src/content/App.tsx:207
 msgid "Edit {0}"
 msgstr "{0}を編集"
 
@@ -104,7 +121,11 @@ msgstr "{0}を編集"
 msgid "Edit this memory"
 msgstr "このメモリを編集"
 
-#: src/content/App.tsx:155
+#: src/content/PromptListView.tsx:31
+msgid "Edit this prompt"
+msgstr "このプロンプトを編集"
+
+#: src/content/App.tsx:172
 msgid "Enlarge"
 msgstr "大きく表示"
 
@@ -121,7 +142,8 @@ msgstr "エラー: {content}"
 msgid "Execution was denied."
 msgstr "実行されませんでした。"
 
-#: src/content/App.tsx:183
+#: src/content/App.tsx:200
+#: src/content/App.tsx:208
 msgid "Finish editing and return to the list"
 msgstr "編集を終えて一覧に戻る"
 
@@ -141,23 +163,31 @@ msgstr "画像またはファイル"
 msgid "Include {selectionSummary}"
 msgstr "{selectionSummary}を含める"
 
-#: src/content/App.tsx:182
+#: src/content/App.tsx:199
 msgid "memory"
 msgstr "メモリ"
 
-#: src/content/App.tsx:152
+#: src/content/App.tsx:168
 msgid "Memory"
 msgstr "メモリ"
+
+#: src/content/PromptListView.tsx:16
+msgid "Memory maintenance"
+msgstr "メモリの整理"
 
 #: src/content/ChatView.tsx:281
 msgid "Memory update failed"
 msgstr "メモリ更新に失敗"
 
+#: src/content/PromptListView.tsx:17
+msgid "Memory update request"
+msgstr "メモリ更新の依頼"
+
 #: src/content/ChatView.tsx:282
 msgid "Memory updated"
 msgstr "メモリ更新あり"
 
-#: src/content/App.tsx:157
+#: src/content/App.tsx:174
 msgid "Menu (chat history and memory)"
 msgstr "メニュー（チャット履歴・メモリ）"
 
@@ -171,8 +201,8 @@ msgstr "モデル"
 msgid "Model and reasoning effort"
 msgstr "モデルと思考量"
 
-#: src/content/App.tsx:215
-#: src/content/App.tsx:215
+#: src/content/App.tsx:240
+#: src/content/App.tsx:240
 msgid "New chat"
 msgstr "新規チャット"
 
@@ -188,12 +218,12 @@ msgstr "APIキーが設定されていません。コドネリアプリで設定
 
 #. js-lingui-explicit-id
 #: src/background/provider.ts:107
-#: src/background/session.ts:261
+#: src/background/session.ts:262
 msgid "errors.apiKeyMissing"
 msgstr "APIキーが設定されていません。コドネリアプリでAPIキーを設定してください。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:154
+#: src/background/agent.ts:149
 msgid "errors.noCompaction"
 msgstr "会話の圧縮結果を取得できませんでした。"
 
@@ -210,7 +240,7 @@ msgid "No memory changes"
 msgstr "メモリ更新なし"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:115
+#: src/background/agent.ts:110
 msgid "errors.noResponse"
 msgstr "回答を取得できませんでした。"
 
@@ -223,12 +253,12 @@ msgid "No saved memories."
 msgstr "保存されたメモリはありません。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:140
+#: src/background/agent.ts:135
 msgid "errors.noTitle"
 msgstr "タイトルを取得できませんでした。"
 
-#: src/content/App.tsx:166
-#: src/content/App.tsx:166
+#: src/content/App.tsx:183
+#: src/content/App.tsx:183
 msgid "Open chat"
 msgstr "チャットを開く"
 
@@ -239,6 +269,18 @@ msgstr "設定を開く"
 #: src/content/HistoryView.tsx:43
 msgid "Open this conversation"
 msgstr "この会話を開く"
+
+#: src/content/App.tsx:207
+msgid "prompt"
+msgstr "プロンプト"
+
+#: src/content/PromptEditor.tsx:19
+msgid "Prompt"
+msgstr "プロンプト"
+
+#: src/content/App.tsx:169
+msgid "Prompts that steer the AI"
+msgstr "AIの振る舞いを決めるプロンプト"
 
 #: src/content/ChatView.tsx:246
 #: src/content/ChatView.tsx:306
@@ -254,13 +296,18 @@ msgstr "思考量"
 msgid "Remove from favorites"
 msgstr "お気に入りを解除"
 
+#: src/content/PromptListView.tsx:36
+#: src/content/PromptListView.tsx:36
+msgid "Reset to default"
+msgstr "デフォルトに戻す"
+
 #. js-lingui-explicit-id
-#: src/background/agent.ts:109
-#: src/background/agent.ts:123
+#: src/background/agent.ts:104
+#: src/background/agent.ts:118
 msgid "errors.responseCancelled"
 msgstr "回答の生成を中止しました。"
 
-#: src/content/App.tsx:155
+#: src/content/App.tsx:172
 msgid "Restore size"
 msgstr "元の大きさに戻す"
 
@@ -268,11 +315,11 @@ msgstr "元の大きさに戻す"
 msgid "Running…"
 msgstr "実行中…"
 
-#: src/content/App.tsx:164
+#: src/content/App.tsx:181
 msgid "Safari has lost its connection to the extension. Quit Safari and open it again."
 msgstr "Safari と拡張機能の接続が切れました。Safari を終了してから開き直してください。"
 
-#: src/content/App.tsx:151
+#: src/content/App.tsx:167
 msgid "Saved conversations"
 msgstr "保存した会話の一覧"
 
@@ -297,7 +344,7 @@ msgstr "割り込み送信"
 msgid "Settings"
 msgstr "設定"
 
-#: src/content/App.tsx:156
+#: src/content/App.tsx:173
 msgid "Show in sidebar"
 msgstr "サイドバーに表示"
 
@@ -309,14 +356,22 @@ msgstr "Appleでサインインしてコドネリの無料プランを使うか�
 msgid "Stop response"
 msgstr "回答を停止"
 
-#: src/content/App.tsx:156
+#: src/content/App.tsx:173
 msgid "Switch to floating panel"
 msgstr "フローティングに戻す"
+
+#: src/content/PromptListView.tsx:14
+msgid "System prompt"
+msgstr "システムプロンプト"
 
 #: src/content/MemoryEditor.tsx:20
 #: src/content/MemoryEditor.tsx:21
 msgid "Title"
 msgstr "タイトル"
+
+#: src/content/PromptListView.tsx:18
+msgid "Title generation"
+msgstr "タイトル生成"
 
 #: src/content/MemoryEditor.tsx:16
 msgid "Title:"
@@ -334,7 +389,7 @@ msgstr "無題"
 msgid "Updating memory…"
 msgstr "メモリ更新中…"
 
-#: src/content/App.tsx:152
+#: src/content/App.tsx:168
 msgid "What the AI remembers"
 msgstr "AIが覚えている内容の一覧"
 

@@ -22,6 +22,10 @@ msgstr "「{preview}」"
 msgid "{0, plural, one {# media item} other {# media items}}"
 msgstr "{0} 個媒體項目"
 
+#: src/content/PromptListView.tsx:32
+msgid "{label} (edited)"
+msgstr "{label}（已編輯）"
+
 #: src/content/ChatView.tsx:258
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "{mediaCount} 個媒體項目"
@@ -38,8 +42,10 @@ msgstr "加入收藏（AI 將無法再編輯）"
 msgid "Ask about this page"
 msgstr "就此頁面提問"
 
-#: src/content/App.tsx:179
-#: src/content/App.tsx:179
+#: src/content/App.tsx:196
+#: src/content/App.tsx:196
+#: src/content/App.tsx:204
+#: src/content/App.tsx:204
 msgid "Back to list"
 msgstr "返回列表"
 
@@ -50,16 +56,20 @@ msgstr "返回列表"
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "快取命中率：{0}%（{1} / {2} tokens）"
 
-#: src/content/App.tsx:157
+#: src/content/App.tsx:169
+msgid "Capabilities"
+msgstr "功能"
+
+#: src/content/App.tsx:174
 msgid "Chat history"
 msgstr "聊天記錄"
 
-#: src/content/App.tsx:151
+#: src/content/App.tsx:167
 msgid "Chats"
 msgstr "聊天"
 
-#: src/content/App.tsx:188
-#: src/content/App.tsx:188
+#: src/content/App.tsx:213
+#: src/content/App.tsx:213
 msgid "Close panel"
 msgstr "關閉面板"
 
@@ -76,8 +86,12 @@ msgstr "正在壓縮對話…"
 msgid "Content"
 msgstr "內容"
 
+#: src/content/PromptListView.tsx:15
+msgid "Conversation compaction"
+msgstr "對話壓縮"
+
 #. js-lingui-explicit-id
-#: src/background/session.ts:341
+#: src/background/session.ts:342
 msgid "errors.compactionFailed"
 msgstr "壓縮對話失敗。{error}"
 
@@ -91,12 +105,15 @@ msgstr "刪除此對話"
 msgid "Delete this memory"
 msgstr "刪除此記憶"
 
-#: src/content/App.tsx:183
+#: src/content/App.tsx:200
+#: src/content/App.tsx:208
 msgid "Done"
 msgstr "完成"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:182
+#. placeholder {0}: prompts.editing ? promptLabels[prompts.editing.id] : t`prompt`
+#: src/content/App.tsx:199
+#: src/content/App.tsx:207
 msgid "Edit {0}"
 msgstr "編輯{0}"
 
@@ -104,7 +121,11 @@ msgstr "編輯{0}"
 msgid "Edit this memory"
 msgstr "編輯此記憶"
 
-#: src/content/App.tsx:155
+#: src/content/PromptListView.tsx:31
+msgid "Edit this prompt"
+msgstr "編輯此提示詞"
+
+#: src/content/App.tsx:172
 msgid "Enlarge"
 msgstr "放大"
 
@@ -121,7 +142,8 @@ msgstr "錯誤：{content}"
 msgid "Execution was denied."
 msgstr "未執行。"
 
-#: src/content/App.tsx:183
+#: src/content/App.tsx:200
+#: src/content/App.tsx:208
 msgid "Finish editing and return to the list"
 msgstr "完成編輯並返回列表"
 
@@ -141,23 +163,31 @@ msgstr "圖片或檔案"
 msgid "Include {selectionSummary}"
 msgstr "包含{selectionSummary}"
 
-#: src/content/App.tsx:182
+#: src/content/App.tsx:199
 msgid "memory"
 msgstr "記憶"
 
-#: src/content/App.tsx:152
+#: src/content/App.tsx:168
 msgid "Memory"
 msgstr "記憶"
+
+#: src/content/PromptListView.tsx:16
+msgid "Memory maintenance"
+msgstr "記憶整理"
 
 #: src/content/ChatView.tsx:281
 msgid "Memory update failed"
 msgstr "記憶更新失敗"
 
+#: src/content/PromptListView.tsx:17
+msgid "Memory update request"
+msgstr "記憶更新請求"
+
 #: src/content/ChatView.tsx:282
 msgid "Memory updated"
 msgstr "記憶已更新"
 
-#: src/content/App.tsx:157
+#: src/content/App.tsx:174
 msgid "Menu (chat history and memory)"
 msgstr "選單（聊天記錄和記憶）"
 
@@ -171,8 +201,8 @@ msgstr "模型"
 msgid "Model and reasoning effort"
 msgstr "模型和推理強度"
 
-#: src/content/App.tsx:215
-#: src/content/App.tsx:215
+#: src/content/App.tsx:240
+#: src/content/App.tsx:240
 msgid "New chat"
 msgstr "新聊天"
 
@@ -188,12 +218,12 @@ msgstr "尚未設定 API 金鑰。請在 Kodoneri App 中設定。"
 
 #. js-lingui-explicit-id
 #: src/background/provider.ts:107
-#: src/background/session.ts:261
+#: src/background/session.ts:262
 msgid "errors.apiKeyMissing"
 msgstr "尚未設定 API 金鑰。請在 Kodoneri App 中設定。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:154
+#: src/background/agent.ts:149
 msgid "errors.noCompaction"
 msgstr "未收到對話壓縮結果。"
 
@@ -210,7 +240,7 @@ msgid "No memory changes"
 msgstr "記憶無變更"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:115
+#: src/background/agent.ts:110
 msgid "errors.noResponse"
 msgstr "未收到回答。"
 
@@ -223,12 +253,12 @@ msgid "No saved memories."
 msgstr "沒有已儲存的記憶。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:140
+#: src/background/agent.ts:135
 msgid "errors.noTitle"
 msgstr "未收到標題。"
 
-#: src/content/App.tsx:166
-#: src/content/App.tsx:166
+#: src/content/App.tsx:183
+#: src/content/App.tsx:183
 msgid "Open chat"
 msgstr "打開聊天"
 
@@ -239,6 +269,18 @@ msgstr "打開設定"
 #: src/content/HistoryView.tsx:43
 msgid "Open this conversation"
 msgstr "打開此對話"
+
+#: src/content/App.tsx:207
+msgid "prompt"
+msgstr "提示詞"
+
+#: src/content/PromptEditor.tsx:19
+msgid "Prompt"
+msgstr "提示詞"
+
+#: src/content/App.tsx:169
+msgid "Prompts that steer the AI"
+msgstr "引導 AI 的提示詞"
 
 #: src/content/ChatView.tsx:246
 #: src/content/ChatView.tsx:306
@@ -254,13 +296,18 @@ msgstr "推理強度"
 msgid "Remove from favorites"
 msgstr "從收藏中移除"
 
+#: src/content/PromptListView.tsx:36
+#: src/content/PromptListView.tsx:36
+msgid "Reset to default"
+msgstr "恢復預設"
+
 #. js-lingui-explicit-id
-#: src/background/agent.ts:109
-#: src/background/agent.ts:123
+#: src/background/agent.ts:104
+#: src/background/agent.ts:118
 msgid "errors.responseCancelled"
 msgstr "已停止產生回答。"
 
-#: src/content/App.tsx:155
+#: src/content/App.tsx:172
 msgid "Restore size"
 msgstr "恢復大小"
 
@@ -268,11 +315,11 @@ msgstr "恢復大小"
 msgid "Running…"
 msgstr "正在執行…"
 
-#: src/content/App.tsx:164
+#: src/content/App.tsx:181
 msgid "Safari has lost its connection to the extension. Quit Safari and open it again."
 msgstr "Safari 與延伸功能的連線已中斷。請結束 Safari 後重新開啟。"
 
-#: src/content/App.tsx:151
+#: src/content/App.tsx:167
 msgid "Saved conversations"
 msgstr "已儲存的對話"
 
@@ -297,7 +344,7 @@ msgstr "中斷並傳送"
 msgid "Settings"
 msgstr "設定"
 
-#: src/content/App.tsx:156
+#: src/content/App.tsx:173
 msgid "Show in sidebar"
 msgstr "在側邊欄中顯示"
 
@@ -309,14 +356,22 @@ msgstr "使用 Apple 登入以使用 Kodoneri 免費方案，或加入你自己�
 msgid "Stop response"
 msgstr "停止回答"
 
-#: src/content/App.tsx:156
+#: src/content/App.tsx:173
 msgid "Switch to floating panel"
 msgstr "切換為浮動面板"
+
+#: src/content/PromptListView.tsx:14
+msgid "System prompt"
+msgstr "系統提示詞"
 
 #: src/content/MemoryEditor.tsx:20
 #: src/content/MemoryEditor.tsx:21
 msgid "Title"
 msgstr "標題"
+
+#: src/content/PromptListView.tsx:18
+msgid "Title generation"
+msgstr "標題產生"
 
 #: src/content/MemoryEditor.tsx:16
 msgid "Title:"
@@ -334,7 +389,7 @@ msgstr "未命名"
 msgid "Updating memory…"
 msgstr "正在更新記憶…"
 
-#: src/content/App.tsx:152
+#: src/content/App.tsx:168
 msgid "What the AI remembers"
 msgstr "AI 記住的內容"
 

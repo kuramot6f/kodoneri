@@ -4,7 +4,8 @@ import { jsonSchema, tool } from "ai";
 import { MockLanguageModelV3, simulateReadableStream } from "ai/test";
 import { anthropic } from "@ai-sdk/anthropic";
 import { streamAnswer } from "../src/background/agent.ts";
-import { formatMemoryContext, SYSTEM_PROMPT } from "../src/background/prompt.ts";
+import { formatMemoryContext } from "../src/background/prompt.ts";
+import { DEFAULT_PROMPTS } from "../src/shared/prompts.ts";
 import { getMessageText, latestContext, taggedMessage } from "../src/shared/conversation.ts";
 import type { ModelMessage } from "ai";
 
@@ -186,7 +187,7 @@ test("the memory list is reference data outside the fixed system prompt", () => 
 
   assert.ok(context.includes(memoryList));
   assert.match(context, /list\(type=memory\)/);
-  assert.ok(!SYSTEM_PROMPT.includes(memoryList));
+  assert.ok(!DEFAULT_PROMPTS.system.includes(memoryList));
 });
 
 test("latestContext returns the newest context of a kind without its tag", () => {

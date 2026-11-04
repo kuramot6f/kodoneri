@@ -22,6 +22,10 @@ msgstr "“{preview}”"
 msgid "{0, plural, one {# media item} other {# media items}}"
 msgstr "미디어 {0}개"
 
+#: src/content/PromptListView.tsx:32
+msgid "{label} (edited)"
+msgstr "{label} (편집됨)"
+
 #: src/content/ChatView.tsx:258
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "미디어 {mediaCount}개"
@@ -38,8 +42,10 @@ msgstr "즐겨찾기에 추가 (AI가 더 이상 편집할 수 없음)"
 msgid "Ask about this page"
 msgstr "이 페이지에 대해 질문하기"
 
-#: src/content/App.tsx:179
-#: src/content/App.tsx:179
+#: src/content/App.tsx:196
+#: src/content/App.tsx:196
+#: src/content/App.tsx:204
+#: src/content/App.tsx:204
 msgid "Back to list"
 msgstr "목록으로 돌아가기"
 
@@ -50,16 +56,20 @@ msgstr "목록으로 돌아가기"
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "캐시 적중률: {0}% ({1} / {2} 토큰)"
 
-#: src/content/App.tsx:157
+#: src/content/App.tsx:169
+msgid "Capabilities"
+msgstr "기능"
+
+#: src/content/App.tsx:174
 msgid "Chat history"
 msgstr "채팅 기록"
 
-#: src/content/App.tsx:151
+#: src/content/App.tsx:167
 msgid "Chats"
 msgstr "채팅"
 
-#: src/content/App.tsx:188
-#: src/content/App.tsx:188
+#: src/content/App.tsx:213
+#: src/content/App.tsx:213
 msgid "Close panel"
 msgstr "패널 닫기"
 
@@ -76,8 +86,12 @@ msgstr "대화 압축 중…"
 msgid "Content"
 msgstr "내용"
 
+#: src/content/PromptListView.tsx:15
+msgid "Conversation compaction"
+msgstr "대화 압축"
+
 #. js-lingui-explicit-id
-#: src/background/session.ts:341
+#: src/background/session.ts:342
 msgid "errors.compactionFailed"
 msgstr "대화를 압축하지 못했습니다. {error}"
 
@@ -91,12 +105,15 @@ msgstr "이 대화 삭제"
 msgid "Delete this memory"
 msgstr "이 메모리 삭제"
 
-#: src/content/App.tsx:183
+#: src/content/App.tsx:200
+#: src/content/App.tsx:208
 msgid "Done"
 msgstr "완료"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:182
+#. placeholder {0}: prompts.editing ? promptLabels[prompts.editing.id] : t`prompt`
+#: src/content/App.tsx:199
+#: src/content/App.tsx:207
 msgid "Edit {0}"
 msgstr "{0} 편집"
 
@@ -104,7 +121,11 @@ msgstr "{0} 편집"
 msgid "Edit this memory"
 msgstr "이 메모리 편집"
 
-#: src/content/App.tsx:155
+#: src/content/PromptListView.tsx:31
+msgid "Edit this prompt"
+msgstr "이 프롬프트 편집"
+
+#: src/content/App.tsx:172
 msgid "Enlarge"
 msgstr "크게 보기"
 
@@ -121,7 +142,8 @@ msgstr "오류: {content}"
 msgid "Execution was denied."
 msgstr "실행되지 않았습니다."
 
-#: src/content/App.tsx:183
+#: src/content/App.tsx:200
+#: src/content/App.tsx:208
 msgid "Finish editing and return to the list"
 msgstr "편집을 마치고 목록으로 돌아가기"
 
@@ -141,23 +163,31 @@ msgstr "이미지 또는 파일"
 msgid "Include {selectionSummary}"
 msgstr "{selectionSummary} 포함"
 
-#: src/content/App.tsx:182
+#: src/content/App.tsx:199
 msgid "memory"
 msgstr "메모리"
 
-#: src/content/App.tsx:152
+#: src/content/App.tsx:168
 msgid "Memory"
 msgstr "메모리"
+
+#: src/content/PromptListView.tsx:16
+msgid "Memory maintenance"
+msgstr "메모리 정리"
 
 #: src/content/ChatView.tsx:281
 msgid "Memory update failed"
 msgstr "메모리 업데이트 실패"
 
+#: src/content/PromptListView.tsx:17
+msgid "Memory update request"
+msgstr "메모리 업데이트 요청"
+
 #: src/content/ChatView.tsx:282
 msgid "Memory updated"
 msgstr "메모리 업데이트됨"
 
-#: src/content/App.tsx:157
+#: src/content/App.tsx:174
 msgid "Menu (chat history and memory)"
 msgstr "메뉴 (채팅 기록 및 메모리)"
 
@@ -171,8 +201,8 @@ msgstr "모델"
 msgid "Model and reasoning effort"
 msgstr "모델 및 추론 수준"
 
-#: src/content/App.tsx:215
-#: src/content/App.tsx:215
+#: src/content/App.tsx:240
+#: src/content/App.tsx:240
 msgid "New chat"
 msgstr "새 채팅"
 
@@ -188,12 +218,12 @@ msgstr "API 키가 설정되지 않았습니다. Kodoneri 앱에서 설정하세
 
 #. js-lingui-explicit-id
 #: src/background/provider.ts:107
-#: src/background/session.ts:261
+#: src/background/session.ts:262
 msgid "errors.apiKeyMissing"
 msgstr "API 키가 설정되지 않았습니다. Kodoneri 앱에서 설정하세요."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:154
+#: src/background/agent.ts:149
 msgid "errors.noCompaction"
 msgstr "대화 압축 결과를 받지 못했습니다."
 
@@ -210,7 +240,7 @@ msgid "No memory changes"
 msgstr "메모리 변경 없음"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:115
+#: src/background/agent.ts:110
 msgid "errors.noResponse"
 msgstr "응답을 받지 못했습니다."
 
@@ -223,12 +253,12 @@ msgid "No saved memories."
 msgstr "저장된 메모리가 없습니다."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:140
+#: src/background/agent.ts:135
 msgid "errors.noTitle"
 msgstr "제목을 받지 못했습니다."
 
-#: src/content/App.tsx:166
-#: src/content/App.tsx:166
+#: src/content/App.tsx:183
+#: src/content/App.tsx:183
 msgid "Open chat"
 msgstr "채팅 열기"
 
@@ -239,6 +269,18 @@ msgstr "설정 열기"
 #: src/content/HistoryView.tsx:43
 msgid "Open this conversation"
 msgstr "이 대화 열기"
+
+#: src/content/App.tsx:207
+msgid "prompt"
+msgstr "프롬프트"
+
+#: src/content/PromptEditor.tsx:19
+msgid "Prompt"
+msgstr "프롬프트"
+
+#: src/content/App.tsx:169
+msgid "Prompts that steer the AI"
+msgstr "AI를 이끄는 프롬프트"
 
 #: src/content/ChatView.tsx:246
 #: src/content/ChatView.tsx:306
@@ -254,13 +296,18 @@ msgstr "추론 수준"
 msgid "Remove from favorites"
 msgstr "즐겨찾기에서 제거"
 
+#: src/content/PromptListView.tsx:36
+#: src/content/PromptListView.tsx:36
+msgid "Reset to default"
+msgstr "기본값으로 재설정"
+
 #. js-lingui-explicit-id
-#: src/background/agent.ts:109
-#: src/background/agent.ts:123
+#: src/background/agent.ts:104
+#: src/background/agent.ts:118
 msgid "errors.responseCancelled"
 msgstr "응답 생성을 중단했습니다."
 
-#: src/content/App.tsx:155
+#: src/content/App.tsx:172
 msgid "Restore size"
 msgstr "원래 크기로"
 
@@ -268,11 +315,11 @@ msgstr "원래 크기로"
 msgid "Running…"
 msgstr "실행 중…"
 
-#: src/content/App.tsx:164
+#: src/content/App.tsx:181
 msgid "Safari has lost its connection to the extension. Quit Safari and open it again."
 msgstr "Safari와 확장 프로그램의 연결이 끊어졌습니다. Safari를 종료한 후 다시 여세요."
 
-#: src/content/App.tsx:151
+#: src/content/App.tsx:167
 msgid "Saved conversations"
 msgstr "저장된 대화"
 
@@ -297,7 +344,7 @@ msgstr "중단하고 보내기"
 msgid "Settings"
 msgstr "설정"
 
-#: src/content/App.tsx:156
+#: src/content/App.tsx:173
 msgid "Show in sidebar"
 msgstr "사이드바에 표시"
 
@@ -309,14 +356,22 @@ msgstr "Apple로 로그인하여 Kodoneri 무료 플랜을 사용하거나, 보�
 msgid "Stop response"
 msgstr "응답 중지"
 
-#: src/content/App.tsx:156
+#: src/content/App.tsx:173
 msgid "Switch to floating panel"
 msgstr "플로팅 패널로 전환"
+
+#: src/content/PromptListView.tsx:14
+msgid "System prompt"
+msgstr "시스템 프롬프트"
 
 #: src/content/MemoryEditor.tsx:20
 #: src/content/MemoryEditor.tsx:21
 msgid "Title"
 msgstr "제목"
+
+#: src/content/PromptListView.tsx:18
+msgid "Title generation"
+msgstr "제목 생성"
 
 #: src/content/MemoryEditor.tsx:16
 msgid "Title:"
@@ -334,7 +389,7 @@ msgstr "제목 없음"
 msgid "Updating memory…"
 msgstr "메모리 업데이트 중…"
 
-#: src/content/App.tsx:152
+#: src/content/App.tsx:168
 msgid "What the AI remembers"
 msgstr "AI가 기억하는 내용"
 

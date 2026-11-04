@@ -22,13 +22,14 @@ import type {
 import { findModel } from "../shared/models";
 import type { ModelSettings } from "../shared/models";
 import { loadConversation, loadSettings, pruneConversations, saveConversation, saveSettings } from "../shared/store";
-import { compact, generateTitle, MEMORY_SYSTEM_PROMPT, MEMORY_TURNS, MEMORY_UPDATE_REQUEST, streamAnswer } from "./agent";
+import { compact, generateTitle, streamAnswer } from "./agent";
 import { applyCompaction, planCompaction } from "./compaction";
 import { syncWithCloud } from "./cloud";
 import { apiKeysLoaded, availableModels, createMemoryRuntime, createRuntime, refreshApiKeys, resolveSettings } from "./provider";
 import type { ModelRuntime } from "./provider";
 import { createTools } from "./tools";
-import { createRuntimeContext, formatMemoryContext, formatSelectionContext, SYSTEM_PROMPT } from "./prompt";
+import { createRuntimeContext, formatMemoryContext, formatSelectionContext } from "./prompt";
+import { loadPrompt, MEMORY_TURNS } from "../shared/prompts";
 import { listMemories } from "./stored";
 import { debugEvent } from "./debug";
 import { errorData } from "../shared/debugLog";
@@ -307,7 +308,7 @@ async function answer(
       pushView(session);
     },
     onToolError: (toolName, errorMessage) => debugEvent("tool_failed", { requestId, toolName, errorMessage })
-  }, SYSTEM_PROMPT);
+  }, await loadPrompt("system"));
   debugEvent("answer_finished", {
     tabId: session.tabId,
     requestId,
@@ -373,7 +374,7 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
   };
   const result = await streamAnswer(
     model,
-    [...recentTurns(conversation.messages, MEMORY_TURNS), taggedMessage("memory_update", MEMORY_UPDATE_REQUEST)],
+    [...recentTurns(conversation.messages, MEMORY_TURNS), taggedMessage("memory_update", await loadPrompt("memory_update"))],
     createTools(runtime),
     runtime.signal,
     {
@@ -386,7 +387,7 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
         progress.messages = finished;
       }
     },
-    MEMORY_SYSTEM_PROMPT
+    await loadPrompt("memory")
   );
   progress.done = true;
   progress.cacheUsage = result.cacheUsage;

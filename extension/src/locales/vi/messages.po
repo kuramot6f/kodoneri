@@ -22,6 +22,10 @@ msgstr "“{preview}”"
 msgid "{0, plural, one {# media item} other {# media items}}"
 msgstr "{0} mục đa phương tiện"
 
+#: src/content/PromptListView.tsx:32
+msgid "{label} (edited)"
+msgstr "{label} (đã sửa)"
+
 #: src/content/ChatView.tsx:258
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "{mediaCount} mục đa phương tiện"
@@ -38,8 +42,10 @@ msgstr "Thêm vào mục yêu thích (AI sẽ không thể chỉnh sửa nữa)"
 msgid "Ask about this page"
 msgstr "Hỏi về trang này"
 
-#: src/content/App.tsx:179
-#: src/content/App.tsx:179
+#: src/content/App.tsx:196
+#: src/content/App.tsx:196
+#: src/content/App.tsx:204
+#: src/content/App.tsx:204
 msgid "Back to list"
 msgstr "Quay lại danh sách"
 
@@ -50,16 +56,20 @@ msgstr "Quay lại danh sách"
 msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
 msgstr "Tỷ lệ trúng bộ nhớ đệm: {0}% ({1} / {2} token)"
 
-#: src/content/App.tsx:157
+#: src/content/App.tsx:169
+msgid "Capabilities"
+msgstr "Khả năng"
+
+#: src/content/App.tsx:174
 msgid "Chat history"
 msgstr "Lịch sử trò chuyện"
 
-#: src/content/App.tsx:151
+#: src/content/App.tsx:167
 msgid "Chats"
 msgstr "Trò chuyện"
 
-#: src/content/App.tsx:188
-#: src/content/App.tsx:188
+#: src/content/App.tsx:213
+#: src/content/App.tsx:213
 msgid "Close panel"
 msgstr "Đóng bảng"
 
@@ -76,8 +86,12 @@ msgstr "Đang nén cuộc trò chuyện…"
 msgid "Content"
 msgstr "Nội dung"
 
+#: src/content/PromptListView.tsx:15
+msgid "Conversation compaction"
+msgstr "Nén cuộc trò chuyện"
+
 #. js-lingui-explicit-id
-#: src/background/session.ts:341
+#: src/background/session.ts:342
 msgid "errors.compactionFailed"
 msgstr "Không thể nén cuộc trò chuyện. {error}"
 
@@ -91,12 +105,15 @@ msgstr "Xóa cuộc trò chuyện này"
 msgid "Delete this memory"
 msgstr "Xóa mục bộ nhớ này"
 
-#: src/content/App.tsx:183
+#: src/content/App.tsx:200
+#: src/content/App.tsx:208
 msgid "Done"
 msgstr "Xong"
 
 #. placeholder {0}: memories.editing?.title.trim() || t`memory`
-#: src/content/App.tsx:182
+#. placeholder {0}: prompts.editing ? promptLabels[prompts.editing.id] : t`prompt`
+#: src/content/App.tsx:199
+#: src/content/App.tsx:207
 msgid "Edit {0}"
 msgstr "Sửa {0}"
 
@@ -104,7 +121,11 @@ msgstr "Sửa {0}"
 msgid "Edit this memory"
 msgstr "Sửa mục bộ nhớ này"
 
-#: src/content/App.tsx:155
+#: src/content/PromptListView.tsx:31
+msgid "Edit this prompt"
+msgstr "Sửa lời nhắc này"
+
+#: src/content/App.tsx:172
 msgid "Enlarge"
 msgstr "Phóng to"
 
@@ -121,7 +142,8 @@ msgstr "Lỗi: {content}"
 msgid "Execution was denied."
 msgstr "Không được thực thi."
 
-#: src/content/App.tsx:183
+#: src/content/App.tsx:200
+#: src/content/App.tsx:208
 msgid "Finish editing and return to the list"
 msgstr "Hoàn tất chỉnh sửa và quay lại danh sách"
 
@@ -141,23 +163,31 @@ msgstr "Hình ảnh hoặc tệp"
 msgid "Include {selectionSummary}"
 msgstr "Bao gồm {selectionSummary}"
 
-#: src/content/App.tsx:182
+#: src/content/App.tsx:199
 msgid "memory"
 msgstr "mục bộ nhớ"
 
-#: src/content/App.tsx:152
+#: src/content/App.tsx:168
 msgid "Memory"
 msgstr "Bộ nhớ"
+
+#: src/content/PromptListView.tsx:16
+msgid "Memory maintenance"
+msgstr "Duy trì bộ nhớ"
 
 #: src/content/ChatView.tsx:281
 msgid "Memory update failed"
 msgstr "Cập nhật bộ nhớ thất bại"
 
+#: src/content/PromptListView.tsx:17
+msgid "Memory update request"
+msgstr "Yêu cầu cập nhật bộ nhớ"
+
 #: src/content/ChatView.tsx:282
 msgid "Memory updated"
 msgstr "Đã cập nhật bộ nhớ"
 
-#: src/content/App.tsx:157
+#: src/content/App.tsx:174
 msgid "Menu (chat history and memory)"
 msgstr "Menu (lịch sử trò chuyện và bộ nhớ)"
 
@@ -171,8 +201,8 @@ msgstr "Mô hình"
 msgid "Model and reasoning effort"
 msgstr "Mô hình và mức suy luận"
 
-#: src/content/App.tsx:215
-#: src/content/App.tsx:215
+#: src/content/App.tsx:240
+#: src/content/App.tsx:240
 msgid "New chat"
 msgstr "Cuộc trò chuyện mới"
 
@@ -188,12 +218,12 @@ msgstr "Chưa định cấu hình khóa API. Hãy định cấu hình trong ứn
 
 #. js-lingui-explicit-id
 #: src/background/provider.ts:107
-#: src/background/session.ts:261
+#: src/background/session.ts:262
 msgid "errors.apiKeyMissing"
 msgstr "Chưa định cấu hình khóa API. Hãy định cấu hình trong ứng dụng Kodoneri."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:154
+#: src/background/agent.ts:149
 msgid "errors.noCompaction"
 msgstr "Không nhận được kết quả nén cuộc trò chuyện."
 
@@ -210,7 +240,7 @@ msgid "No memory changes"
 msgstr "Bộ nhớ không thay đổi"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:115
+#: src/background/agent.ts:110
 msgid "errors.noResponse"
 msgstr "Không nhận được câu trả lời."
 
@@ -223,12 +253,12 @@ msgid "No saved memories."
 msgstr "Không có mục bộ nhớ đã lưu."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:140
+#: src/background/agent.ts:135
 msgid "errors.noTitle"
 msgstr "Không nhận được tiêu đề."
 
-#: src/content/App.tsx:166
-#: src/content/App.tsx:166
+#: src/content/App.tsx:183
+#: src/content/App.tsx:183
 msgid "Open chat"
 msgstr "Mở trò chuyện"
 
@@ -239,6 +269,18 @@ msgstr "Mở Cài đặt"
 #: src/content/HistoryView.tsx:43
 msgid "Open this conversation"
 msgstr "Mở cuộc trò chuyện này"
+
+#: src/content/App.tsx:207
+msgid "prompt"
+msgstr "lời nhắc"
+
+#: src/content/PromptEditor.tsx:19
+msgid "Prompt"
+msgstr "Lời nhắc"
+
+#: src/content/App.tsx:169
+msgid "Prompts that steer the AI"
+msgstr "Các lời nhắc định hướng AI"
 
 #: src/content/ChatView.tsx:246
 #: src/content/ChatView.tsx:306
@@ -254,13 +296,18 @@ msgstr "Mức suy luận"
 msgid "Remove from favorites"
 msgstr "Xóa khỏi mục yêu thích"
 
+#: src/content/PromptListView.tsx:36
+#: src/content/PromptListView.tsx:36
+msgid "Reset to default"
+msgstr "Đặt lại mặc định"
+
 #. js-lingui-explicit-id
-#: src/background/agent.ts:109
-#: src/background/agent.ts:123
+#: src/background/agent.ts:104
+#: src/background/agent.ts:118
 msgid "errors.responseCancelled"
 msgstr "Đã hủy tạo câu trả lời."
 
-#: src/content/App.tsx:155
+#: src/content/App.tsx:172
 msgid "Restore size"
 msgstr "Khôi phục kích thước"
 
@@ -268,11 +315,11 @@ msgstr "Khôi phục kích thước"
 msgid "Running…"
 msgstr "Đang chạy…"
 
-#: src/content/App.tsx:164
+#: src/content/App.tsx:181
 msgid "Safari has lost its connection to the extension. Quit Safari and open it again."
 msgstr "Safari đã mất kết nối với tiện ích mở rộng. Hãy thoát Safari rồi mở lại."
 
-#: src/content/App.tsx:151
+#: src/content/App.tsx:167
 msgid "Saved conversations"
 msgstr "Cuộc trò chuyện đã lưu"
 
@@ -297,7 +344,7 @@ msgstr "Ngắt và gửi"
 msgid "Settings"
 msgstr "Cài đặt"
 
-#: src/content/App.tsx:156
+#: src/content/App.tsx:173
 msgid "Show in sidebar"
 msgstr "Hiển thị trong thanh bên"
 
@@ -309,14 +356,22 @@ msgstr "Đăng nhập bằng Apple để dùng gói miễn phí của Kodoneri, 
 msgid "Stop response"
 msgstr "Dừng trả lời"
 
-#: src/content/App.tsx:156
+#: src/content/App.tsx:173
 msgid "Switch to floating panel"
 msgstr "Chuyển sang bảng nổi"
+
+#: src/content/PromptListView.tsx:14
+msgid "System prompt"
+msgstr "Lời nhắc hệ thống"
 
 #: src/content/MemoryEditor.tsx:20
 #: src/content/MemoryEditor.tsx:21
 msgid "Title"
 msgstr "Tiêu đề"
+
+#: src/content/PromptListView.tsx:18
+msgid "Title generation"
+msgstr "Tạo tiêu đề"
 
 #: src/content/MemoryEditor.tsx:16
 msgid "Title:"
@@ -334,7 +389,7 @@ msgstr "Không có tiêu đề"
 msgid "Updating memory…"
 msgstr "Đang cập nhật bộ nhớ…"
 
-#: src/content/App.tsx:152
+#: src/content/App.tsx:168
 msgid "What the AI remembers"
 msgstr "Những gì AI ghi nhớ"
 

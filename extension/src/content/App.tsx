@@ -7,9 +7,12 @@ import { HistoryView } from "./HistoryView";
 import { Icon } from "./Icon";
 import { MemoryEditor } from "./MemoryEditor";
 import { MemoryListView } from "./MemoryListView";
+import { PromptEditor } from "./PromptEditor";
+import { PromptListView, usePromptLabels } from "./PromptListView";
 import { SegmentedTabs } from "./SegmentedTabs";
 import { useChatButton } from "./useChatButton";
 import { useMemories } from "./useMemories";
+import { usePrompts } from "./usePrompts";
 import { usePanel } from "./usePanel";
 import { EDGES, usePanelFrame } from "./usePanelFrame";
 import {
@@ -20,11 +23,12 @@ import {
 import type { PageSelection } from "./pageSelection";
 import type { Conversation } from "../shared/conversation";
 import type { Memory } from "../shared/memory";
+import type { Prompt } from "../shared/prompts";
 import type { PanelFrame, RuntimeMessage } from "../shared/protocol";
 import { deleteConversation, loadConversations } from "../shared/store";
 
-type View = "chat" | "history" | "memory";
-type HistoryTab = "chat" | "memory";
+type View = "chat" | "history" | "memory" | "prompt";
+type HistoryTab = "chat" | "memory" | "capability";
 /** floating/sidebar on desktop and iPad; phones keep the floating look at a fixed size, or enlarge it. */
 type Layout = "floating" | "sidebar" | "phone" | "phone-expanded";
 
@@ -43,6 +47,8 @@ export function App() {
   const panelRef = useRef<HTMLElement>(null);
   const panel = usePanel();
   const memories = useMemories();
+  const prompts = usePrompts();
+  const promptLabels = usePromptLabels();
   const chatButton = useChatButton();
   const phone = useMediaQuery(PHONE_QUERY);
   const state = panel.state;
@@ -113,7 +119,7 @@ export function App() {
   };
 
   const loadHistory = async () => {
-    const [stored] = await Promise.all([loadConversations(), memories.refresh()]);
+    const [stored] = await Promise.all([loadConversations(), memories.refresh(), prompts.refresh()]);
     setConversations(stored);
   };
 
@@ -147,9 +153,20 @@ export function App() {
     await memories.close();
   };
 
+  const openPrompt = (prompt: Prompt) => {
+    prompts.open(prompt);
+    setView("prompt");
+  };
+
+  const closePrompt = async () => {
+    setView("history");
+    await prompts.close();
+  };
+
   const historyTabs = [
     { value: "chat", label: t`Chats`, title: t`Saved conversations` },
-    { value: "memory", label: t`Memory`, title: t`What the AI remembers` }
+    { value: "memory", label: t`Memory`, title: t`What the AI remembers` },
+    { value: "capability", label: t`Capabilities`, title: t`Prompts that steer the AI` }
   ] as const;
   const expandLabel = phone
     ? (expanded ? t`Restore size` : t`Enlarge`)
@@ -181,6 +198,14 @@ export function App() {
               </button>
               <h1 className="header-title"><Trans>Edit {memories.editing?.title.trim() || t`memory`}</Trans></h1>
               <button className="pill" type="button" title={t`Finish editing and return to the list`} onClick={() => void closeMemory()}><Trans>Done</Trans></button>
+            </>
+          ) : view === "prompt" ? (
+            <>
+              <button className="round" type="button" aria-label={t`Back to list`} title={t`Back to list`} onClick={() => void closePrompt()}>
+                <Icon name="back" />
+              </button>
+              <h1 className="header-title"><Trans>Edit {prompts.editing ? promptLabels[prompts.editing.id] : t`prompt`}</Trans></h1>
+              <button className="pill" type="button" title={t`Finish editing and return to the list`} onClick={() => void closePrompt()}><Trans>Done</Trans></button>
             </>
           ) : (
             <>
@@ -222,10 +247,14 @@ export function App() {
         </header>
         {view === "memory" && memories.editing ? (
           <MemoryEditor memory={memories.editing} onChange={memories.update} />
+        ) : view === "prompt" && prompts.editing ? (
+          <PromptEditor prompt={prompts.editing} onChange={prompts.update} />
         ) : view === "history" ? (
           <>
             <SegmentedTabs tabs={historyTabs} value={historyTab} onChange={setHistoryTab} />
-            {historyTab === "memory" ? (
+            {historyTab === "capability" ? (
+              <PromptListView prompts={prompts.prompts} onSelect={openPrompt} onReset={(prompt) => void prompts.reset(prompt)} />
+            ) : historyTab === "memory" ? (
               <MemoryListView
                 memories={memories.memories}
                 onCreate={createMemory}

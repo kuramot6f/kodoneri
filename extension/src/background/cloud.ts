@@ -1,5 +1,6 @@
 import { errorData } from "../shared/debugLog";
 import { MEMORY_PREFIX } from "../shared/memory";
+import { PROMPT_PREFIX } from "../shared/prompts";
 import { CONVERSATION_PREFIX } from "../shared/store";
 import { debugEvent } from "./debug";
 
@@ -11,7 +12,7 @@ type Stored = Record<string, { updatedAt?: number } | undefined>;
 let running: Promise<boolean> | null = null;
 
 /**
- * Brings Safari's storage and iCloud to the newer copy of each conversation and memory, tombstones included.
+ * Brings Safari's storage and iCloud to the newer copy of each conversation, memory, and prompt, tombstones included.
  * Answers whether anything here changed.
  */
 export function syncWithCloud(): Promise<boolean> {
@@ -56,7 +57,7 @@ async function sync(): Promise<boolean> {
 }
 
 function isSynced(key: string): boolean {
-  return key.startsWith(CONVERSATION_PREFIX) || key.startsWith(MEMORY_PREFIX);
+  return [CONVERSATION_PREFIX, MEMORY_PREFIX, PROMPT_PREFIX].some((prefix) => key.startsWith(prefix));
 }
 
 function updatedAt(value: Stored[string]): number {
