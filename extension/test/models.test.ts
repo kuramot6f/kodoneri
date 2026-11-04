@@ -2,12 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { CATALOG, PLANS, PROVIDERS, clampEffort, findModel, lowestEffort } from "../src/shared/models.ts";
 
-test("every catalog entry has a unique id, a known provider and a price", () => {
+test("every catalog entry has a unique id and a known provider", () => {
   const ids = new Set(CATALOG.map((model) => model.id));
   assert.equal(ids.size, CATALOG.length);
   for (const model of CATALOG) {
     assert.ok(Object.hasOwn(PROVIDERS, model.provider), model.id);
-    assert.ok(model.pricing.input > 0 && model.pricing.output > 0, model.id);
   }
 });
 

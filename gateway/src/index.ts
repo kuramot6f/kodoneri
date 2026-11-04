@@ -3,7 +3,7 @@ import { findCatalogModel, PLANS, type Provider } from "../../extension/src/shar
 import { effectivePlan, ensureBilling, syncTransaction, verifyNotification, type BillingRow } from "./billing";
 import { deleteExpiredFiles } from "./files";
 import { UPSTREAMS, clientResponse, gatewayUrl, prepareBody, requestHeaders, type Body } from "./upstream";
-import { customCost, loggedCost } from "./usage";
+import { loggedCost } from "./usage";
 
 const APPLE_ISSUER = "https://appleid.apple.com";
 const NONCE_TTL_MINUTES = 10;
@@ -98,7 +98,6 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
   const billing = await ensureBilling(env, user.userId);
   if (!canUseGateway(billing)) return usageLimitResponse(billing);
 
-  const headers = requestHeaders(request.headers);
   let body: BodyInit;
   let model: string | null = null;
   if (generating) {
@@ -106,14 +105,12 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
     if (!input) return status(400);
     model = typeof input.model === "string" ? input.model : null;
     const plan = effectivePlan(billing);
-    const catalogModel = model ? findCatalogModel(model) : undefined;
-    if (!model || catalogModel?.provider !== provider || !PLANS[plan].includes(model)) {
+    if (!model || findCatalogModel(model)?.provider !== provider || !PLANS[plan].includes(model)) {
       return errorResponse(403, "model_not_allowed", `${model ?? "This model"} is not included in the ${plan} plan.`);
     }
     const prepared = prepareBody(provider, input, user.billingId);
     if (!prepared) return errorResponse(400, "tool_not_allowed", "Only function tools are available through chatext.");
     body = JSON.stringify(prepared);
-    headers.set("cf-aig-custom-cost", customCost(catalogModel.pricing, new Date()));
   } else {
     // Uploads are not metered, so their count and size are capped instead.
     if (!(await env.UPLOAD_LIMIT.limit({ key: user.userId })).success) {
@@ -125,6 +122,7 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
   }
   ctx.waitUntil(env.DB.prepare("UPDATE tokens SET last_used_at = datetime('now') WHERE token_hash = ?").bind(user.tokenHash).run());
 
+  const headers = requestHeaders(request.headers);
   headers.set("cf-aig-authorization", `Bearer ${env.CLOUDFLARE_API_TOKEN}`);
   headers.set("cf-aig-metadata", JSON.stringify({ user_id: user.billingId }));
   headers.set("cf-aig-collect-log-payload", "false");
