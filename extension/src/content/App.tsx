@@ -279,7 +279,6 @@ export function App() {
             step={state.step}
             memory={state.memory}
             compacting={state.compacting}
-            cacheUsage={state.cacheUsage}
             question={question}
             includeSelection={includeSelection}
             selectionSummary={selectionSummary}

@@ -26,7 +26,7 @@ msgstr "{0, plural, one {# media item} other {# media items}}"
 msgid "{label} (edited)"
 msgstr "{label} (edited)"
 
-#: src/content/ChatView.tsx:258
+#: src/content/ChatView.tsx:254
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "{mediaCount, plural, one {# media item} other {# media items}}"
 
@@ -38,7 +38,7 @@ msgstr "Add to favorites"
 msgid "Add to favorites (the AI will no longer be able to edit it)"
 msgstr "Add to favorites (the AI will no longer be able to edit it)"
 
-#: src/content/ChatView.tsx:134
+#: src/content/ChatView.tsx:131
 msgid "Ask about this page"
 msgstr "Ask about this page"
 
@@ -48,13 +48,6 @@ msgstr "Ask about this page"
 #: src/content/App.tsx:204
 msgid "Back to list"
 msgstr "Back to list"
-
-#. placeholder {0}: rate.toFixed(1)
-#. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
-#. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:353
-msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
-msgstr "Cache hit rate: {0}% ({1} / {2} tokens)"
 
 #: src/content/App.tsx:169
 msgid "Capabilities"
@@ -77,7 +70,7 @@ msgstr "Close panel"
 msgid "Close search"
 msgstr "Close search"
 
-#: src/content/ChatView.tsx:102
+#: src/content/ChatView.tsx:99
 msgid "Compacting conversation…"
 msgstr "Compacting conversation…"
 
@@ -91,12 +84,12 @@ msgid "Conversation compaction"
 msgstr "Conversation compaction"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:342
+#: src/background/session.ts:337
 msgid "errors.compactionFailed"
 msgstr "Conversation compaction failed. {error}"
 
-#: src/content/HistoryView.tsx:47
-#: src/content/HistoryView.tsx:47
+#: src/content/HistoryView.tsx:46
+#: src/content/HistoryView.tsx:46
 msgid "Delete this conversation"
 msgstr "Delete this conversation"
 
@@ -130,15 +123,15 @@ msgid "Enlarge"
 msgstr "Enlarge"
 
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:288
+#: src/content/ChatView.tsx:294
 msgid "Error: {0}"
 msgstr "Error: {0}"
 
-#: src/content/ChatView.tsx:231
+#: src/content/ChatView.tsx:227
 msgid "Error: {content}"
 msgstr "Error: {content}"
 
-#: src/content/ChatView.tsx:364
+#: src/content/ChatView.tsx:356
 msgid "Execution was denied."
 msgstr "Execution was denied."
 
@@ -147,19 +140,19 @@ msgstr "Execution was denied."
 msgid "Finish editing and return to the list"
 msgstr "Finish editing and return to the list"
 
-#: src/content/ChatView.tsx:101
+#: src/content/ChatView.tsx:98
 msgid "Generating response…"
 msgstr "Generating response…"
 
-#: src/content/ChatView.tsx:182
+#: src/content/ChatView.tsx:178
 msgid "Get started for free"
 msgstr "Get started for free"
 
-#: src/content/ChatView.tsx:365
+#: src/content/ChatView.tsx:357
 msgid "Image or file"
 msgstr "Image or file"
 
-#: src/content/ChatView.tsx:114
+#: src/content/ChatView.tsx:111
 msgid "Include {selectionSummary}"
 msgstr "Include {selectionSummary}"
 
@@ -175,7 +168,7 @@ msgstr "Memory"
 msgid "Memory maintenance"
 msgstr "Memory maintenance"
 
-#: src/content/ChatView.tsx:281
+#: src/content/ChatView.tsx:287
 msgid "Memory update failed"
 msgstr "Memory update failed"
 
@@ -183,7 +176,7 @@ msgstr "Memory update failed"
 msgid "Memory update request"
 msgstr "Memory update request"
 
-#: src/content/ChatView.tsx:282
+#: src/content/ChatView.tsx:288
 msgid "Memory updated"
 msgstr "Memory updated"
 
@@ -195,8 +188,8 @@ msgstr "Menu (chat history and memory)"
 msgid "Model"
 msgstr "Model"
 
-#: src/content/ChatView.tsx:122
-#: src/content/ChatView.tsx:123
+#: src/content/ChatView.tsx:119
+#: src/content/ChatView.tsx:120
 #: src/content/ModelMenu.tsx:60
 msgid "Model and reasoning effort"
 msgstr "Model and reasoning effort"
@@ -218,16 +211,16 @@ msgstr "No API key is configured. Configure one in the Kodoneri app."
 
 #. js-lingui-explicit-id
 #: src/background/provider.ts:107
-#: src/background/session.ts:262
+#: src/background/session.ts:258
 msgid "errors.apiKeyMissing"
 msgstr "No API key is configured. Configure one in the Kodoneri app."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:149
+#: src/background/agent.ts:144
 msgid "errors.noCompaction"
 msgstr "No conversation compaction result was received."
 
-#: src/content/HistoryView.tsx:37
+#: src/content/HistoryView.tsx:36
 msgid "No matching conversations."
 msgstr "No matching conversations."
 
@@ -235,16 +228,16 @@ msgstr "No matching conversations."
 msgid "No matching memories."
 msgstr "No matching memories."
 
-#: src/content/ChatView.tsx:282
+#: src/content/ChatView.tsx:288
 msgid "No memory changes"
 msgstr "No memory changes"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:110
+#: src/background/agent.ts:106
 msgid "errors.noResponse"
 msgstr "No response was received."
 
-#: src/content/HistoryView.tsx:35
+#: src/content/HistoryView.tsx:34
 msgid "No saved conversations."
 msgstr "No saved conversations."
 
@@ -253,7 +246,7 @@ msgid "No saved memories."
 msgstr "No saved memories."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:135
+#: src/background/agent.ts:130
 msgid "errors.noTitle"
 msgstr "No title was received."
 
@@ -262,11 +255,11 @@ msgstr "No title was received."
 msgid "Open chat"
 msgstr "Open chat"
 
-#: src/content/ChatView.tsx:184
+#: src/content/ChatView.tsx:180
 msgid "Open Settings"
 msgstr "Open Settings"
 
-#: src/content/HistoryView.tsx:43
+#: src/content/HistoryView.tsx:42
 msgid "Open this conversation"
 msgstr "Open this conversation"
 
@@ -282,8 +275,8 @@ msgstr "Prompt"
 msgid "Prompts that steer the AI"
 msgstr "Prompts that steer the AI"
 
-#: src/content/ChatView.tsx:246
-#: src/content/ChatView.tsx:306
+#: src/content/ChatView.tsx:242
+#: src/content/ChatView.tsx:311
 msgid "Reasoning"
 msgstr "Reasoning"
 
@@ -302,8 +295,8 @@ msgid "Reset to default"
 msgstr "Reset to default"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:104
-#: src/background/agent.ts:118
+#: src/background/agent.ts:100
+#: src/background/agent.ts:114
 msgid "errors.responseCancelled"
 msgstr "Response generation was cancelled."
 
@@ -311,7 +304,7 @@ msgstr "Response generation was cancelled."
 msgid "Restore size"
 msgstr "Restore size"
 
-#: src/content/ChatView.tsx:324
+#: src/content/ChatView.tsx:329
 msgid "Running…"
 msgstr "Running…"
 
@@ -323,7 +316,7 @@ msgstr "Safari has lost its connection to the extension. Quit Safari and open it
 msgid "Saved conversations"
 msgstr "Saved conversations"
 
-#: src/content/HistoryView.tsx:55
+#: src/content/HistoryView.tsx:54
 msgid "Search history"
 msgstr "Search history"
 
@@ -331,11 +324,11 @@ msgstr "Search history"
 msgid "Search memories"
 msgstr "Search memories"
 
-#: src/content/ChatView.tsx:66
+#: src/content/ChatView.tsx:63
 msgid "Send"
 msgstr "Send"
 
-#: src/content/ChatView.tsx:66
+#: src/content/ChatView.tsx:63
 msgid "Send and interrupt"
 msgstr "Send and interrupt"
 
@@ -348,11 +341,11 @@ msgstr "Settings"
 msgid "Show in sidebar"
 msgstr "Show in sidebar"
 
-#: src/content/ChatView.tsx:183
+#: src/content/ChatView.tsx:179
 msgid "Sign in with Apple to use Kodoneri’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
 msgstr "Sign in with Apple to use Kodoneri’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
 
-#: src/content/ChatView.tsx:66
+#: src/content/ChatView.tsx:63
 msgid "Stop response"
 msgstr "Stop response"
 
@@ -377,7 +370,7 @@ msgstr "Title generation"
 msgid "Title:"
 msgstr "Title:"
 
-#: src/content/HistoryView.tsx:24
+#: src/content/HistoryView.tsx:23
 msgid "Today"
 msgstr "Today"
 
@@ -385,7 +378,7 @@ msgstr "Today"
 msgid "Untitled"
 msgstr "Untitled"
 
-#: src/content/ChatView.tsx:279
+#: src/content/ChatView.tsx:285
 msgid "Updating memory…"
 msgstr "Updating memory…"
 
@@ -393,7 +386,7 @@ msgstr "Updating memory…"
 msgid "What the AI remembers"
 msgstr "What the AI remembers"
 
-#: src/content/HistoryView.tsx:24
+#: src/content/HistoryView.tsx:23
 msgid "Yesterday"
 msgstr "Yesterday"
 

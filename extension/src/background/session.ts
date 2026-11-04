@@ -1,4 +1,4 @@
-import type { CacheUsage, Conversation, ModelMessage } from "../shared/conversation";
+import type { Conversation, ModelMessage } from "../shared/conversation";
 import { i18n } from "../shared/i18n.ts";
 import { errorMessage } from "../shared/errors.ts";
 import {
@@ -44,7 +44,6 @@ interface Session {
   step: ModelMessage[] | null;
   compacting: boolean;
   memory: MemoryProgress | null;
-  cacheUsage: CacheUsage | null;
   liveTimer?: ReturnType<typeof setTimeout>;
 }
 
@@ -98,8 +97,7 @@ function createSession(tabId: number, panel: PanelState, conversation: Conversat
     run: null,
     step: null,
     compacting: false,
-    memory: null,
-    cacheUsage: null
+    memory: null
   };
 }
 
@@ -129,7 +127,6 @@ export async function handlePanelMessage(tabId: number, message: PanelMessage): 
     session.settings = session.conversation?.settings;
     session.step = null;
     session.memory = null;
-    session.cacheUsage = null;
     persist(session);
   } else if (message.type === "panel") {
     session.panel = { ...session.panel, ...message.panel };
@@ -191,7 +188,6 @@ async function ask(session: Session, message: AskMessage): Promise<void> {
       await previous.done;
     }
     session.memory = null;
-    session.cacheUsage = null;
 
     const now = Date.now();
     const conversation = session.conversation ? expireToolHistory(session.conversation) : createConversation(message.text);
@@ -328,7 +324,6 @@ async function answer(
     return;
   }
   session.step = null;
-  session.cacheUsage = result.cacheUsage;
 
   const plan = result.error ? null : planCompaction(conversation.messages, result.contextTokens, models.main.info.contextWindow);
   if (plan) {
@@ -359,7 +354,7 @@ async function answer(
 }
 
 async function maintainMemory(session: Session, conversation: Conversation, model: ModelRuntime): Promise<void> {
-  const progress: MemoryProgress = { messages: [], done: false, cacheUsage: null };
+  const progress: MemoryProgress = { messages: [], done: false };
   let finished: ModelMessage[] = [];
   session.memory = progress;
   pushView(session);
@@ -390,7 +385,6 @@ async function maintainMemory(session: Session, conversation: Conversation, mode
     await loadPrompt("memory")
   );
   progress.done = true;
-  progress.cacheUsage = result.cacheUsage;
   if (result.error) progress.error = result.error;
   debugEvent("memory_update_finished", {
     tabId: session.tabId,
@@ -444,8 +438,7 @@ function view(session: Session): TabView {
     conversation: session.conversation,
     step: session.step,
     compacting: session.compacting,
-    memory: session.memory,
-    cacheUsage: session.cacheUsage
+    memory: session.memory
   };
 }
 

@@ -11,11 +11,6 @@ import type { SelectionContext } from "./protocol";
 
 export type { AssistantModelMessage, ModelMessage, ToolModelMessage, ToolResultPart, UserModelMessage } from "ai";
 
-export interface CacheUsage {
-  hitTokens: number;
-  missTokens: number;
-}
-
 export interface Conversation {
   id: string;
   title: string;

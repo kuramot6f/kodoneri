@@ -26,7 +26,7 @@ msgstr "{0} mục đa phương tiện"
 msgid "{label} (edited)"
 msgstr "{label} (đã sửa)"
 
-#: src/content/ChatView.tsx:258
+#: src/content/ChatView.tsx:254
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "{mediaCount} mục đa phương tiện"
 
@@ -38,7 +38,7 @@ msgstr "Thêm vào mục yêu thích"
 msgid "Add to favorites (the AI will no longer be able to edit it)"
 msgstr "Thêm vào mục yêu thích (AI sẽ không thể chỉnh sửa nữa)"
 
-#: src/content/ChatView.tsx:134
+#: src/content/ChatView.tsx:131
 msgid "Ask about this page"
 msgstr "Hỏi về trang này"
 
@@ -48,13 +48,6 @@ msgstr "Hỏi về trang này"
 #: src/content/App.tsx:204
 msgid "Back to list"
 msgstr "Quay lại danh sách"
-
-#. placeholder {0}: rate.toFixed(1)
-#. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
-#. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:353
-msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
-msgstr "Tỷ lệ trúng bộ nhớ đệm: {0}% ({1} / {2} token)"
 
 #: src/content/App.tsx:169
 msgid "Capabilities"
@@ -77,7 +70,7 @@ msgstr "Đóng bảng"
 msgid "Close search"
 msgstr "Đóng tìm kiếm"
 
-#: src/content/ChatView.tsx:102
+#: src/content/ChatView.tsx:99
 msgid "Compacting conversation…"
 msgstr "Đang nén cuộc trò chuyện…"
 
@@ -91,12 +84,12 @@ msgid "Conversation compaction"
 msgstr "Nén cuộc trò chuyện"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:342
+#: src/background/session.ts:337
 msgid "errors.compactionFailed"
 msgstr "Không thể nén cuộc trò chuyện. {error}"
 
-#: src/content/HistoryView.tsx:47
-#: src/content/HistoryView.tsx:47
+#: src/content/HistoryView.tsx:46
+#: src/content/HistoryView.tsx:46
 msgid "Delete this conversation"
 msgstr "Xóa cuộc trò chuyện này"
 
@@ -130,15 +123,15 @@ msgid "Enlarge"
 msgstr "Phóng to"
 
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:288
+#: src/content/ChatView.tsx:294
 msgid "Error: {0}"
 msgstr "Lỗi: {0}"
 
-#: src/content/ChatView.tsx:231
+#: src/content/ChatView.tsx:227
 msgid "Error: {content}"
 msgstr "Lỗi: {content}"
 
-#: src/content/ChatView.tsx:364
+#: src/content/ChatView.tsx:356
 msgid "Execution was denied."
 msgstr "Không được thực thi."
 
@@ -147,19 +140,19 @@ msgstr "Không được thực thi."
 msgid "Finish editing and return to the list"
 msgstr "Hoàn tất chỉnh sửa và quay lại danh sách"
 
-#: src/content/ChatView.tsx:101
+#: src/content/ChatView.tsx:98
 msgid "Generating response…"
 msgstr "Đang tạo câu trả lời…"
 
-#: src/content/ChatView.tsx:182
+#: src/content/ChatView.tsx:178
 msgid "Get started for free"
 msgstr "Bắt đầu miễn phí"
 
-#: src/content/ChatView.tsx:365
+#: src/content/ChatView.tsx:357
 msgid "Image or file"
 msgstr "Hình ảnh hoặc tệp"
 
-#: src/content/ChatView.tsx:114
+#: src/content/ChatView.tsx:111
 msgid "Include {selectionSummary}"
 msgstr "Bao gồm {selectionSummary}"
 
@@ -175,7 +168,7 @@ msgstr "Bộ nhớ"
 msgid "Memory maintenance"
 msgstr "Duy trì bộ nhớ"
 
-#: src/content/ChatView.tsx:281
+#: src/content/ChatView.tsx:287
 msgid "Memory update failed"
 msgstr "Cập nhật bộ nhớ thất bại"
 
@@ -183,7 +176,7 @@ msgstr "Cập nhật bộ nhớ thất bại"
 msgid "Memory update request"
 msgstr "Yêu cầu cập nhật bộ nhớ"
 
-#: src/content/ChatView.tsx:282
+#: src/content/ChatView.tsx:288
 msgid "Memory updated"
 msgstr "Đã cập nhật bộ nhớ"
 
@@ -195,8 +188,8 @@ msgstr "Menu (lịch sử trò chuyện và bộ nhớ)"
 msgid "Model"
 msgstr "Mô hình"
 
-#: src/content/ChatView.tsx:122
-#: src/content/ChatView.tsx:123
+#: src/content/ChatView.tsx:119
+#: src/content/ChatView.tsx:120
 #: src/content/ModelMenu.tsx:60
 msgid "Model and reasoning effort"
 msgstr "Mô hình và mức suy luận"
@@ -218,16 +211,16 @@ msgstr "Chưa định cấu hình khóa API. Hãy định cấu hình trong ứn
 
 #. js-lingui-explicit-id
 #: src/background/provider.ts:107
-#: src/background/session.ts:262
+#: src/background/session.ts:258
 msgid "errors.apiKeyMissing"
 msgstr "Chưa định cấu hình khóa API. Hãy định cấu hình trong ứng dụng Kodoneri."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:149
+#: src/background/agent.ts:144
 msgid "errors.noCompaction"
 msgstr "Không nhận được kết quả nén cuộc trò chuyện."
 
-#: src/content/HistoryView.tsx:37
+#: src/content/HistoryView.tsx:36
 msgid "No matching conversations."
 msgstr "Không có cuộc trò chuyện phù hợp."
 
@@ -235,16 +228,16 @@ msgstr "Không có cuộc trò chuyện phù hợp."
 msgid "No matching memories."
 msgstr "Không có mục bộ nhớ phù hợp."
 
-#: src/content/ChatView.tsx:282
+#: src/content/ChatView.tsx:288
 msgid "No memory changes"
 msgstr "Bộ nhớ không thay đổi"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:110
+#: src/background/agent.ts:106
 msgid "errors.noResponse"
 msgstr "Không nhận được câu trả lời."
 
-#: src/content/HistoryView.tsx:35
+#: src/content/HistoryView.tsx:34
 msgid "No saved conversations."
 msgstr "Không có cuộc trò chuyện đã lưu."
 
@@ -253,7 +246,7 @@ msgid "No saved memories."
 msgstr "Không có mục bộ nhớ đã lưu."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:135
+#: src/background/agent.ts:130
 msgid "errors.noTitle"
 msgstr "Không nhận được tiêu đề."
 
@@ -262,11 +255,11 @@ msgstr "Không nhận được tiêu đề."
 msgid "Open chat"
 msgstr "Mở trò chuyện"
 
-#: src/content/ChatView.tsx:184
+#: src/content/ChatView.tsx:180
 msgid "Open Settings"
 msgstr "Mở Cài đặt"
 
-#: src/content/HistoryView.tsx:43
+#: src/content/HistoryView.tsx:42
 msgid "Open this conversation"
 msgstr "Mở cuộc trò chuyện này"
 
@@ -282,8 +275,8 @@ msgstr "Lời nhắc"
 msgid "Prompts that steer the AI"
 msgstr "Các lời nhắc định hướng AI"
 
-#: src/content/ChatView.tsx:246
-#: src/content/ChatView.tsx:306
+#: src/content/ChatView.tsx:242
+#: src/content/ChatView.tsx:311
 msgid "Reasoning"
 msgstr "Suy luận"
 
@@ -302,8 +295,8 @@ msgid "Reset to default"
 msgstr "Đặt lại mặc định"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:104
-#: src/background/agent.ts:118
+#: src/background/agent.ts:100
+#: src/background/agent.ts:114
 msgid "errors.responseCancelled"
 msgstr "Đã hủy tạo câu trả lời."
 
@@ -311,7 +304,7 @@ msgstr "Đã hủy tạo câu trả lời."
 msgid "Restore size"
 msgstr "Khôi phục kích thước"
 
-#: src/content/ChatView.tsx:324
+#: src/content/ChatView.tsx:329
 msgid "Running…"
 msgstr "Đang chạy…"
 
@@ -323,7 +316,7 @@ msgstr "Safari đã mất kết nối với tiện ích mở rộng. Hãy thoát
 msgid "Saved conversations"
 msgstr "Cuộc trò chuyện đã lưu"
 
-#: src/content/HistoryView.tsx:55
+#: src/content/HistoryView.tsx:54
 msgid "Search history"
 msgstr "Tìm trong lịch sử"
 
@@ -331,11 +324,11 @@ msgstr "Tìm trong lịch sử"
 msgid "Search memories"
 msgstr "Tìm trong bộ nhớ"
 
-#: src/content/ChatView.tsx:66
+#: src/content/ChatView.tsx:63
 msgid "Send"
 msgstr "Gửi"
 
-#: src/content/ChatView.tsx:66
+#: src/content/ChatView.tsx:63
 msgid "Send and interrupt"
 msgstr "Ngắt và gửi"
 
@@ -348,11 +341,11 @@ msgstr "Cài đặt"
 msgid "Show in sidebar"
 msgstr "Hiển thị trong thanh bên"
 
-#: src/content/ChatView.tsx:183
+#: src/content/ChatView.tsx:179
 msgid "Sign in with Apple to use Kodoneri’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
 msgstr "Đăng nhập bằng Apple để dùng gói miễn phí của Kodoneri, hoặc thêm khóa API OpenAI, Anthropic hay DeepSeek của riêng bạn."
 
-#: src/content/ChatView.tsx:66
+#: src/content/ChatView.tsx:63
 msgid "Stop response"
 msgstr "Dừng trả lời"
 
@@ -377,7 +370,7 @@ msgstr "Tạo tiêu đề"
 msgid "Title:"
 msgstr "Tiêu đề:"
 
-#: src/content/HistoryView.tsx:24
+#: src/content/HistoryView.tsx:23
 msgid "Today"
 msgstr "Hôm nay"
 
@@ -385,7 +378,7 @@ msgstr "Hôm nay"
 msgid "Untitled"
 msgstr "Không có tiêu đề"
 
-#: src/content/ChatView.tsx:279
+#: src/content/ChatView.tsx:285
 msgid "Updating memory…"
 msgstr "Đang cập nhật bộ nhớ…"
 
@@ -393,7 +386,7 @@ msgstr "Đang cập nhật bộ nhớ…"
 msgid "What the AI remembers"
 msgstr "Những gì AI ghi nhớ"
 
-#: src/content/HistoryView.tsx:24
+#: src/content/HistoryView.tsx:23
 msgid "Yesterday"
 msgstr "Hôm qua"
 

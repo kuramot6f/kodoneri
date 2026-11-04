@@ -1,4 +1,4 @@
-import type { CacheUsage, Conversation, ModelMessage } from "./conversation";
+import type { Conversation, ModelMessage } from "./conversation";
 import type { DebugData } from "./debugLog";
 import type { ModelInfo, ModelSettings } from "./models";
 
@@ -53,7 +53,6 @@ export interface MemoryProgress {
   messages: ModelMessage[];
   done: boolean;
   error?: string;
-  cacheUsage: CacheUsage | null;
 }
 
 export interface TabView {
@@ -66,7 +65,6 @@ export interface TabView {
   step: ModelMessage[] | null;
   compacting: boolean;
   memory: MemoryProgress | null;
-  cacheUsage: CacheUsage | null;
 }
 
 export interface AskMessage {

@@ -458,12 +458,6 @@ textarea::placeholder { color: var(--text-secondary); }
 }
 .selection-option input { margin: 0; accent-color: var(--accent); }
 
-.cache-rate {
-  color: var(--text-secondary);
-  font-size: 11px;
-  text-align: right;
-}
-
 /* モデルと思考量。入力欄左のボタンの真上に開く小さなガラス板 */
 .model-menu-anchor { position: relative; flex: none; }
 .model-menu {

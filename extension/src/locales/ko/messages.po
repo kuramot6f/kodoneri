@@ -26,7 +26,7 @@ msgstr "미디어 {0}개"
 msgid "{label} (edited)"
 msgstr "{label} (편집됨)"
 
-#: src/content/ChatView.tsx:258
+#: src/content/ChatView.tsx:254
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "미디어 {mediaCount}개"
 
@@ -38,7 +38,7 @@ msgstr "즐겨찾기에 추가"
 msgid "Add to favorites (the AI will no longer be able to edit it)"
 msgstr "즐겨찾기에 추가 (AI가 더 이상 편집할 수 없음)"
 
-#: src/content/ChatView.tsx:134
+#: src/content/ChatView.tsx:131
 msgid "Ask about this page"
 msgstr "이 페이지에 대해 질문하기"
 
@@ -48,13 +48,6 @@ msgstr "이 페이지에 대해 질문하기"
 #: src/content/App.tsx:204
 msgid "Back to list"
 msgstr "목록으로 돌아가기"
-
-#. placeholder {0}: rate.toFixed(1)
-#. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
-#. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:353
-msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
-msgstr "캐시 적중률: {0}% ({1} / {2} 토큰)"
 
 #: src/content/App.tsx:169
 msgid "Capabilities"
@@ -77,7 +70,7 @@ msgstr "패널 닫기"
 msgid "Close search"
 msgstr "검색 닫기"
 
-#: src/content/ChatView.tsx:102
+#: src/content/ChatView.tsx:99
 msgid "Compacting conversation…"
 msgstr "대화 압축 중…"
 
@@ -91,12 +84,12 @@ msgid "Conversation compaction"
 msgstr "대화 압축"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:342
+#: src/background/session.ts:337
 msgid "errors.compactionFailed"
 msgstr "대화를 압축하지 못했습니다. {error}"
 
-#: src/content/HistoryView.tsx:47
-#: src/content/HistoryView.tsx:47
+#: src/content/HistoryView.tsx:46
+#: src/content/HistoryView.tsx:46
 msgid "Delete this conversation"
 msgstr "이 대화 삭제"
 
@@ -130,15 +123,15 @@ msgid "Enlarge"
 msgstr "크게 보기"
 
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:288
+#: src/content/ChatView.tsx:294
 msgid "Error: {0}"
 msgstr "오류: {0}"
 
-#: src/content/ChatView.tsx:231
+#: src/content/ChatView.tsx:227
 msgid "Error: {content}"
 msgstr "오류: {content}"
 
-#: src/content/ChatView.tsx:364
+#: src/content/ChatView.tsx:356
 msgid "Execution was denied."
 msgstr "실행되지 않았습니다."
 
@@ -147,19 +140,19 @@ msgstr "실행되지 않았습니다."
 msgid "Finish editing and return to the list"
 msgstr "편집을 마치고 목록으로 돌아가기"
 
-#: src/content/ChatView.tsx:101
+#: src/content/ChatView.tsx:98
 msgid "Generating response…"
 msgstr "응답 생성 중…"
 
-#: src/content/ChatView.tsx:182
+#: src/content/ChatView.tsx:178
 msgid "Get started for free"
 msgstr "무료로 시작하기"
 
-#: src/content/ChatView.tsx:365
+#: src/content/ChatView.tsx:357
 msgid "Image or file"
 msgstr "이미지 또는 파일"
 
-#: src/content/ChatView.tsx:114
+#: src/content/ChatView.tsx:111
 msgid "Include {selectionSummary}"
 msgstr "{selectionSummary} 포함"
 
@@ -175,7 +168,7 @@ msgstr "메모리"
 msgid "Memory maintenance"
 msgstr "메모리 정리"
 
-#: src/content/ChatView.tsx:281
+#: src/content/ChatView.tsx:287
 msgid "Memory update failed"
 msgstr "메모리 업데이트 실패"
 
@@ -183,7 +176,7 @@ msgstr "메모리 업데이트 실패"
 msgid "Memory update request"
 msgstr "메모리 업데이트 요청"
 
-#: src/content/ChatView.tsx:282
+#: src/content/ChatView.tsx:288
 msgid "Memory updated"
 msgstr "메모리 업데이트됨"
 
@@ -195,8 +188,8 @@ msgstr "메뉴 (채팅 기록 및 메모리)"
 msgid "Model"
 msgstr "모델"
 
-#: src/content/ChatView.tsx:122
-#: src/content/ChatView.tsx:123
+#: src/content/ChatView.tsx:119
+#: src/content/ChatView.tsx:120
 #: src/content/ModelMenu.tsx:60
 msgid "Model and reasoning effort"
 msgstr "모델 및 추론 수준"
@@ -218,16 +211,16 @@ msgstr "API 키가 설정되지 않았습니다. Kodoneri 앱에서 설정하세
 
 #. js-lingui-explicit-id
 #: src/background/provider.ts:107
-#: src/background/session.ts:262
+#: src/background/session.ts:258
 msgid "errors.apiKeyMissing"
 msgstr "API 키가 설정되지 않았습니다. Kodoneri 앱에서 설정하세요."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:149
+#: src/background/agent.ts:144
 msgid "errors.noCompaction"
 msgstr "대화 압축 결과를 받지 못했습니다."
 
-#: src/content/HistoryView.tsx:37
+#: src/content/HistoryView.tsx:36
 msgid "No matching conversations."
 msgstr "일치하는 대화가 없습니다."
 
@@ -235,16 +228,16 @@ msgstr "일치하는 대화가 없습니다."
 msgid "No matching memories."
 msgstr "일치하는 메모리가 없습니다."
 
-#: src/content/ChatView.tsx:282
+#: src/content/ChatView.tsx:288
 msgid "No memory changes"
 msgstr "메모리 변경 없음"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:110
+#: src/background/agent.ts:106
 msgid "errors.noResponse"
 msgstr "응답을 받지 못했습니다."
 
-#: src/content/HistoryView.tsx:35
+#: src/content/HistoryView.tsx:34
 msgid "No saved conversations."
 msgstr "저장된 대화가 없습니다."
 
@@ -253,7 +246,7 @@ msgid "No saved memories."
 msgstr "저장된 메모리가 없습니다."
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:135
+#: src/background/agent.ts:130
 msgid "errors.noTitle"
 msgstr "제목을 받지 못했습니다."
 
@@ -262,11 +255,11 @@ msgstr "제목을 받지 못했습니다."
 msgid "Open chat"
 msgstr "채팅 열기"
 
-#: src/content/ChatView.tsx:184
+#: src/content/ChatView.tsx:180
 msgid "Open Settings"
 msgstr "설정 열기"
 
-#: src/content/HistoryView.tsx:43
+#: src/content/HistoryView.tsx:42
 msgid "Open this conversation"
 msgstr "이 대화 열기"
 
@@ -282,8 +275,8 @@ msgstr "프롬프트"
 msgid "Prompts that steer the AI"
 msgstr "AI를 이끄는 프롬프트"
 
-#: src/content/ChatView.tsx:246
-#: src/content/ChatView.tsx:306
+#: src/content/ChatView.tsx:242
+#: src/content/ChatView.tsx:311
 msgid "Reasoning"
 msgstr "추론"
 
@@ -302,8 +295,8 @@ msgid "Reset to default"
 msgstr "기본값으로 재설정"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:104
-#: src/background/agent.ts:118
+#: src/background/agent.ts:100
+#: src/background/agent.ts:114
 msgid "errors.responseCancelled"
 msgstr "응답 생성을 중단했습니다."
 
@@ -311,7 +304,7 @@ msgstr "응답 생성을 중단했습니다."
 msgid "Restore size"
 msgstr "원래 크기로"
 
-#: src/content/ChatView.tsx:324
+#: src/content/ChatView.tsx:329
 msgid "Running…"
 msgstr "실행 중…"
 
@@ -323,7 +316,7 @@ msgstr "Safari와 확장 프로그램의 연결이 끊어졌습니다. Safari를
 msgid "Saved conversations"
 msgstr "저장된 대화"
 
-#: src/content/HistoryView.tsx:55
+#: src/content/HistoryView.tsx:54
 msgid "Search history"
 msgstr "기록 검색"
 
@@ -331,11 +324,11 @@ msgstr "기록 검색"
 msgid "Search memories"
 msgstr "메모리 검색"
 
-#: src/content/ChatView.tsx:66
+#: src/content/ChatView.tsx:63
 msgid "Send"
 msgstr "보내기"
 
-#: src/content/ChatView.tsx:66
+#: src/content/ChatView.tsx:63
 msgid "Send and interrupt"
 msgstr "중단하고 보내기"
 
@@ -348,11 +341,11 @@ msgstr "설정"
 msgid "Show in sidebar"
 msgstr "사이드바에 표시"
 
-#: src/content/ChatView.tsx:183
+#: src/content/ChatView.tsx:179
 msgid "Sign in with Apple to use Kodoneri’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
 msgstr "Apple로 로그인하여 Kodoneri 무료 플랜을 사용하거나, 보유한 OpenAI, Anthropic 또는 DeepSeek API 키를 추가하세요."
 
-#: src/content/ChatView.tsx:66
+#: src/content/ChatView.tsx:63
 msgid "Stop response"
 msgstr "응답 중지"
 
@@ -377,7 +370,7 @@ msgstr "제목 생성"
 msgid "Title:"
 msgstr "제목:"
 
-#: src/content/HistoryView.tsx:24
+#: src/content/HistoryView.tsx:23
 msgid "Today"
 msgstr "오늘"
 
@@ -385,7 +378,7 @@ msgstr "오늘"
 msgid "Untitled"
 msgstr "제목 없음"
 
-#: src/content/ChatView.tsx:279
+#: src/content/ChatView.tsx:285
 msgid "Updating memory…"
 msgstr "메모리 업데이트 중…"
 
@@ -393,7 +386,7 @@ msgstr "메모리 업데이트 중…"
 msgid "What the AI remembers"
 msgstr "AI가 기억하는 내용"
 
-#: src/content/HistoryView.tsx:24
+#: src/content/HistoryView.tsx:23
 msgid "Yesterday"
 msgstr "어제"
 

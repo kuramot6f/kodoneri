@@ -26,7 +26,7 @@ msgstr "{0} 個媒體項目"
 msgid "{label} (edited)"
 msgstr "{label}（已編輯）"
 
-#: src/content/ChatView.tsx:258
+#: src/content/ChatView.tsx:254
 msgid "{mediaCount, plural, one {# media item} other {# media items}}"
 msgstr "{mediaCount} 個媒體項目"
 
@@ -38,7 +38,7 @@ msgstr "加入收藏"
 msgid "Add to favorites (the AI will no longer be able to edit it)"
 msgstr "加入收藏（AI 將無法再編輯）"
 
-#: src/content/ChatView.tsx:134
+#: src/content/ChatView.tsx:131
 msgid "Ask about this page"
 msgstr "就此頁面提問"
 
@@ -48,13 +48,6 @@ msgstr "就此頁面提問"
 #: src/content/App.tsx:204
 msgid "Back to list"
 msgstr "返回列表"
-
-#. placeholder {0}: rate.toFixed(1)
-#. placeholder {1}: usage.hitTokens.toLocaleString(i18n.locale)
-#. placeholder {2}: inputTokens.toLocaleString(i18n.locale)
-#: src/content/ChatView.tsx:353
-msgid "Cache hit rate: {0}% ({1} / {2} tokens)"
-msgstr "快取命中率：{0}%（{1} / {2} tokens）"
 
 #: src/content/App.tsx:169
 msgid "Capabilities"
@@ -77,7 +70,7 @@ msgstr "關閉面板"
 msgid "Close search"
 msgstr "關閉搜尋"
 
-#: src/content/ChatView.tsx:102
+#: src/content/ChatView.tsx:99
 msgid "Compacting conversation…"
 msgstr "正在壓縮對話…"
 
@@ -91,12 +84,12 @@ msgid "Conversation compaction"
 msgstr "對話壓縮"
 
 #. js-lingui-explicit-id
-#: src/background/session.ts:342
+#: src/background/session.ts:337
 msgid "errors.compactionFailed"
 msgstr "壓縮對話失敗。{error}"
 
-#: src/content/HistoryView.tsx:47
-#: src/content/HistoryView.tsx:47
+#: src/content/HistoryView.tsx:46
+#: src/content/HistoryView.tsx:46
 msgid "Delete this conversation"
 msgstr "刪除此對話"
 
@@ -130,15 +123,15 @@ msgid "Enlarge"
 msgstr "放大"
 
 #. placeholder {0}: progress.error
-#: src/content/ChatView.tsx:288
+#: src/content/ChatView.tsx:294
 msgid "Error: {0}"
 msgstr "錯誤：{0}"
 
-#: src/content/ChatView.tsx:231
+#: src/content/ChatView.tsx:227
 msgid "Error: {content}"
 msgstr "錯誤：{content}"
 
-#: src/content/ChatView.tsx:364
+#: src/content/ChatView.tsx:356
 msgid "Execution was denied."
 msgstr "未執行。"
 
@@ -147,19 +140,19 @@ msgstr "未執行。"
 msgid "Finish editing and return to the list"
 msgstr "完成編輯並返回列表"
 
-#: src/content/ChatView.tsx:101
+#: src/content/ChatView.tsx:98
 msgid "Generating response…"
 msgstr "正在產生回答…"
 
-#: src/content/ChatView.tsx:182
+#: src/content/ChatView.tsx:178
 msgid "Get started for free"
 msgstr "免費開始使用"
 
-#: src/content/ChatView.tsx:365
+#: src/content/ChatView.tsx:357
 msgid "Image or file"
 msgstr "圖片或檔案"
 
-#: src/content/ChatView.tsx:114
+#: src/content/ChatView.tsx:111
 msgid "Include {selectionSummary}"
 msgstr "包含{selectionSummary}"
 
@@ -175,7 +168,7 @@ msgstr "記憶"
 msgid "Memory maintenance"
 msgstr "記憶整理"
 
-#: src/content/ChatView.tsx:281
+#: src/content/ChatView.tsx:287
 msgid "Memory update failed"
 msgstr "記憶更新失敗"
 
@@ -183,7 +176,7 @@ msgstr "記憶更新失敗"
 msgid "Memory update request"
 msgstr "記憶更新請求"
 
-#: src/content/ChatView.tsx:282
+#: src/content/ChatView.tsx:288
 msgid "Memory updated"
 msgstr "記憶已更新"
 
@@ -195,8 +188,8 @@ msgstr "選單（聊天記錄和記憶）"
 msgid "Model"
 msgstr "模型"
 
-#: src/content/ChatView.tsx:122
-#: src/content/ChatView.tsx:123
+#: src/content/ChatView.tsx:119
+#: src/content/ChatView.tsx:120
 #: src/content/ModelMenu.tsx:60
 msgid "Model and reasoning effort"
 msgstr "模型和推理強度"
@@ -218,16 +211,16 @@ msgstr "尚未設定 API 金鑰。請在 Kodoneri App 中設定。"
 
 #. js-lingui-explicit-id
 #: src/background/provider.ts:107
-#: src/background/session.ts:262
+#: src/background/session.ts:258
 msgid "errors.apiKeyMissing"
 msgstr "尚未設定 API 金鑰。請在 Kodoneri App 中設定。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:149
+#: src/background/agent.ts:144
 msgid "errors.noCompaction"
 msgstr "未收到對話壓縮結果。"
 
-#: src/content/HistoryView.tsx:37
+#: src/content/HistoryView.tsx:36
 msgid "No matching conversations."
 msgstr "沒有相符的對話。"
 
@@ -235,16 +228,16 @@ msgstr "沒有相符的對話。"
 msgid "No matching memories."
 msgstr "沒有相符的記憶。"
 
-#: src/content/ChatView.tsx:282
+#: src/content/ChatView.tsx:288
 msgid "No memory changes"
 msgstr "記憶無變更"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:110
+#: src/background/agent.ts:106
 msgid "errors.noResponse"
 msgstr "未收到回答。"
 
-#: src/content/HistoryView.tsx:35
+#: src/content/HistoryView.tsx:34
 msgid "No saved conversations."
 msgstr "沒有已儲存的對話。"
 
@@ -253,7 +246,7 @@ msgid "No saved memories."
 msgstr "沒有已儲存的記憶。"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:135
+#: src/background/agent.ts:130
 msgid "errors.noTitle"
 msgstr "未收到標題。"
 
@@ -262,11 +255,11 @@ msgstr "未收到標題。"
 msgid "Open chat"
 msgstr "打開聊天"
 
-#: src/content/ChatView.tsx:184
+#: src/content/ChatView.tsx:180
 msgid "Open Settings"
 msgstr "打開設定"
 
-#: src/content/HistoryView.tsx:43
+#: src/content/HistoryView.tsx:42
 msgid "Open this conversation"
 msgstr "打開此對話"
 
@@ -282,8 +275,8 @@ msgstr "提示詞"
 msgid "Prompts that steer the AI"
 msgstr "引導 AI 的提示詞"
 
-#: src/content/ChatView.tsx:246
-#: src/content/ChatView.tsx:306
+#: src/content/ChatView.tsx:242
+#: src/content/ChatView.tsx:311
 msgid "Reasoning"
 msgstr "推理"
 
@@ -302,8 +295,8 @@ msgid "Reset to default"
 msgstr "恢復預設"
 
 #. js-lingui-explicit-id
-#: src/background/agent.ts:104
-#: src/background/agent.ts:118
+#: src/background/agent.ts:100
+#: src/background/agent.ts:114
 msgid "errors.responseCancelled"
 msgstr "已停止產生回答。"
 
@@ -311,7 +304,7 @@ msgstr "已停止產生回答。"
 msgid "Restore size"
 msgstr "恢復大小"
 
-#: src/content/ChatView.tsx:324
+#: src/content/ChatView.tsx:329
 msgid "Running…"
 msgstr "正在執行…"
 
@@ -323,7 +316,7 @@ msgstr "Safari 與延伸功能的連線已中斷。請結束 Safari 後重新開
 msgid "Saved conversations"
 msgstr "已儲存的對話"
 
-#: src/content/HistoryView.tsx:55
+#: src/content/HistoryView.tsx:54
 msgid "Search history"
 msgstr "搜尋記錄"
 
@@ -331,11 +324,11 @@ msgstr "搜尋記錄"
 msgid "Search memories"
 msgstr "搜尋記憶"
 
-#: src/content/ChatView.tsx:66
+#: src/content/ChatView.tsx:63
 msgid "Send"
 msgstr "傳送"
 
-#: src/content/ChatView.tsx:66
+#: src/content/ChatView.tsx:63
 msgid "Send and interrupt"
 msgstr "中斷並傳送"
 
@@ -348,11 +341,11 @@ msgstr "設定"
 msgid "Show in sidebar"
 msgstr "在側邊欄中顯示"
 
-#: src/content/ChatView.tsx:183
+#: src/content/ChatView.tsx:179
 msgid "Sign in with Apple to use Kodoneri’s free plan, or add your own OpenAI, Anthropic, or DeepSeek API key."
 msgstr "使用 Apple 登入以使用 Kodoneri 免費方案，或加入你自己的 OpenAI、Anthropic 或 DeepSeek API 金鑰。"
 
-#: src/content/ChatView.tsx:66
+#: src/content/ChatView.tsx:63
 msgid "Stop response"
 msgstr "停止回答"
 
@@ -377,7 +370,7 @@ msgstr "標題產生"
 msgid "Title:"
 msgstr "標題："
 
-#: src/content/HistoryView.tsx:24
+#: src/content/HistoryView.tsx:23
 msgid "Today"
 msgstr "今天"
 
@@ -385,7 +378,7 @@ msgstr "今天"
 msgid "Untitled"
 msgstr "未命名"
 
-#: src/content/ChatView.tsx:279
+#: src/content/ChatView.tsx:285
 msgid "Updating memory…"
 msgstr "正在更新記憶…"
 
@@ -393,7 +386,7 @@ msgstr "正在更新記憶…"
 msgid "What the AI remembers"
 msgstr "AI 記住的內容"
 
-#: src/content/HistoryView.tsx:24
+#: src/content/HistoryView.tsx:23
 msgid "Yesterday"
 msgstr "昨天"
 

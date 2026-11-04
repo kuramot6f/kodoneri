@@ -4,7 +4,6 @@ import { plural, t } from "@lingui/core/macro";
 import { Trans, useLingui } from "@lingui/react/macro";
 import type {
   AssistantModelMessage,
-  CacheUsage,
   Conversation,
   ModelMessage,
   ToolResultPart,
@@ -26,7 +25,6 @@ interface ChatViewProps {
   step: ModelMessage[] | null;
   memory: MemoryProgress | null;
   compacting: boolean;
-  cacheUsage: CacheUsage | null;
   question: string;
   includeSelection: boolean;
   selectionSummary: string | null;
@@ -43,7 +41,6 @@ export function ChatView({
   step,
   memory,
   compacting,
-  cacheUsage,
   question,
   includeSelection,
   selectionSummary,
@@ -150,7 +147,6 @@ export function ChatView({
             <Icon name={showStop ? "stop" : "send"} tone="inverse" />
           </button>
         </div>
-        {cacheUsage && <CacheRate usage={cacheUsage} />}
       </form>
     </>
   );
@@ -296,7 +292,6 @@ function MemoryUpdateView({ progress }: { progress: MemoryProgress }) {
       <div className="memory-update-log">
         <Messages messages={progress.messages} />
         {progress.error && <div className="message error">{t`Error: ${progress.error}`}</div>}
-        {progress.cacheUsage && <CacheRate usage={progress.cacheUsage} />}
       </div>
     </details>
   );
@@ -350,19 +345,6 @@ function collectToolResults(messages: ModelMessage[]): Map<string, ToolResultPar
     for (const result of getToolResults(message)) results.set(result.toolCallId, result.output);
   }
   return results;
-}
-
-function CacheRate({ usage }: { usage: CacheUsage }) {
-  const { i18n, t } = useLingui();
-  const inputTokens = usage.hitTokens + usage.missTokens;
-  if (inputTokens === 0) return null;
-
-  const rate = usage.hitTokens / inputTokens * 100;
-  return (
-    <div className="cache-rate">
-      {t`Cache hit rate: ${rate.toFixed(1)}% (${usage.hitTokens.toLocaleString(i18n.locale)} / ${inputTokens.toLocaleString(i18n.locale)} tokens)`}
-    </div>
-  );
 }
 
 function formatToolOutput(output: ToolResultPart["output"]): string {

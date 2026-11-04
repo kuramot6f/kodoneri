@@ -1,6 +1,5 @@
 import { generateText, isLoopFinished, streamText } from "ai";
-import type { AssistantModelMessage, JSONValue, LanguageModelUsage, ModelMessage, ToolResultPart, ToolSet } from "ai";
-import type { CacheUsage } from "../shared/conversation";
+import type { AssistantModelMessage, JSONValue, ModelMessage, ToolResultPart, ToolSet } from "ai";
 import { i18n } from "../shared/i18n.ts";
 import { taggedMessage } from "../shared/conversation.ts";
 import { errorMessage } from "../shared/errors.ts";
@@ -21,7 +20,6 @@ interface StreamResult {
   cancelled?: boolean;
   /** Text and reasoning of the step that was cut off, so it can still be shown and saved. */
   partial: AssistantModelMessage | null;
-  cacheUsage: CacheUsage | null;
   contextTokens: number | null;
 }
 
@@ -38,7 +36,6 @@ export async function streamAnswer(
 ): Promise<StreamResult> {
   let parts: AssistantPart[] = [];
   let results: ToolResultPart[] = [];
-  let cacheUsage: CacheUsage | null = null;
   let contextTokens: number | null = null;
   const step = (): ModelMessage[] => parts.length === 0 ? [] : [
     { role: "assistant", content: parts },
@@ -73,7 +70,6 @@ export async function streamAnswer(
         abortSignal: signal,
         providerOptions: runtime.providerOptions,
         onStepEnd: (finished) => {
-          cacheUsage = sumCacheUsage(cacheUsage, readCacheUsage(finished.usage));
           contextTokens = finished.usage.totalTokens ?? null;
           parts = [];
           results = [];
@@ -108,7 +104,7 @@ export async function streamAnswer(
       const last = (await result.steps).at(-1);
       if (last?.rawFinishReason === "pause_turn") continue;
       if (!last?.text) throw new Error(i18n._({ id: "errors.noResponse", message: "No response was received." }));
-      return { partial: null, cacheUsage, contextTokens };
+      return { partial: null, contextTokens };
     }
   } catch (error) {
     const cancelled = isAbortError(error);
@@ -118,7 +114,6 @@ export async function streamAnswer(
       error: cancelled ? i18n._({ id: "errors.responseCancelled", message: "Response generation was cancelled." }) : errorMessage(error),
       cancelled,
       partial: content.some((part) => part.type === "text") ? { role: "assistant", content } : null,
-      cacheUsage,
       contextTokens
     };
   }
@@ -148,20 +143,6 @@ export async function compact(runtime: ModelRuntime, prefix: ModelMessage[], sig
   const content = text.trim();
   if (!content) throw new Error(i18n._({ id: "errors.noCompaction", message: "No conversation compaction result was received." }));
   return `This is a working checkpoint for continuing an earlier conversation.\n\n${content}`;
-}
-
-function readCacheUsage(usage: LanguageModelUsage): CacheUsage | null {
-  const { cacheReadTokens, noCacheTokens, cacheWriteTokens } = usage.inputTokenDetails;
-  if (cacheReadTokens === undefined && noCacheTokens === undefined) return null;
-  return { hitTokens: cacheReadTokens ?? 0, missTokens: (noCacheTokens ?? 0) + (cacheWriteTokens ?? 0) };
-}
-
-function sumCacheUsage(current: CacheUsage | null, next: CacheUsage | null): CacheUsage | null {
-  if (!next) return current;
-  return {
-    hitTokens: (current?.hitTokens ?? 0) + next.hitTokens,
-    missTokens: (current?.missTokens ?? 0) + next.missTokens
-  };
 }
 
 function isAbortError(error: unknown): boolean {
