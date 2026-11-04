@@ -10,7 +10,7 @@
       "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 922000, "webSearch": true
     },
     {
-      "id": "gpt-6-sol", "provider": "openai", "label": "GPT-6 Sol",
+      "id": "gpt-6.1-sol", "provider": "openai", "label": "GPT-6.1 Sol",
       "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 922000, "webSearch": true
     },
     {
@@ -26,7 +26,7 @@
       "efforts": ["low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000, "webSearch": true
     },
     {
-      "id": "claude-sonnet-5", "provider": "anthropic", "label": "Claude Sonnet 5",
+      "id": "claude-sonnet-5-5", "provider": "anthropic", "label": "Claude Sonnet 5.5",
       "efforts": ["none", "low", "medium", "high", "xhigh", "max"], "contextWindow": 1000000, "webSearch": true
     },
     {
@@ -36,7 +36,7 @@
   ],
   "plans": {
     "free": ["deepseek-flash", "gpt-6-luna"],
-    "plus": ["deepseek-flash", "gpt-6-luna", "gpt-6-sol", "claude-sonnet-5"],
-    "pro": ["gpt-6-luna", "gpt-6-sol", "gpt-6-astra", "claude-sonnet-5", "claude-opus-5-5", "claude-fable-5-1", "deepseek-flash"]
+    "plus": ["deepseek-flash", "gpt-6-luna", "gpt-6.1-sol", "claude-sonnet-5-5"],
+    "pro": ["gpt-6-luna", "gpt-6.1-sol", "gpt-6-astra", "claude-sonnet-5-5", "claude-opus-5-5", "claude-fable-5-1", "deepseek-flash"]
   }
 }
