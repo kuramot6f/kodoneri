@@ -1,0 +1,26 @@
+name: TestFlight
+
+# Xcode Cloud archives, signs and distributes; this only starts its workflows on the pushed ref.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+concurrency: testflight
+
+jobs:
+  xcode-cloud:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        workflow: ${{ fromJSON(vars.XCODE_CLOUD_WORKFLOWS) }}
+    env:
+      ASC_BYPASS_KEYCHAIN: '1'
+      ASC_NO_UPDATE: '1'
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_PRIVATE_KEY_B64: ${{ secrets.ASC_PRIVATE_KEY_B64 }}
+    steps:
+      - uses: rudrankriyam/setup-asc@v1
+      - run: asc xcode-cloud run --app 6814798032 --workflow "${{ matrix.workflow }}" --branch "$GITHUB_REF_NAME" --wait --timeout 2h

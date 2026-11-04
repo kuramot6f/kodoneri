@@ -52,6 +52,33 @@ Node.js 24・Corepack と pnpm の依存関係をインストールします。
 生成された設定ファイルは Git 管理外のままです。
 スクリプトを含むコミットをリモートへ push してから、そのコミットでビルドを開始します。
 
+## GitHub Actions
+
+| ワークフロー | きっかけ | 内容 |
+|---|---|---|
+| `testflight.yml` | `v*` タグの push、手動実行 | `asc xcode-cloud run` で Xcode Cloud のワークフローをそのタグ（手動ならブランチ）で起動し、完了まで待つ |
+| `deploy-gateway.yml` | `main` の `gateway/` か `extension/src/shared/` の変更、手動実行 | 型チェックとテストのあと `wrangler deploy` |
+
+TestFlight への配布は Xcode Cloud ワークフロー側で設定します（Archive アクションの配布先を TestFlight にし、
+ポストアクションでテスターグループを指定）。二重ビルドを避けるため、Xcode Cloud 側の開始条件は手動だけにします。
+ビルド番号は Xcode Cloud が採番し、バージョンは `MARKETING_VERSION` のままです。
+
+リポジトリに設定する値:
+
+| 種類 | 名前 | 値 |
+|---|---|---|
+| Variable | `XCODE_CLOUD_WORKFLOWS` | 起動する Xcode Cloud ワークフロー名の JSON 配列（例: `["iOS","macOS"]`） |
+| Secret | `ASC_KEY_ID` / `ASC_ISSUER_ID` | App Store Connect API キー（Developer 以上） |
+| Secret | `ASC_PRIVATE_KEY_B64` | その `.p8` を `base64 -i AuthKey_XXXX.p8` したもの |
+| Secret | `CLOUDFLARE_API_TOKEN` | Workers・D1 を編集できる API トークン |
+| Secret | `CLOUDFLARE_ACCOUNT_ID` / `D1_DATABASE_ID` | `wrangler.example.jsonc` のプレースホルダーに入る値 |
+
+Worker のシークレット（`wrangler secret put`）はデプロイをまたいで残るので CI では扱いません。
+
+```sh
+git tag v1.0.1 && git push origin v1.0.1   # TestFlight
+```
+
 ## API キー
 
 OpenAI / Anthropic / DeepSeek のキーはアプリの画面から入力する（iCloud Keychain で同期）。
