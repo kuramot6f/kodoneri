@@ -15,9 +15,9 @@ test("every plan lists catalog models only", () => {
 });
 
 test("findModel reads the access from the key", () => {
-  assert.equal(findModel("chatext:gpt-6-sol")?.access, "chatext");
-  assert.equal(findModel("byok:gpt-6-sol")?.provider, "openai");
-  assert.equal(findModel("other:gpt-6-sol"), undefined);
+  assert.equal(findModel("chatext:gpt-6.1-sol")?.access, "chatext");
+  assert.equal(findModel("byok:gpt-6.1-sol")?.provider, "openai");
+  assert.equal(findModel("other:gpt-6.1-sol"), undefined);
   assert.equal(findModel("byok:gpt-5.6-sol"), undefined);
 });
 
