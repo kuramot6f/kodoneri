@@ -2,12 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { deleteExpiredFiles } from "../src/files.ts";
 
-const env = {
-  AI: { gateway: (id: string) => ({ getUrl: async (provider: string) => `https://gateway.ai.cloudflare.com/v1/account/${id}/${provider}` }) },
-  CLOUDFLARE_AI_GATEWAY_ID: "gateway",
-  CLOUDFLARE_API_TOKEN: "token"
-} as unknown as Env;
-const base = "https://gateway.ai.cloudflare.com/v1/account/gateway/anthropic/v1/files";
+const env = { ANTHROPIC_API_KEY: "key" } as Env;
+const base = "https://api.anthropic.com/v1/files";
 
 test("deletes Anthropic files older than seven hours across pages", async (t) => {
   const now = Date.parse("2026-09-24T12:00:00Z");
@@ -17,6 +13,7 @@ test("deletes Anthropic files older than seven hours across pages", async (t) =>
   };
   const deleted: string[] = [];
   t.mock.method(globalThis, "fetch", async (url: string, init?: RequestInit) => {
+    assert.equal(new Headers(init?.headers).get("x-api-key"), "key");
     if (init?.method === "DELETE") {
       deleted.push(url);
       return new Response(null, { status: 200 });

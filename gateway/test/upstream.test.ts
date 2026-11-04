@@ -35,8 +35,7 @@ test("forwards only provider headers and known Anthropic betas", () => {
     "content-type": "application/json",
     "anthropic-version": "2023-06-01",
     "anthropic-beta": "files-api-2025-04-14, fast-mode-2026-02-01",
-    "cf-aig-cache-ttl": "3600",
-    "cf-aig-collect-log": "false",
+    "x-api-key": "token",
     authorization: "Bearer token"
   }));
   assert.deepEqual([...headers], [

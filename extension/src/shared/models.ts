@@ -18,6 +18,16 @@ export interface CatalogModel {
   contextWindow: number;
   /** The provider runs web searches for the model. */
   webSearch?: boolean;
+  price: Price;
+}
+
+/** USD per million tokens, what the gateway meters subscription use with. DeepSeek's are its peak rates. */
+export interface Price {
+  input: number;
+  cachedInput: number;
+  /** Anthropic's 5-minute cache write; input otherwise. */
+  cacheWrite?: number;
+  output: number;
 }
 
 export interface ModelInfo extends CatalogModel {

@@ -1,4 +1,4 @@
-import { gatewayUrl } from "./upstream.ts";
+import { UPSTREAMS } from "./upstream.ts";
 
 /**
  * Anthropic keeps uploaded files until they are deleted. The extension replays tool images for 6 hours
@@ -16,9 +16,10 @@ interface FilePage {
 
 /** Deletes the shared Anthropic account's files that no conversation can still reference. */
 export async function deleteExpiredFiles(env: Env, now = Date.now()): Promise<void> {
-  const base = `${await gatewayUrl(env, "anthropic")}/v1/files`;
+  const { url, files, authorize } = UPSTREAMS.anthropic;
+  const base = `${url}${files}`;
   const headers = {
-    "cf-aig-authorization": `Bearer ${env.CLOUDFLARE_API_TOKEN}`,
+    ...authorize(env),
     "anthropic-version": "2023-06-01",
     "anthropic-beta": "files-api-2025-04-14"
   };

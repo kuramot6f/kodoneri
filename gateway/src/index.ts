@@ -2,8 +2,8 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 import { findCatalogModel, PLANS, type Provider } from "../../extension/src/shared/models.ts";
 import { effectivePlan, ensureBilling, syncTransaction, verifyNotification, type BillingRow } from "./billing";
 import { deleteExpiredFiles } from "./files";
-import { UPSTREAMS, clientResponse, gatewayUrl, prepareBody, requestHeaders, type Body } from "./upstream";
-import { loggedCost } from "./usage";
+import { UPSTREAMS, clientResponse, prepareBody, requestHeaders, type Body } from "./upstream";
+import { costMicrousd, readUsage } from "./usage";
 
 const APPLE_ISSUER = "https://appleid.apple.com";
 const NONCE_TTL_MINUTES = 10;
@@ -15,7 +15,9 @@ const appleKeys = createRemoteJWKSet(new URL(`${APPLE_ISSUER}/auth/keys`));
 // Secrets are not in wrangler.jsonc, so `wrangler types` does not know them.
 declare global {
   interface Env {
-    CLOUDFLARE_API_TOKEN: string;
+    OPENAI_API_KEY: string;
+    ANTHROPIC_API_KEY: string;
+    DEEPSEEK_API_KEY: string;
     // App Store Connect In-App Purchase key; APPLE_PRIVATE_KEY is the .p8 file's contents.
     APPLE_ISSUER_ID: string;
     APPLE_KEY_ID: string;
@@ -87,7 +89,7 @@ async function signIn(request: Request, env: Env): Promise<Response> {
   return Response.json({ token });
 }
 
-/** Forwards authenticated model and file requests through Cloudflare AI Gateway using its stored provider keys. */
+/** Forwards authenticated model and file requests to the provider with the shared provider key. */
 async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider: Provider, path: string): Promise<Response> {
   const upstream = UPSTREAMS[provider];
   const generating = path === upstream.generate;
@@ -123,23 +125,16 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
   ctx.waitUntil(env.DB.prepare("UPDATE tokens SET last_used_at = datetime('now') WHERE token_hash = ?").bind(user.tokenHash).run());
 
   const headers = requestHeaders(request.headers);
-  headers.set("cf-aig-authorization", `Bearer ${env.CLOUDFLARE_API_TOKEN}`);
-  headers.set("cf-aig-metadata", JSON.stringify({ user_id: user.billingId }));
-  headers.set("cf-aig-collect-log-payload", "false");
+  for (const [name, value] of Object.entries(upstream.authorize(env))) headers.set(name, value);
 
-  const response = await fetch(`${await gatewayUrl(env, provider)}${path}`, { method: "POST", headers, body });
-  const logId = response.headers.get("cf-aig-log-id");
+  const response = await fetch(`${upstream.url}${path}`, { method: "POST", headers, body });
   if (!model || !response.ok || !response.body || !billing.period_start) return clientResponse(response.body, response);
-  if (!logId) {
-    console.error("AI Gateway returned no log id", provider, model);
-    return clientResponse(response.body, response);
-  }
 
-  // The log is written once the response ends, even when the client stops reading early.
+  // The usage comes at the end of the body, which is read to the end even when the client stops early.
   const [clientBody, meterBody] = response.body.tee();
-  ctx.waitUntil(meterBody.pipeTo(new WritableStream())
-    .then(() => recordUsage(env, user.userId, billing.period_start!, logId))
-    .catch((error) => console.error("Usage could not be recorded", provider, model, logId, error)));
+  ctx.waitUntil(new Response(meterBody).text()
+    .then((text) => recordUsage(env, user.userId, billing.period_start!, provider, model!, text))
+    .catch((error) => console.error("Usage could not be recorded", provider, model, error)));
   return clientResponse(clientBody, response);
 }
 
@@ -222,18 +217,20 @@ function errorResponse(code: number, type: string, message: string): Response {
   return Response.json({ type: "error", error: { message, type } }, { status: code });
 }
 
-/** Records the cost AI Gateway logged for the request; the log id keeps a retried write from counting twice. */
-async function recordUsage(env: Env, userId: string, periodStart: string, logId: string): Promise<void> {
-  const cost = await loggedCost(env.AI.gateway(env.CLOUDFLARE_AI_GATEWAY_ID), logId);
-  if (!cost) {
-    console.error("AI Gateway logged no cost", logId);
+/** Prices the usage the response reported and adds it to the period. */
+async function recordUsage(env: Env, userId: string, periodStart: string, provider: Provider, model: string, body: string): Promise<void> {
+  const usage = readUsage(provider, body);
+  if (!usage) {
+    console.error("The response reported no usage", provider, model);
     return;
   }
   await env.DB.prepare(`
-    INSERT OR IGNORE INTO usage_events
-      (log_id, user_id, period_start, cost_microusd, input_tokens, output_tokens)
+    INSERT INTO usage_events (id, user_id, period_start, cost_microusd, input_tokens, output_tokens)
     VALUES (?, ?, ?, ?, ?, ?)
-  `).bind(logId, userId, periodStart, cost.costMicrousd, cost.inputTokens, cost.outputTokens).run();
+  `).bind(
+    crypto.randomUUID(), userId, periodStart, costMicrousd(model, usage),
+    usage.input + usage.cachedInput + usage.cacheWrite, usage.output
+  ).run();
 }
 
 async function sha256(value: string): Promise<string> {

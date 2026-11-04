@@ -7,6 +7,10 @@ export type Body = Record<string, unknown>;
  * so anything that reaches other users' data or bills outside the token usage is closed off.
  */
 interface Upstream {
+  /** The provider's API origin; the paths below sit under it. */
+  url: string;
+  /** Authorizes the request with the provider key, a Worker secret. */
+  authorize(env: Env): Record<string, string>;
   /** The path whose JSON body names the model; the only one that is metered. */
   generate: string;
   /** Upload only: listing, reading or deleting would reach every user's files. */
@@ -21,6 +25,8 @@ interface Upstream {
 
 export const UPSTREAMS: Record<Provider, Upstream> = {
   openai: {
+    url: "https://api.openai.com/v1",
+    authorize: (env) => ({ authorization: `Bearer ${env.OPENAI_API_KEY}` }),
     generate: "/responses",
     files: "/files",
     toolTypes: ["function"],
@@ -28,6 +34,8 @@ export const UPSTREAMS: Record<Provider, Upstream> = {
     identify: (body, billingId) => ({ ...body, safety_identifier: billingId })
   },
   anthropic: {
+    url: "https://api.anthropic.com",
+    authorize: (env) => ({ "x-api-key": env.ANTHROPIC_API_KEY }),
     generate: "/v1/messages",
     files: "/v1/files",
     toolTypes: [undefined, "custom"],
@@ -35,6 +43,8 @@ export const UPSTREAMS: Record<Provider, Upstream> = {
     identify: (body, billingId) => ({ ...body, metadata: { ...(body.metadata as Body | undefined), user_id: billingId } })
   },
   deepseek: {
+    url: "https://api.deepseek.com",
+    authorize: (env) => ({ authorization: `Bearer ${env.DEEPSEEK_API_KEY}` }),
     generate: "/chat/completions",
     files: "/files",
     toolTypes: ["function"],
@@ -48,11 +58,6 @@ export const UPSTREAMS: Record<Provider, Upstream> = {
   }
 };
 
-/** The provider's API on Cloudflare AI Gateway, which adds the stored provider key. The binding knows the account. */
-export async function gatewayUrl(env: Env, provider: Provider): Promise<string> {
-  return (await env.AI.gateway(env.CLOUDFLARE_AI_GATEWAY_ID).getUrl(provider)).replace(/\/$/, "");
-}
-
 /** Returns the body to send, or null when it asks for a provider-hosted tool. */
 export function prepareBody(provider: Provider, body: Body, billingId: string): Body | null {
   const upstream = UPSTREAMS[provider];
@@ -65,7 +70,7 @@ export function prepareBody(provider: Provider, body: Body, billingId: string): 
 /** Betas the extension's SDK sends; others can switch on pricier features. */
 const ANTHROPIC_BETAS = new Set(["files-api-2025-04-14", "thinking-binding-controls-2026-08-01"]);
 
-/** Only what the provider APIs need; `cf-aig-*` and the like would let a client steer AI Gateway. */
+/** Only what the provider APIs need; the client's credentials and anything else stay behind. */
 export function requestHeaders(source: Headers): Headers {
   const headers = pick(source, ["content-type", "accept", "anthropic-version"]);
   const betas = source.get("anthropic-beta")?.split(",").map((beta) => beta.trim()).filter((beta) => ANTHROPIC_BETAS.has(beta));

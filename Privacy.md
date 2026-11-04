@@ -22,7 +22,7 @@ When you send a message, Kodoneri sends it to the AI provider of the model you c
 
 ## With a Kodoneri plan
 
-- Your messages pass through our relay server to the provider. We do not store or view their content, and payload logging is turned off in the gateway we use (Cloudflare AI Gateway).
+- Your messages pass through our relay server to the provider. We do not store, log or view their content.
 - To bill your plan, we store your Sign in with Apple identifier, your App Store purchase records, and the token count and cost of each request. Cloudflare also keeps request metadata, such as the model, token count, and time.
 - When you sign in with Apple, Kodoneri does not ask for your name or email address, so we never receive them.
 - Conversations and memories are stored on your device and in your iCloud, just as with your own API keys.

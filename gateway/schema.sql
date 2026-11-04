@@ -39,9 +39,9 @@ CREATE TABLE IF NOT EXISTS billing (
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
--- AI Gateway の log id を主キーにして、同じリクエストを二重計上しない。
+-- 1 リクエスト 1 行。原価はレスポンスの usage と models.json の単価から計算する。
 CREATE TABLE IF NOT EXISTS usage_events (
-  log_id TEXT PRIMARY KEY,
+  id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL REFERENCES users(id),
   period_start TEXT NOT NULL,
   cost_microusd INTEGER NOT NULL,
