@@ -108,6 +108,8 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
   const baseURL = info.access === "chatext" ? GATEWAY_BASE[info.provider] : undefined;
   const level = effort === "lowest" ? lowestEffort(info) : clampEffort(info, effort);
   const expiresAfter = TOOL_HISTORY_TTL_MS / 1000;
+  // Provider-hosted search bills outside the token usage, so the gateway refuses it.
+  const webSearch = info.webSearch && !baseURL;
 
   switch (info.provider) {
     case "openai": {
@@ -122,7 +124,7 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
           openai: { reasoningEffort: level, store: false } satisfies OpenAILanguageModelResponsesOptions
         },
         fileOptions: { openai: { purpose: "user_data", expiresAfter } satisfies OpenAIFilesOptions },
-        tools: info.webSearch ? { web_search: openai.tools.webSearch() } : {}
+        tools: webSearch ? { web_search: openai.tools.webSearch() } : {}
       };
     }
     case "anthropic": {
@@ -148,7 +150,7 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
         providerOptions: { anthropic: options satisfies AnthropicLanguageModelOptions },
         fileOptions: {},
         // The basic version searches directly; later ones filter results through code execution.
-        tools: info.webSearch ? { web_search: anthropic.tools.webSearch_20250305() } : {}
+        tools: webSearch ? { web_search: anthropic.tools.webSearch_20250305() } : {}
       };
     }
     case "deepseek": {
