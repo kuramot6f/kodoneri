@@ -21,6 +21,8 @@ const GATEWAY_BASE: Record<Provider, string> = {
 };
 
 const MEMORY_MODEL_ID = "gpt-6-luna";
+/** Bounds what one Anthropic web_fetch adds to the context. */
+const WEB_FETCH_MAX_TOKENS = 20000;
 
 type ProviderOptions = NonNullable<Parameters<typeof streamText>[0]["providerOptions"]>;
 type FilesApi = Parameters<typeof uploadFile>[0]["api"];
@@ -32,7 +34,7 @@ export interface ModelRuntime {
   files: FilesApi;
   providerOptions: ProviderOptions;
   fileOptions: ProviderOptions;
-  /** Web search tools the provider runs or serves; given to answers only. */
+  /** Web search and page fetch tools; given to answers only. */
   tools: ToolSet;
 }
 
@@ -109,8 +111,9 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
   const baseURL = info.access === "chatext" ? GATEWAY_BASE[info.provider] : undefined;
   const level = effort === "lowest" ? lowestEffort(info) : clampEffort(info, effort);
   const expiresAfter = TOOL_HISTORY_TTL_MS / 1000;
-  // Provider-hosted search bills outside the token usage, so the gateway refuses it.
-  const hostedSearch = info.webSearch && !baseURL;
+  // Provider-hosted search bills outside the token usage, so through the gateway every model searches with
+  // DeepSeek's Search and Fetch APIs, which the gateway meters per request.
+  const gatewaySearch = baseURL ? deepSeekSearchTools(apiKey, GATEWAY_BASE.deepseek) : null;
 
   switch (info.provider) {
     case "openai": {
@@ -125,7 +128,8 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
           openai: { reasoningEffort: level, store: false } satisfies OpenAILanguageModelResponsesOptions
         },
         fileOptions: { openai: { purpose: "user_data", expiresAfter } satisfies OpenAIFilesOptions },
-        tools: hostedSearch ? { web_search: openai.tools.webSearch() } : {}
+        // Its web search opens pages itself, so no separate fetch tool is needed.
+        tools: gatewaySearch ?? { web_search: openai.tools.webSearch() }
       };
     }
     case "anthropic": {
@@ -150,8 +154,11 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
         files: anthropic.files(),
         providerOptions: { anthropic: options satisfies AnthropicLanguageModelOptions },
         fileOptions: {},
-        // The basic version searches directly; later ones filter results through code execution.
-        tools: hostedSearch ? { web_search: anthropic.tools.webSearch_20250305() } : {}
+        // The basic versions run directly; later ones filter results through code execution.
+        tools: gatewaySearch ?? {
+          web_search: anthropic.tools.webSearch_20250305(),
+          web_fetch: anthropic.tools.webFetch_20250910({ maxContentTokens: WEB_FETCH_MAX_TOKENS })
+        }
       };
     }
     case "deepseek": {
@@ -165,8 +172,7 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
         files: deepSeek.files(),
         providerOptions: { deepseek: options },
         fileOptions: { deepseek: { expiresAfter } satisfies DeepSeekFilesOptions },
-        // Search and Fetch are plain APIs called from function tools, so the gateway can meter them per request.
-        tools: info.webSearch ? deepSeekSearchTools(apiKey, baseURL) : {}
+        tools: deepSeekSearchTools(apiKey, baseURL)
       };
     }
   }
