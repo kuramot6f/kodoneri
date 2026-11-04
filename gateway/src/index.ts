@@ -91,10 +91,10 @@ async function signIn(request: Request, env: Env): Promise<Response> {
 async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider: Provider, path: string): Promise<Response> {
   const upstream = UPSTREAMS[provider];
   const generating = path === upstream.generate;
-  if (!generating && path !== upstream.files) return status(404);
-  if (request.method !== "POST") return status(405);
+  if (!generating && path !== upstream.files) return errorResponse(404, "not_found", `${path} is not available through chatext.`);
+  if (request.method !== "POST") return errorResponse(405, "method_not_allowed", "Only POST is supported.");
   const user = await authenticate(request, env);
-  if (!user) return status(401);
+  if (!user) return errorResponse(401, "authentication_error", "The chatext sign-in is invalid. Sign in again in the app.");
   const billing = await ensureBilling(env, user.userId);
   if (!canUseGateway(billing)) return usageLimitResponse(billing);
 
@@ -102,7 +102,7 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
   let model: string | null = null;
   if (generating) {
     const input = await request.json<Body>().catch(() => null);
-    if (!input) return status(400);
+    if (!input) return errorResponse(400, "invalid_request_error", "The request body is not valid JSON.");
     model = typeof input.model === "string" ? input.model : null;
     const plan = effectivePlan(billing);
     if (!model || findCatalogModel(model)?.provider !== provider || !PLANS[plan].includes(model)) {
@@ -146,13 +146,13 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
 /** Returns the current StoreKit period and D1-backed usage totals. */
 async function usage(request: Request, env: Env): Promise<Response> {
   const user = await authenticate(request, env);
-  if (!user) return status(401);
+  if (!user) return errorResponse(401, "authentication_error", "The chatext sign-in is invalid. Sign in again in the app.");
   return billingResponse(await ensureBilling(env, user.userId));
 }
 
 async function updateSubscription(request: Request, env: Env): Promise<Response> {
   const user = await authenticate(request, env);
-  if (!user) return status(401);
+  if (!user) return errorResponse(401, "authentication_error", "The chatext sign-in is invalid. Sign in again in the app.");
   await ensureBilling(env, user.userId);
   const body = await request.json().catch(() => null) as { signedTransaction?: unknown } | null;
   if (typeof body?.signedTransaction !== "string") return status(400);
@@ -217,8 +217,9 @@ function usageLimitResponse(row: BillingRow): Response {
   return errorResponse(402, "usage_limit_exceeded", message);
 }
 
+/** Shaped so the Anthropic, OpenAI and DeepSeek SDKs all read the message. */
 function errorResponse(code: number, type: string, message: string): Response {
-  return Response.json({ error: { message, type } }, { status: code });
+  return Response.json({ type: "error", error: { message, type } }, { status: code });
 }
 
 /** Records the cost AI Gateway logged for the request; the log id keeps a retried write from counting twice. */
