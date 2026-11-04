@@ -3,6 +3,7 @@ node_modules/
 
 # Vite の生成物。npm run build / Xcode ビルドで再生成される。
 extension/dist/
+extension/src/locales/*/messages.ts
 extension/.env.local
 
 # サーバーの URL と ID。*.example をコピーして作る。
