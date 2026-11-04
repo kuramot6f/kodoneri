@@ -14,7 +14,7 @@ import { getMeta, getMessageText, getToolResults } from "../shared/conversation"
 import type { MemoryProgress, RuntimeMessage, SelectionContext } from "../shared/protocol";
 import { openSettings } from "./device";
 import { Icon } from "./Icon";
-import { markdown } from "./markdown";
+import { generateCss, highlightCode, HTML_CLASS } from "./html";
 import { ModelMenu } from "./ModelMenu";
 
 /** Within this distance of the bottom, new content keeps the view pinned to the bottom. */
@@ -98,7 +98,7 @@ export function ChatView({
       <div id="messages" aria-live="polite" ref={messagesRef}>
         {needsSetup && <SetupPrompt />}
         <Messages messages={step ? [...messages, ...step] : messages} />
-        {step?.length === 0 && <MarkdownMessage content={t`Generating response…`} />}
+        {step?.length === 0 && <HtmlMessage content={t`Generating response…`} />}
         {compacting && <div className="memory-update-label"><Trans>Compacting conversation…</Trans></div>}
         {memory && <MemoryUpdateView progress={memory} />}
       </div>
@@ -195,7 +195,7 @@ function Messages({ messages }: { messages: ModelMessage[] }) {
   const toolResults = useMemo(() => collectToolResults(messages), [messages]);
   const blocks = useMemo(() => toBlocks(messages), [messages]);
   return blocks.map((block, index) => {
-    if (typeof block === "string") return <MarkdownMessage key={index} content={block} />;
+    if (typeof block === "string") return <HtmlMessage key={index} content={block} />;
     if (Array.isArray(block)) return <Activity key={index} parts={block} toolResults={toolResults} />;
     return <UserMessage key={index} message={block} />;
   });
@@ -260,15 +260,25 @@ function SelectionMessage({ selection }: { selection: SelectionContext }) {
   );
 }
 
-function MarkdownMessage({ content }: { content: string }) {
-  // Streaming deltas arrive faster than markdown + highlighting can render; deferring lets React skip stale ones.
+function HtmlMessage({ content }: { content: string }) {
+  // Streaming deltas arrive faster than highlighting and CSS generation can run; deferring lets React skip stale ones.
   const deferredContent = useDeferredValue(content);
-  const html = useMemo(() => markdown.parse(deferredContent, { async: false }), [deferredContent]);
+  const html = useMemo(() => highlightCode(deferredContent), [deferredContent]);
+  const [css, setCss] = useState("");
+  useEffect(() => {
+    let current = true;
+    void generateCss(deferredContent).then((generated) => {
+      if (current) setCss(generated);
+    });
+    return () => {
+      current = false;
+    };
+  }, [deferredContent]);
   return (
-    <div
-      className="message assistant markdown"
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+    <>
+      <style>{css}</style>
+      <div className={`message assistant ${HTML_CLASS}`} dangerouslySetInnerHTML={{ __html: html }} />
+    </>
   );
 }
 

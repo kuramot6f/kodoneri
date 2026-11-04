@@ -1,7 +1,6 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { lexer } from "marked";
-import type { Token } from "marked";
+import { htmlToPlainText } from "./html";
 import { Icon } from "./Icon";
 import { findSnippet, Highlight, normalizeQuery, SearchBar } from "./search";
 import type { Conversation, ModelMessage } from "../shared/conversation";
@@ -83,7 +82,7 @@ function indexConversation(conversation: Conversation): IndexedConversation {
 // 検索対象はユーザーの質問とアシスタントの回答本文のみ。選択範囲コンテキストやツール結果は除外する
 function getSearchableText(message: ModelMessage): string {
   if (message.role === "user" && !getMeta(message).kind) return getMessageText(message);
-  if (message.role === "assistant") return markdownToPlainText(getMessageText(message));
+  if (message.role === "assistant") return htmlToPlainText(getMessageText(message));
   return "";
 }
 
@@ -150,56 +149,10 @@ function groupEntriesByDate(entries: HistoryEntry[], locale: string, todayLabel:
 function getLastAnswer(conversation: Conversation): string {
   for (const message of conversation.messages.toReversed()) {
     if (message.role !== "assistant") continue;
-    const content = markdownToPlainText(getMessageText(message));
+    const content = htmlToPlainText(getMessageText(message));
     if (content) return content;
   }
   return "";
-}
-
-function markdownToPlainText(markdown: string): string {
-  return tokensToPlainText(lexer(markdown)).replace(/\s+/g, " ").trim();
-}
-
-function tokensToPlainText(tokens: Token[]): string {
-  return tokens.map(tokenToPlainText).filter(Boolean).join(" ");
-}
-
-function tokenToPlainText(token: Token): string {
-  switch (token.type) {
-    case "blockquote":
-    case "del":
-    case "em":
-    case "heading":
-    case "link":
-    case "list_item":
-    case "paragraph":
-    case "strong":
-      return tokensToPlainText(token.tokens ?? []);
-    case "list":
-      return token.items.map(tokenToPlainText).join(" ");
-    case "table":
-      return [token.header, ...token.rows]
-        .flat()
-        .map((cell) => tokensToPlainText(cell.tokens))
-        .join(" ");
-    case "text":
-      return token.tokens ? tokensToPlainText(token.tokens) : token.text;
-    case "code":
-    case "codespan":
-    case "escape":
-    case "image":
-      return token.text;
-    case "br":
-    case "checkbox":
-    case "hr":
-    case "space":
-      return " ";
-    case "def":
-    case "html":
-      return "";
-    default:
-      return "";
-  }
 }
 
 function startOfDay(date: Date): Date {
