@@ -8,7 +8,6 @@ extension/.env.local
 
 # サーバーの URL と ID。*.example をコピーして作る。
 Secrets.xcconfig
-gateway/wrangler.jsonc
 
 # 作業ログとメモはローカルだけに残す。
 worklog/

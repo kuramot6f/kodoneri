@@ -16,7 +16,7 @@ interface FilePage {
 
 /** Deletes the shared Anthropic account's files that no conversation can still reference. */
 export async function deleteExpiredFiles(env: Env, now = Date.now()): Promise<void> {
-  const base = `${gatewayUrl(env, "anthropic")}/v1/files`;
+  const base = `${await gatewayUrl(env, "anthropic")}/v1/files`;
   const headers = {
     "cf-aig-authorization": `Bearer ${env.CLOUDFLARE_API_TOKEN}`,
     "anthropic-version": "2023-06-01",

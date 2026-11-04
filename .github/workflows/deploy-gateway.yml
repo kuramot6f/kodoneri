@@ -19,17 +19,11 @@ jobs:
         working-directory: gateway
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      # Empty IDs still deploy, but every model request then fails at AI Gateway.
-      - run: test -n "$CLOUDFLARE_ACCOUNT_ID" && test -n "$D1_DATABASE_ID" || { echo "::error::Set the CLOUDFLARE_ACCOUNT_ID and D1_DATABASE_ID repository secrets."; exit 1; }
-      # wrangler.jsonc is ignored by git; fill the example's placeholders.
-      - run: sed -e "s/<cloudflare-account-id>/$CLOUDFLARE_ACCOUNT_ID/" -e "s/<d1-database-id>/$D1_DATABASE_ID/" wrangler.example.jsonc > wrangler.jsonc
       - run: corepack pnpm install --frozen-lockfile
       - run: corepack pnpm typecheck
       - run: corepack pnpm test

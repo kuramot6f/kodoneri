@@ -24,7 +24,6 @@ cd extension && corepack pnpm install --frozen-lockfile
 ```sh
 cp extension/.env.example extension/.env.local
 cp Secrets.example.xcconfig Secrets.xcconfig
-cp gateway/wrangler.example.jsonc gateway/wrangler.jsonc
 ```
 
 ## ビルド
@@ -71,7 +70,6 @@ TestFlight への配布は Xcode Cloud ワークフロー側で設定します�
 | Secret | `ASC_KEY_ID` / `ASC_ISSUER_ID` | App Store Connect API キー（Developer 以上） |
 | Secret | `ASC_PRIVATE_KEY_B64` | その `.p8` を `base64 -i AuthKey_XXXX.p8` したもの |
 | Secret | `CLOUDFLARE_API_TOKEN` | Workers・D1 を編集できる API トークン |
-| Secret | `CLOUDFLARE_ACCOUNT_ID` / `D1_DATABASE_ID` | `wrangler.example.jsonc` のプレースホルダーに入る値 |
 
 Worker のシークレット（`wrangler secret put`）はデプロイをまたいで残るので CI では扱いません。
 

@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { deleteExpiredFiles } from "../src/files.ts";
 
-const env = { CLOUDFLARE_ACCOUNT_ID: "account", CLOUDFLARE_AI_GATEWAY_ID: "gateway", CLOUDFLARE_API_TOKEN: "token" } as unknown as Env;
+const env = {
+  AI: { gateway: (id: string) => ({ getUrl: async (provider: string) => `https://gateway.ai.cloudflare.com/v1/account/${id}/${provider}` }) },
+  CLOUDFLARE_AI_GATEWAY_ID: "gateway",
+  CLOUDFLARE_API_TOKEN: "token"
+} as unknown as Env;
 const base = "https://gateway.ai.cloudflare.com/v1/account/gateway/anthropic/v1/files";
 
 test("deletes Anthropic files older than seven hours across pages", async (t) => {

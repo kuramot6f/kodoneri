@@ -8,7 +8,6 @@
   "vars": {
     "APPLE_APP_ID": "6814798032",
     "APPLE_BUNDLE_ID": "kuramot6f.chatext",
-    "CLOUDFLARE_ACCOUNT_ID": "<cloudflare-account-id>",
     "CLOUDFLARE_AI_GATEWAY_ID": "chatext"
   },
   "ai": { "binding": "AI" },
@@ -19,8 +18,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "chatext-gateway",
-      "database_id": "<d1-database-id>"
+      // Wrangler binds the existing database by name.
+      "database_name": "chatext-gateway"
     }
   ]
 }

@@ -127,7 +127,7 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
   headers.set("cf-aig-metadata", JSON.stringify({ user_id: user.billingId }));
   headers.set("cf-aig-collect-log-payload", "false");
 
-  const response = await fetch(`${gatewayUrl(env, provider)}${path}`, { method: "POST", headers, body });
+  const response = await fetch(`${await gatewayUrl(env, provider)}${path}`, { method: "POST", headers, body });
   const logId = response.headers.get("cf-aig-log-id");
   if (!model || !response.ok || !response.body || !billing.period_start) return clientResponse(response.body, response);
   if (!logId) {
