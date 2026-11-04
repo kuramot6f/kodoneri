@@ -9,17 +9,12 @@ export type Effort = (typeof EFFORTS)[number];
 /** Who pays: the user's own key, or the chatext subscription through the gateway. */
 export type Access = "byok" | "chatext";
 
-/** USD per million tokens. */
-interface Rates {
+/** USD per million tokens; AI Gateway applies them to each request. */
+export interface Pricing {
   input: number;
   cacheRead: number;
   cacheWrite?: number;
   output: number;
-}
-
-export interface Pricing extends Rates {
-  /** Rates for the whole request once its input exceeds `above` tokens. */
-  longContext?: Rates & { above: number };
   /** Every rate is multiplied during these [start, end) UTC hours, Monday to Friday. */
   peak?: { weekdayHoursUtc: [number, number][]; multiplier: number };
 }
