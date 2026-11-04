@@ -15,6 +15,8 @@ interface Upstream {
   generate: string;
   /** Upload only: listing, reading or deleting would reach every user's files. */
   files: string;
+  /** Paid tool endpoints and the microUSD each successful request costs. */
+  toolPaths: Record<string, number>;
   /** Tool types that run on the client; provider-hosted tools bill outside the token usage. */
   toolTypes: unknown[];
   /** Body fields that bill outside the token usage, run unmetered, or switch to another model. */
@@ -29,6 +31,7 @@ export const UPSTREAMS: Record<Provider, Upstream> = {
     authorize: (env) => ({ authorization: `Bearer ${env.OPENAI_API_KEY}` }),
     generate: "/responses",
     files: "/files",
+    toolPaths: {},
     toolTypes: ["function"],
     drop: ["background", "service_tier", "prompt", "conversation"],
     identify: (body, billingId) => ({ ...body, safety_identifier: billingId })
@@ -38,6 +41,7 @@ export const UPSTREAMS: Record<Provider, Upstream> = {
     authorize: (env) => ({ "x-api-key": env.ANTHROPIC_API_KEY }),
     generate: "/v1/messages",
     files: "/v1/files",
+    toolPaths: {},
     toolTypes: [undefined, "custom"],
     drop: ["service_tier", "speed", "inference_geo", "fallbacks", "mcp_servers", "container"],
     identify: (body, billingId) => ({ ...body, metadata: { ...(body.metadata as Body | undefined), user_id: billingId } })
@@ -47,6 +51,8 @@ export const UPSTREAMS: Record<Provider, Upstream> = {
     authorize: (env) => ({ authorization: `Bearer ${env.DEEPSEEK_API_KEY}` }),
     generate: "/chat/completions",
     files: "/files",
+    // $0.75 per 1,000 successful Search or Fetch requests.
+    toolPaths: { "/v1/tools/search": 750, "/v1/tools/fetch": 750 },
     toolTypes: ["function"],
     drop: [],
     // Without include_usage a stream carries no usage and could not be metered.

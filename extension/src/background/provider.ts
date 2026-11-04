@@ -9,6 +9,7 @@ import type { LanguageModel, streamText, ToolSet, uploadFile } from "ai";
 import { CATALOG, DEFAULT_MODEL_ID, PLANS, clampEffort, findModel, isPlan, lowestEffort, modelKey } from "../shared/models";
 import type { Effort, ModelInfo, ModelSettings, Plan, Provider } from "../shared/models";
 import { TOOL_HISTORY_TTL_MS } from "../shared/conversation";
+import { deepSeekSearchTools } from "./deepseekSearch";
 
 /** The chatext gateway relays each provider's own API under `/{provider}`; the key is the gateway token. */
 const GATEWAY_URL = import.meta.env.VITE_GATEWAY_URL;
@@ -31,7 +32,7 @@ export interface ModelRuntime {
   files: FilesApi;
   providerOptions: ProviderOptions;
   fileOptions: ProviderOptions;
-  /** Tools the provider runs itself, such as web search; given to answers only. */
+  /** Web search tools the provider runs or serves; given to answers only. */
   tools: ToolSet;
 }
 
@@ -109,7 +110,7 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
   const level = effort === "lowest" ? lowestEffort(info) : clampEffort(info, effort);
   const expiresAfter = TOOL_HISTORY_TTL_MS / 1000;
   // Provider-hosted search bills outside the token usage, so the gateway refuses it.
-  const webSearch = info.webSearch && !baseURL;
+  const hostedSearch = info.webSearch && !baseURL;
 
   switch (info.provider) {
     case "openai": {
@@ -124,7 +125,7 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
           openai: { reasoningEffort: level, store: false } satisfies OpenAILanguageModelResponsesOptions
         },
         fileOptions: { openai: { purpose: "user_data", expiresAfter } satisfies OpenAIFilesOptions },
-        tools: webSearch ? { web_search: openai.tools.webSearch() } : {}
+        tools: hostedSearch ? { web_search: openai.tools.webSearch() } : {}
       };
     }
     case "anthropic": {
@@ -150,7 +151,7 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
         providerOptions: { anthropic: options satisfies AnthropicLanguageModelOptions },
         fileOptions: {},
         // The basic version searches directly; later ones filter results through code execution.
-        tools: webSearch ? { web_search: anthropic.tools.webSearch_20250305() } : {}
+        tools: hostedSearch ? { web_search: anthropic.tools.webSearch_20250305() } : {}
       };
     }
     case "deepseek": {
@@ -164,7 +165,8 @@ export function createRuntime(settings: ModelSettings, effort: Effort | "lowest"
         files: deepSeek.files(),
         providerOptions: { deepseek: options },
         fileOptions: { deepseek: { expiresAfter } satisfies DeepSeekFilesOptions },
-        tools: {}
+        // Search and Fetch are plain APIs called from function tools, so the gateway can meter them per request.
+        tools: info.webSearch ? deepSeekSearchTools(apiKey, baseURL) : {}
       };
     }
   }

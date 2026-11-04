@@ -37,7 +37,7 @@
     },
     {
       "id": "deepseek-flash", "provider": "deepseek", "label": "DeepSeek Flash",
-      "efforts": ["none", "low", "high", "max"], "contextWindow": 1000000,
+      "efforts": ["none", "low", "high", "max"], "contextWindow": 1000000, "webSearch": true,
       "price": { "input": 0.3, "cachedInput": 0.006, "output": 1.2 }
     }
   ],

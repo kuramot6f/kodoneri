@@ -89,11 +89,12 @@ async function signIn(request: Request, env: Env): Promise<Response> {
   return Response.json({ token });
 }
 
-/** Forwards authenticated model and file requests to the provider with the shared provider key. */
+/** Forwards authenticated model, tool and file requests to the provider with the shared provider key. */
 async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider: Provider, path: string): Promise<Response> {
   const upstream = UPSTREAMS[provider];
   const generating = path === upstream.generate;
-  if (!generating && path !== upstream.files) return errorResponse(404, "not_found", `${path} is not available through chatext.`);
+  const toolCost = Object.hasOwn(upstream.toolPaths, path) ? upstream.toolPaths[path]! : null;
+  if (!generating && path !== upstream.files && toolCost === null) return errorResponse(404, "not_found", `${path} is not available through chatext.`);
   if (request.method !== "POST") return errorResponse(405, "method_not_allowed", "Only POST is supported.");
   const user = await authenticate(request, env);
   if (!user) return errorResponse(401, "authentication_error", "The chatext sign-in is invalid. Sign in again in the app.");
@@ -113,6 +114,8 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
     const prepared = prepareBody(provider, input, user.billingId);
     if (!prepared) return errorResponse(400, "tool_not_allowed", "Only function tools are available through chatext.");
     body = JSON.stringify(prepared);
+  } else if (toolCost !== null) {
+    body = await request.arrayBuffer();
   } else {
     // Uploads are not metered, so their count and size are capped instead.
     if (!(await env.UPLOAD_LIMIT.limit({ key: user.userId })).success) {
@@ -128,6 +131,11 @@ async function proxy(request: Request, env: Env, ctx: ExecutionContext, provider
   for (const [name, value] of Object.entries(upstream.authorize(env))) headers.set(name, value);
 
   const response = await fetch(`${upstream.url}${path}`, { method: "POST", headers, body });
+  // DeepSeek skips billing an empty search; charging every success keeps the gateway from reading the body.
+  if (toolCost !== null && response.ok && billing.period_start) {
+    ctx.waitUntil(insertUsage(env, user.userId, billing.period_start, toolCost, 0, 0)
+      .catch((error) => console.error("Tool usage could not be recorded", provider, path, error)));
+  }
   if (!model || !response.ok || !response.body || !billing.period_start) return clientResponse(response.body, response);
 
   // The usage comes at the end of the body, which is read to the end even when the client stops early.
@@ -224,13 +232,14 @@ async function recordUsage(env: Env, userId: string, periodStart: string, provid
     console.error("The response reported no usage", provider, model);
     return;
   }
+  await insertUsage(env, userId, periodStart, costMicrousd(model, usage), usage.input + usage.cachedInput + usage.cacheWrite, usage.output);
+}
+
+async function insertUsage(env: Env, userId: string, periodStart: string, cost: number, inputTokens: number, outputTokens: number): Promise<void> {
   await env.DB.prepare(`
     INSERT INTO usage_events (id, user_id, period_start, cost_microusd, input_tokens, output_tokens)
     VALUES (?, ?, ?, ?, ?, ?)
-  `).bind(
-    crypto.randomUUID(), userId, periodStart, costMicrousd(model, usage),
-    usage.input + usage.cachedInput + usage.cacheWrite, usage.output
-  ).run();
+  `).bind(crypto.randomUUID(), userId, periodStart, cost, inputTokens, outputTokens).run();
 }
 
 async function sha256(value: string): Promise<string> {

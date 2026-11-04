@@ -86,6 +86,19 @@ export const navigateInput = z.object({
     .describe("Tab ref from list (type=tab) or browser_context, such as tab_1043. Use the browser_context ref for the current tab.")
 });
 
+export const webSearchInput = z.object({
+  query: z.string().trim().min(1).max(128)
+    .describe("Search query of at most 128 characters. Supports site:, -site:, \"exact phrase\", -term, lang:en,ja, after:2025-01-01 and before:2026-06-01.")
+});
+
+export const webFetchInput = z.object({
+  url: z.string().url().max(8192).describe("HTTP or HTTPS URL to fetch."),
+  offset: z.number().int().min(0).optional()
+    .describe("Zero-based character offset at which to start reading. Defaults to 0."),
+  limit: z.number().int().min(1).max(20000).optional()
+    .describe("Maximum number of characters to read. Defaults to 10000.")
+});
+
 const VALUE_ACTIONS = new Set(["type", "press", "select"]);
 
 export const interactInput = z.object({
@@ -104,6 +117,7 @@ export const interactInput = z.object({
 
 export type GrepInput = z.infer<typeof grepInput>;
 export type ReadInput = z.infer<typeof readInput>;
+export type WebFetchInput = z.infer<typeof webFetchInput>;
 export type OpenInput = z.infer<typeof openInput>;
 export type NavigateInput = z.infer<typeof navigateInput>;
 
@@ -119,5 +133,7 @@ export const TOOL_DESCRIPTIONS = {
   delete: "State-changing deletion of a whole memory topic. Use when the user asked to forget it, or all its content is invalid, superseded, stale with no future utility, or duplicated elsewhere; remove a single statement with patch instead. Fails for favorites (is_editable=false).",
   open: "State-changing load of a URL. With ref, loads url in that tab; without ref, opens url in a new background tab. Use navigate(switch_tab) when the tab must become active. Returns the tab and its ref after the browser accepts the operation, not after the destination finishes loading. Observe the resulting page before dependent actions.",
   navigate: "State-changing history navigation and tab management of the tab given by ref, from list (type=tab) or browser_context; the current page's ref is given in browser_context. To load a URL, use open. switch_tab makes the tab active and moves this conversation into it: it becomes the current tab for capture_viewport and browser_context, and the previous tab keeps its own ref. The tab running this conversation cannot be closed. Returns after the browser accepts the operation, not after the destination finishes loading. Observe the resulting page or tabs before dependent actions.",
-  interact: "State-changing operation on the first live DOM element matching query in the referenced tab or iframe. Works in background tabs. Tabs opened by click remain in the background; use list (type=tab) and switch_tab when one must become active. Returns action, query, element, and success after dispatch, not confirmation of navigation, submission, or task completion. type replaces an input/textarea/contenteditable value; press dispatches synthetic keydown/keyup events and does not guarantee native key behavior; select chooses an option by value; check sets a checkbox/radio to checked. Invalid selectors, absent or incompatible elements, and unavailable refs fail. Choose selectors from observed HTML. Observe the result before planning dependent actions; do not blindly retry an operation whose outcome is unknown."
+  interact: "State-changing operation on the first live DOM element matching query in the referenced tab or iframe. Works in background tabs. Tabs opened by click remain in the background; use list (type=tab) and switch_tab when one must become active. Returns action, query, element, and success after dispatch, not confirmation of navigation, submission, or task completion. type replaces an input/textarea/contenteditable value; press dispatches synthetic keydown/keyup events and does not guarantee native key behavior; select chooses an option by value; check sets a checkbox/radio to checked. Invalid selectors, absent or incompatible elements, and unavailable refs fail. Choose selectors from observed HTML. Observe the result before planning dependent actions; do not blindly retry an operation whose outcome is unknown.",
+  web_search: "Read-only web search. Returns up to 10 results with title, url, site, date, and a summary of a few hundred characters. Use web_fetch to read a result in full.",
+  web_fetch: "Read-only retrieval of a web page as Markdown, fetched by the search provider rather than the browser, so it sees no login state. Returns title, content, offset, endOffset, totalCharacters, and eof; offsets count UTF-16 code units. Every call fetches the page again. Use read or grep with the URL for the page's raw HTML or text, and open to view it in a tab."
 } as const;
