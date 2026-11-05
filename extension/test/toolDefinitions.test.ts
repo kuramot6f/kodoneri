@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { captureViewportInput, grepInput, interactInput, navigateInput, newInput, openInput, patchInput, renameInput } from "../src/background/toolDefinitions.ts";
+import { captureViewportInput, grepInput, navigateInput, newInput, openInput, patchInput, renameInput } from "../src/background/toolDefinitions.ts";
 
 const ok = (schema: { safeParse: (value: unknown) => { success: boolean } }, value: unknown) => assert.equal(schema.safeParse(value).success, true, JSON.stringify(value));
 const fails = (schema: { safeParse: (value: unknown) => { success: boolean } }, value: unknown) => assert.equal(schema.safeParse(value).success, false, JSON.stringify(value));
@@ -31,14 +31,6 @@ test("navigate requires a tab ref and ignores extra fields", () => {
   fails(navigateInput, { action: "back" });
   fails(navigateInput, { action: "open", ref: "tab_2", url: "https://example.com" });
   fails(navigateInput, { action: "switch_tab", ref: "iframe_1" });
-});
-
-test("interact requires a value for type, press, and select and ignores it otherwise", () => {
-  ok(interactInput, { ref: "tab_1_iframe_2", action: "type", query: "input", value: "x" });
-  ok(interactInput, { ref: "tab_1", action: "click", query: "a" });
-  ok(interactInput, { ref: "tab_1", action: "check", query: "input", value: "x" });
-  fails(interactInput, { ref: "tab_1", action: "type", query: "input" });
-  fails(interactInput, { ref: "tab_1_img_1", action: "click", query: "a" });
 });
 
 test("capture_viewport ignores extra fields", () => {

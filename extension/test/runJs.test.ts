@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import Sval from "sval";
 import { runInPage, runJs } from "../src/background/runJs.ts";
-import { interactInput, runJsInput } from "../src/background/toolDefinitions.ts";
+import { runJsInput } from "../src/background/toolDefinitions.ts";
 
 (globalThis as unknown as { __chatextSval: typeof Sval }).__chatextSval = Sval;
 
@@ -78,9 +78,11 @@ test("runJs retries in the interpreter only when the page blocks eval", async ()
   await assert.rejects(runJs(1, 0, "x", fakeApi([[{ result: null }]]).api), /without a result/);
 });
 
-test("run_js takes the same refs as interact and needs code", () => {
-  assert.equal(runJsInput.safeParse({ ref: "tab_1_iframe_2", code: "return 1" }).success, true);
-  assert.equal(runJsInput.safeParse({ ref: "tab_1_img_1", code: "return 1" }).success, false);
-  assert.equal(runJsInput.safeParse({ ref: "tab_1" }).success, false);
-  assert.equal(interactInput.safeParse({ ref: "tab_1", action: "click", query: "a" }).success, true);
+test("run_js takes a tab or iframe ref and needs a description and code", () => {
+  const description = "Returns one";
+  assert.equal(runJsInput.safeParse({ description, ref: "tab_1_iframe_2", code: "return 1" }).success, true);
+  assert.equal(runJsInput.safeParse({ description, ref: "tab_1_img_1", code: "return 1" }).success, false);
+  assert.equal(runJsInput.safeParse({ description, ref: "tab_1" }).success, false);
+  assert.equal(runJsInput.safeParse({ ref: "tab_1", code: "return 1" }).success, false);
+  assert.equal(runJsInput.safeParse({ description: " ", ref: "tab_1", code: "return 1" }).success, false);
 });

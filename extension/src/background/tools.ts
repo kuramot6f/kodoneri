@@ -26,7 +26,6 @@ import {
   captureViewportInput,
   deleteInput,
   grepInput,
-  interactInput,
   isCollectionGrep,
   listInput,
   navigateInput,
@@ -52,7 +51,7 @@ export interface ToolContext {
   moveSession: (tabId: number) => Promise<void>;
 }
 
-const MUTATING_TOOLS = new Set(["interact", "run_js", "open", "navigate", "patch", "rename", "new", "delete"]);
+const MUTATING_TOOLS = new Set(["run_js", "open", "navigate", "patch", "rename", "new", "delete"]);
 const MEMORY_SCOPE_ERROR = "During a memory update only memories are available: list(type=memory), grep with resource_type=memory, read/grep with memory_<id>, and patch/rename/new/delete.";
 
 export function createTools(context: ToolContext): ToolSet {
@@ -100,10 +99,6 @@ export function createTools(context: ToolContext): ToolSet {
     navigate: define("navigate", navigateInput, async (args) => {
       browserOnly();
       return navigate(context, args);
-    }),
-    interact: define("interact", interactInput, async (args) => {
-      browserOnly();
-      return pageTool(context, "interact", args, args.ref);
     }),
     run_js: define("run_js", runJsInput, async ({ ref, code }) => {
       browserOnly();
@@ -165,13 +160,10 @@ async function pageTool(context: ToolContext, name: PageToolName, args: Record<s
     name,
     args: { ...args, ref: match && !match[3] ? undefined : ref }
   };
-  const send = async () => {
-    const reply = await browser.tabs.sendMessage(tabId, message, { frameId }) as PageToolReply | undefined;
-    if (!reply) throw new Error("Could not retrieve the tool result.");
-    if ("error" in reply) throw new Error(reply.error);
-    return reply.output;
-  };
-  return name === "interact" && args.action === "click" ? keepNewTabsInBackground(tabId, send) : send();
+  const reply = await browser.tabs.sendMessage(tabId, message, { frameId }) as PageToolReply | undefined;
+  if (!reply) throw new Error("Could not retrieve the tool result.");
+  if ("error" in reply) throw new Error(reply.error);
+  return reply.output;
 }
 
 async function listTabs(currentTabId: number) {

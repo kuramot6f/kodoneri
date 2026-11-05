@@ -323,9 +323,11 @@ function ToolCall({
   input: unknown;
   output: ToolResultPart["output"] | undefined;
 }) {
+  const script = runJsScript(name, input);
   return (
     <details className="tool-call">
       <summary><Icon name="expand" />{toolLabel(name, input, output)}</summary>
+      {script && <pre>{script.code}</pre>}
       <pre>{output === undefined ? t`Running…` : formatToolOutput(output)}</pre>
     </details>
   );
@@ -333,9 +335,18 @@ function ToolCall({
 
 // OpenAI の web 検索は呼び出しの input が空で、検索語などは結果の action に入る
 function toolLabel(name: string, input: unknown, output?: ToolResultPart["output"]): string {
+  const script = runJsScript(name, input);
+  if (script) return script.description;
   const value = output?.type === "json" ? output.value : null;
   const action = value && typeof value === "object" && "action" in value ? value.action : undefined;
   return `${name} ${JSON.stringify(action ?? input)}`;
+}
+
+// run_js の見出しはモデルが書いた説明。コードは開くと見える
+function runJsScript(name: string, input: unknown): { description: string; code: string } | null {
+  if (name !== "run_js" || !input || typeof input !== "object") return null;
+  const { description, code } = input as { description?: unknown; code?: unknown };
+  return typeof description === "string" && typeof code === "string" ? { description, code } : null;
 }
 
 function collectToolResults(messages: ModelMessage[]): Map<string, ToolResultPart["output"]> {

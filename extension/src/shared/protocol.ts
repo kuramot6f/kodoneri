@@ -105,7 +105,7 @@ export interface ModelsView {
   settings: ModelSettings | null;
 }
 
-export type PageToolName = "grep" | "read" | "read_image" | "interact";
+export type PageToolName = "grep" | "read" | "read_image";
 
 /** Background → a content frame via tabs.sendMessage. */
 export type TabMessage =

@@ -2,7 +2,6 @@ import { fetchText, isSameOrigin, resolveUrl } from "../shared/fetch";
 import type { PageToolName, RuntimeMessage, SelectionContext, TextResource } from "../shared/protocol";
 import { aggregateGrep, grepText, readText, type GrepArgs, type ReadArgs } from "../shared/text";
 import { createImageReader } from "./imageTools";
-import { interact, type InteractArgs } from "./interactionTools";
 import { createPageSnapshotState, preparePageSnapshot, type PageSnapshot } from "./pageSnapshot";
 import { createSelectionContext, type PageSelection } from "./pageSelection";
 
@@ -92,7 +91,6 @@ function createPageTools(refPrefix: string, selection: PageSelection | null): Pa
         case "read_image":
           if (typeof args.ref !== "string") throw new Error("read_image needs an image ref or URL, not a tab or iframe ref.");
           return readImage(args.ref);
-        case "interact": return interact(args as unknown as InteractArgs);
       }
     },
     dispose: () => controller.abort()
