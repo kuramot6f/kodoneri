@@ -1,0 +1,18 @@
+diff --git a/dist/sval.js b/dist/sval.js
+index 49df5a49abe1cf7643359fb720fdcfeb18581627..15ee681196981fc4a460fdd96e85bd0fa349db8e 100644
+--- a/dist/sval.js
++++ b/dist/sval.js
+@@ -5999,9 +5999,11 @@ function* je(e, t) {
+       l.type === "PropertyDefinition" && !l.static && (yield* Ot(l, t, { klass: n, superClass: r }));
+     }
+   };
+-  let a = function* () {
++  let a = function () {
+     const n = r ? tt(this, r) : this;
+-    return yield* s(n), n;
++    const fields = s(n);
++    while (!fields.next().done);
++    return n;
+   };
+   for (let n = 0; n < i.length; n++) {
+     const u = i[n];

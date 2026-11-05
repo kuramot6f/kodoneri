@@ -5,9 +5,10 @@
   "type": "module",
   "packageManager": "pnpm@12.5.1",
   "scripts": {
-    "build": "corepack pnpm i18n:compile && corepack pnpm typecheck && corepack pnpm build:content && corepack pnpm build:background",
+    "build": "corepack pnpm i18n:compile && corepack pnpm typecheck && corepack pnpm build:content && corepack pnpm build:background && corepack pnpm build:interpreter",
     "build:content": "vite build --mode content",
     "build:background": "vite build --mode background",
+    "build:interpreter": "vite build --mode interpreter",
     "i18n:extract": "lingui extract --clean",
     "i18n:compile": "lingui compile --typescript",
     "test": "node --experimental-strip-types --test test/*.test.ts",
@@ -25,6 +26,7 @@
     "highlight.js": "^11.12.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "sval": "^0.6.12",
     "zod": "^4.6.5"
   },
   "devDependencies": {

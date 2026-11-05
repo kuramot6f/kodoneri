@@ -5,6 +5,7 @@ import babel from "@rolldown/plugin-babel";
 
 export default defineConfig(({ mode }) => {
   const isContent = mode === "content";
+  const isInterpreter = mode === "interpreter";
   const babelPresets = [
     linguiTransformerBabelPreset(),
     ...(isContent ? [reactCompilerPreset()] : [])
@@ -26,10 +27,10 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: isContent,
       copyPublicDir: isContent,
       lib: {
-        entry: isContent ? "src/content/main.tsx" : "src/background/main.ts",
-        name: isContent ? "WebPageChatContent" : undefined,
-        formats: [isContent ? "iife" : "es"],
-        fileName: () => isContent ? "content.js" : "background.js",
+        entry: isInterpreter ? "src/page/interpreter.ts" : isContent ? "src/content/main.tsx" : "src/background/main.ts",
+        name: isInterpreter ? "ChatextInterpreter" : isContent ? "WebPageChatContent" : undefined,
+        formats: [isContent || isInterpreter ? "iife" : "es"],
+        fileName: () => isInterpreter ? "interpreter.js" : isContent ? "content.js" : "background.js",
         cssFileName: "styles"
       }
     }

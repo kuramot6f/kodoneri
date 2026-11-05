@@ -8,7 +8,7 @@ Kodoneri has no ads, analytics, or tracking, and we never sell your data.
 
 ## What is sent to AI providers
 
-When you send a message, Kodoneri sends it to the AI provider of the model you chose (OpenAI, Anthropic, or DeepSeek). It also sends what the AI needs to answer, such as text and screenshots of the pages you ask about. Each provider handles this data under its own policy:
+When you send a message, Kodoneri sends it to the AI provider of the model you chose (OpenAI, Anthropic, or DeepSeek). It also sends what the AI needs to answer, such as text and screenshots of the pages you ask about. The AI can also run JavaScript on your open pages, including pages you are logged in to, without asking first, and whatever that code returns is sent too. Each provider handles this data under its own policy:
 
 - [OpenAI](https://openai.com/policies/privacy-policy/)
 - [Anthropic](https://www.anthropic.com/legal/privacy)

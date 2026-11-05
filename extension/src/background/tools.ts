@@ -9,6 +9,7 @@ import { keepNewTabsInBackground } from "./backgroundTabPolicy.ts";
 import { resolveFrame } from "./frames.ts";
 import { navigate, open, resolveTab } from "./navigate.ts";
 import type { ModelRuntime } from "./provider.ts";
+import { runJs } from "./runJs.ts";
 import {
   grepStored,
   grepStoredRef,
@@ -35,6 +36,7 @@ import {
   readImageInput,
   readInput,
   renameInput,
+  runJsInput,
   TOOL_DESCRIPTIONS,
   type GrepInput,
   type ReadInput
@@ -50,7 +52,7 @@ export interface ToolContext {
   moveSession: (tabId: number) => Promise<void>;
 }
 
-const MUTATING_TOOLS = new Set(["interact", "open", "navigate", "patch", "rename", "new", "delete"]);
+const MUTATING_TOOLS = new Set(["interact", "run_js", "open", "navigate", "patch", "rename", "new", "delete"]);
 const MEMORY_SCOPE_ERROR = "During a memory update only memories are available: list(type=memory), grep with resource_type=memory, read/grep with memory_<id>, and patch/rename/new/delete.";
 
 export function createTools(context: ToolContext): ToolSet {
@@ -102,6 +104,11 @@ export function createTools(context: ToolContext): ToolSet {
     interact: define("interact", interactInput, async (args) => {
       browserOnly();
       return pageTool(context, "interact", args, args.ref);
+    }),
+    run_js: define("run_js", runJsInput, async ({ ref, code }) => {
+      browserOnly();
+      const { tabId, frameId } = await resolvePageRef(context, ref);
+      return keepNewTabsInBackground(tabId, () => runJs(tabId, frameId, code));
     })
   };
 }
@@ -134,17 +141,22 @@ async function grepTabs(context: ToolContext, args: GrepInput) {
   );
 }
 
-/**
- * Sends a tool to the content script owning the ref. Refs look like tab_12, tab_12_iframe_1,
- * tab_12_style_3, or tab_12_iframe_1_img_2; anything else (a URL) targets the current tab.
- * A tab or iframe ref is dropped from the args; a resource ref or URL is passed on.
- */
-async function pageTool(context: ToolContext, name: PageToolName, args: Record<string, unknown>, ref: string): Promise<unknown> {
+/** Refs look like tab_12, tab_12_iframe_1, tab_12_style_3, or tab_12_iframe_1_img_2; anything else (a URL) targets the current tab. */
+async function resolvePageRef(context: ToolContext, ref: string) {
   const match = /^(tab_\d+)((?:_iframe_\d+)*)(_.+)?$/.exec(ref);
   const tabId = match ? await resolveTab(match[1]!) : context.session.tabId;
   const framePath = match?.[2]?.slice(1) ?? "";
   const frameId = framePath ? await resolveFrame(tabId, framePath) : 0;
   if (frameId === null) throw new Error(`Could not connect to iframe: ${ref}`);
+  return { match, tabId, frameId };
+}
+
+/**
+ * Sends a tool to the content script owning the ref.
+ * A tab or iframe ref is dropped from the args; a resource ref or URL is passed on.
+ */
+async function pageTool(context: ToolContext, name: PageToolName, args: Record<string, unknown>, ref: string): Promise<unknown> {
+  const { match, tabId, frameId } = await resolvePageRef(context, ref);
 
   const message: TabMessage = {
     type: "tool",
